@@ -1,0 +1,22 @@
+# Папки сборки и кэш
+build/
+dist/
+bin/
+out/
+.gradle/
+.idea/
+.kotlin/
+# Служебные файлы Android
+*.iml
+local.properties
+.DS_Store
+*.hprof
+
+# Привязываем локальный репозиторий к удаленному (ссылку возьми со своего GitHub)
+git remote add origin https://github.com/Slavafit/OrderPackager.git
+
+# Переименовываем ветку в main (если она еще не так называется)
+git branch -M main
+
+# Отправляем всё на сервер
+git push -u origin main
