@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Order Packer</string>
+
+    <!-- Общее -->
+    <string name="cancel">Отмена</string>
+    <string name="save">Сохранить</string>
+    <string name="delete">Удалить</string>
+    <string name="add">Добавить</string>
+    <string name="import_csv">Импорт</string>
+    <string name="export_csv">Экспорт</string>
+    <string name="confirm">Подтвердить</string>
+    <string name="close">Закрыть</string>
+    <string name="done">Готово</string>
+    <string name="back">Назад</string>
+    <string name="error">Ошибка</string>
+    <string name="loading">Загрузка…</string>
+
+    <!-- Экран 1 — выбор клиента -->
+    <string name="select_client">Выберите клиента</string>
+    <string name="search_client">Поиск клиента…</string>
+    <string name="start_work">Начать работу с %1$s</string>
+    <string name="no_clients">Добавьте клиентов через меню → Клиенты</string>
+    <string name="no_search_results">Не найдено по запросу «%1$s»</string>
+    <string name="history">История</string>
+    <string name="settings">Настройки</string>
+    <string name="clients_list">Список клиентов</string>
+    <string name="cyclic_list">Циклический список</string>
+
+    <!-- Экран 2 — рабочий -->
+    <string name="client_label">Клиент: %1$s</string>
+    <string name="position_counter">%1$d / %2$d</string>
+    <string name="saved_check">Сохранено ✓</string>
+    <string name="prev">Предыдущий</string>
+    <string name="next">Следующий</string>
+    <string name="composition">Состав</string>
+    <string name="clothes">Одежда</string>
+    <string name="shoes">Обувь</string>
+    <string name="cosmetics">Косметика</string>
+    <string name="accessories">Аксессуары</string>
+    <string name="other">Другое</string>
+    <string name="other_hint">Что именно?</string>
+    <string name="weight">Вес</string>
+    <string name="weight_kg">%1$s кг</string>
+    <string name="weight_empty">— кг</string>
+    <string name="get_weight">Получить вес</string>
+    <string name="print_label">Печать этикетки → далее</string>
+    <string name="printing">Печать…</string>
+    <string name="finish_order">Завершить заказ</string>
+    <string name="finish_order_dialog_title">Завершить заказ?</string>
+    <string name="finish_order_dialog_body">Сохранено позиций: %1$d.\nПерейти к оформлению заказа для %2$s?</string>
+    <string name="cyclic_list_empty">Циклический список пуст!</string>
+    <string name="cyclic_list_empty_hint">Добавьте позиции в настройках</string>
+    <string name="weight_error">Ошибка весов: %1$s</string>
+    <string name="position_saved">Позиция сохранена</string>
+
+    <!-- Экран 3 — завершение заказа -->
+    <string name="completion_title">Завершение заказа</string>
+    <string name="total_weight">Общий вес</string>
+    <string name="positions_count">Позиций</string>
+    <string name="box_size">Размер коробки (см)</string>
+    <string name="box_l">Д</string>
+    <string name="box_w">Ш</string>
+    <string name="box_h">В</string>
+    <string name="apply_default">По умолч.</string>
+    <string name="save_as_default">Сохранить →</string>
+    <string name="default_saved">Сохранено как размер по умолчанию</string>
+    <string name="default_applied">Размер по умолчанию применён</string>
+    <string name="share_order">Поделиться заказом</string>
+    <string name="save_and_finish">Сохранить и завершить</string>
+    <string name="order_saved">Заказ сохранён!</string>
+    <string name="processed_positions">Обработанные позиции</string>
+    <string name="no_positions">Нет обработанных позиций</string>
+
+    <!-- Клиенты -->
+    <string name="clients_title">Клиенты</string>
+    <string name="clients_count">%1$d в списке</string>
+    <string name="clients_empty">Список пуст</string>
+    <string name="add_client">Добавить клиента</string>
+    <string name="new_client">Новый клиент</string>
+    <string name="last_name">Фамилия</string>
+    <string name="delete_client_title">Удалить клиента?</string>
+    <string name="delete_client_body">«%1$s» будет удалён из списка.</string>
+    <string name="import_done">Импортировано: %1$d клиентов</string>
+    <string name="export_done">Экспорт выполнен</string>
+
+    <!-- Циклический список -->
+    <string name="cyclic_title">Циклический список</string>
+    <string name="cyclic_count">%1$d позиций • удержите для удаления</string>
+    <string name="cyclic_empty">Список пуст</string>
+    <string name="add_position">Добавить позицию</string>
+    <string name="new_position">Новая позиция</string>
+    <string name="position_hint">Имя Фамилия</string>
+    <string name="add_to_end">Добавить в конец</string>
+    <string name="delete_position_title">Удалить позицию?</string>
+    <string name="delete_position_body">«%1$s» будет удалена из списка.</string>
+    <string name="clear_list">Очистить список</string>
+    <string name="clear_list_title">Очистить список?</string>
+    <string name="clear_list_body">Все %1$d позиций будут удалены. Это нельзя отменить.\n\nПосле этого вы сможете загрузить новый список через импорт.</string>
+    <string name="list_cleared">Список очищен</string>
+    <string name="import_preview_title">Подтвердить импорт</string>
+    <string name="import_found">Найдено позиций: %1$d</string>
+    <string name="import_first_rows">Первые строки:</string>
+    <string name="import_more">…ещё %1$d</string>
+    <string name="import_will_fill">Список будет заполнен.</string>
+    <string name="import_will_replace">⚠️ Текущий список (%1$d поз.) будет заменён.</string>
+    <string name="import_load">Загрузить</string>
+    <string name="import_cyclic_done">Импортировано: %1$d позиций</string>
+    <string name="import_empty_error">Файл пуст или не распознан</string>
+
+    <!-- История -->
+    <string name="history_title">История</string>
+    <string name="history_subtitle">%1$s  •  %2$d заказов</string>
+    <string name="daily_report">Отчёт за день</string>
+    <string name="orders_today">Заказов</string>
+    <string name="orders_done">Завершено</string>
+    <string name="orders_in_progress">В процессе</string>
+    <string name="no_orders_today">За сегодня заказов нет</string>
+    <string name="order_positions_count">%1$d поз.</string>
+    <string name="delete_order_title">Удалить заказ?</string>
+    <string name="delete_order_body">Заказ клиента «%1$s» будет удалён.</string>
+    <string name="delete_position_from_order_title">Удалить позицию?</string>
+    <string name="delete_position_from_order_body">«%1$s» будет удалена из заказа.</string>
+    <string name="order_total">Итого</string>
+    <string name="box_label">Коробка: %1$d×%2$d×%3$d см</string>
+    <string name="no_positions_in_order">Нет позиций</string>
+
+    <!-- Настройки -->
+    <string name="settings_title">Настройки</string>
+    <string name="theme_section">Тема оформления</string>
+    <string name="theme_system">Система</string>
+    <string name="theme_light">Светлая</string>
+    <string name="theme_dark">Тёмная</string>
+    <string name="scale_section">Весы</string>
+    <string name="scale_ip_label">IP весов</string>
+    <string name="scale_ip_hint">192.168.1.50</string>
+    <string name="scale_ip_saved">IP весов сохранён</string>
+    <string name="scale_description">HTTP-адрес весов. Ожидается JSON: {\"weight\":0.00,\"unit\":\"kg\"}</string>
+    <string name="printer_section">Принтер Zebra (100×150мм)</string>
+    <string name="printer_ip_label">IP принтера</string>
+    <string name="printer_ip_saved">IP принтера сохранён</string>
+    <string name="printer_description">Отправка ZPL по TCP:9100. Принтер и телефон в одной сети.</string>
+    <string name="printer_test">Тест</string>
+    <string name="printer_test_ok">✅ Печать успешна!</string>
+    <string name="printer_test_fail">❌ %1$s</string>
+</resources>

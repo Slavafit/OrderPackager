@@ -134,7 +134,10 @@ fun EditClientsScreen(repo: AppRepository, onBack: () -> Unit) {
                 }
             }
         } else {
-            LazyColumn(contentPadding = PaddingValues(bottom = 88.dp)) {
+            LazyColumn(
+                modifier = Modifier.padding(padding),
+                contentPadding = PaddingValues(bottom = 88.dp)
+            ) {
                 items(clients, key = { it.id }) { client ->
                     ListItem(
                         headlineContent = {
