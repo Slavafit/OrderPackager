@@ -23,6 +23,8 @@ import com.orderpackager.repository.AppRepository
 import com.orderpackager.ui.viewmodel.WorkingViewModel
 import com.orderpackager.utils.PrintHelper
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.orderpackager.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,7 +62,7 @@ fun WorkingScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text("Клиент: $clientName",
+                        Text(stringResource(R.string.client_label, clientName),
                             fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f))
                         Text("${state.currentIndex + 1} / ${state.totalItems}",
@@ -83,7 +85,7 @@ fun WorkingScreen(
                     ) {
                         Icon(Icons.Default.CheckCircle, null)
                         Spacer(Modifier.width(4.dp))
-                        Text("Завершить заказ")
+                        Text(stringResource(R.string.finish_order))
                     }
                 },
                 colors = TopAppBarDefaults.topAppBarColors(MaterialTheme.colorScheme.primary)
@@ -104,8 +106,8 @@ fun WorkingScreen(
                     Icon(Icons.Default.Warning, null, Modifier.size(64.dp),
                         tint = MaterialTheme.colorScheme.error)
                     Spacer(Modifier.height(12.dp))
-                    Text("Циклический список пуст!")
-                    Text("Добавьте позиции в настройках")
+                    Text(stringResource(R.string.cyclic_list_empty))
+                    Text(stringResource(R.string.cyclic_list_empty_hint))
                 }
             }
             return@Scaffold
@@ -137,7 +139,7 @@ fun WorkingScreen(
                     if (state.isCurrentSaved) {
                         AssistChip(
                             onClick = {},
-                            label = { Text("Сохранено ✓") },
+                            label = { Text(stringResource(R.string.saved_check)) },
                             leadingIcon = { Icon(Icons.Default.Check, null, Modifier.size(14.dp)) }
                         )
                         Spacer(Modifier.height(4.dp))
@@ -164,13 +166,13 @@ fun WorkingScreen(
                 ) {
                     Icon(Icons.Default.ArrowBack, null, Modifier.size(18.dp))
                     Spacer(Modifier.width(4.dp))
-                    Text("Предыдущий")
+                    Text(stringResource(R.string.prev))
                 }
                 OutlinedButton(
                     onClick = { vm.goNext() },
                     modifier = Modifier.weight(1f)
                 ) {
-                    Text("Следующий")
+                    Text(stringResource(R.string.next))
                     Spacer(Modifier.width(4.dp))
                     Icon(Icons.Default.ArrowForward, null, Modifier.size(18.dp))
                 }
@@ -182,20 +184,20 @@ fun WorkingScreen(
                 elevation = CardDefaults.cardElevation(2.dp)
             ) {
                 Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text("Состав", style = MaterialTheme.typography.labelLarge,
+                    Text(stringResource(R.string.composition), style = MaterialTheme.typography.labelLarge,
                         color = MaterialTheme.colorScheme.outline,
                         modifier = Modifier.padding(bottom = 4.dp))
 
                     // 2 колонки чекбоксов
                     Row(Modifier.fillMaxWidth()) {
                         Column(Modifier.weight(1f)) {
-                            CompactCheck("👔 Одежда",    state.hasClothes,     vm::setClothes)
-                            CompactCheck("👟 Обувь",     state.hasShoes,       vm::setShoes)
-                            CompactCheck("💄 Косметика", state.hasCosmetics,   vm::setCosmetics)
+                            CompactCheck(stringResource(R.string.clothes),    state.hasClothes,     vm::setClothes)
+                            CompactCheck(stringResource(R.string.shoes),     state.hasShoes,       vm::setShoes)
+                            CompactCheck(stringResource(R.string.cosmetics), state.hasCosmetics,   vm::setCosmetics)
                         }
                         Column(Modifier.weight(1f)) {
-                            CompactCheck("💍 Аксессуары", state.hasAccessories, vm::setAccessories)
-                            CompactCheck("👜 Сумка",     state.hasOther,       vm::setOther)
+                            CompactCheck(stringResource(R.string.accessories), state.hasAccessories, vm::setAccessories)
+                            CompactCheck(stringResource(R.string.other),     state.hasOther,       vm::setOther)
                         }
                     }
 
@@ -204,7 +206,7 @@ fun WorkingScreen(
                             value = state.otherText,
                             onValueChange = vm::setOtherText,
                             modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
-                            placeholder = { Text("Что именно?") },
+                            placeholder = { Text(stringResource(R.string.other_hint)) },
                             singleLine = true
                         )
                     }
@@ -232,7 +234,8 @@ fun WorkingScreen(
                             CircularProgressIndicator(Modifier.size(32.dp))
                         } else {
                             Text(
-                                text = state.weightKg?.let { "${"%.3f".format(it)} кг" } ?: "— кг",
+                                //text = state.weightKg?.let { "${"%.2f".format(it)} кг" } ?: stringResource(R.string.weight_empty),
+                                text = state.weightKg?.let { stringResource(R.string.weight_kg, it) } ?: stringResource(R.string.weight_empty),
                                 fontSize = 40.sp,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = if (state.weightKg != null)
@@ -241,7 +244,6 @@ fun WorkingScreen(
                             )
                         }
                     }
-
                     state.weightError?.let { err ->
                         Text(err, color = MaterialTheme.colorScheme.error,
                             fontSize = 12.sp, modifier = Modifier.padding(top = 4.dp))
@@ -255,7 +257,7 @@ fun WorkingScreen(
                     ) {
                         Icon(Icons.Default.Scale, null)
                         Spacer(Modifier.width(8.dp))
-                        Text("Получить вес", fontSize = 16.sp)
+                        Text(stringResource(R.string.get_weight), fontSize = 16.sp)
                     }
                 }
             }
@@ -315,7 +317,7 @@ fun WorkingScreen(
                 }
                 Spacer(Modifier.width(10.dp))
                 Text(
-                    if (isPrinting) "Печать…" else "🖨 Печать этикетки → далее",
+                    if (isPrinting) stringResource(R.string.printing) else stringResource(R.string.print_label),
                     fontSize = 18.sp
                 )
             }
@@ -329,9 +331,9 @@ fun WorkingScreen(
         AlertDialog(
             onDismissRequest = { showFinishDialog = false },
             icon = { Icon(Icons.Default.CheckCircle, null) },
-            title = { Text("Завершить заказ?") },
+            title = { Text(stringResource(R.string.finish_order_dialog_title)) },
             text = {
-                Text("Сохранено позиций: ${state.savedPositions.size}.\nПерейти к оформлению заказа для $clientName?")
+                Text(stringResource(R.string.finish_order_dialog_body, state.savedPositions.size, clientName))
             },
             confirmButton = {
                 Button(onClick = {
@@ -340,10 +342,10 @@ fun WorkingScreen(
                         showFinishDialog = false
                         onFinishOrder()
                     }
-                }) { Text("Завершить") }
+                }) { Text(stringResource(R.string.finish)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showFinishDialog = false }) { Text("Отмена") }
+                OutlinedButton(onClick = { showFinishDialog = false }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }

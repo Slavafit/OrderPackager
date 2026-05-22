@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Order Packer</string>
+
+    <!-- General -->
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
+    <string name="delete">Delete</string>
+    <string name="add">Add</string>
+    <string name="import_csv">Import</string>
+    <string name="export_csv">Export</string>
+    <string name="confirm">Confirm</string>
+    <string name="close">Close</string>
+    <string name="done">Done</string>
+    <string name="back">Back</string>
+    <string name="error">Error</string>
+    <string name="loading">Loading…</string>
+    <string name="menu">Menu</string>
+    <string name="search">Search</string>
+
+
+    <!-- Screen 1 — client selection -->
+    <string name="no_client">No clients</string>
+    <string name="select_client">Select a client</string>
+    <string name="search_client">Search client…</string>
+    <string name="start_work">Start with %1$s</string>
+    <string name="no_clients">Add clients via menu → Clients</string>
+    <string name="no_search_results">No results for «%1$s»</string>
+    <string name="history">History</string>
+    <string name="settings">Settings</string>
+    <string name="clients_list">Clients</string>
+    <string name="cyclic_list">Cyclic list</string>
+    <string name="results">Results: %1$d</string>
+
+    <!-- Screen 2 — working -->
+    <string name="client_label">Client: %1$s</string>
+    <string name="position_counter">%1$d / %2$d</string>
+    <string name="saved_check">Saved ✓</string>
+    <string name="prev">Previous</string>
+    <string name="next">Next</string>
+    <string name="composition">Contents</string>
+    <string name="clothes">👔 Clothes</string>
+    <string name="shoes">👟 Shoes</string>
+    <string name="cosmetics">💄 Cosmetics</string>
+    <string name="accessories">💍 Accessories</string>
+    <string name="other">👜 Bag</string>
+    <string name="other_hint">What exactly?</string>
+    <string name="weight">Weight</string>
+    <string name="weight_kg">%1$s kg</string>
+    <string name="weight_empty">— kg</string>
+    <string name="get_weight">Get weight</string>
+    <string name="print_label">🖨 Print label → next</string>
+    <string name="printing">Printing…</string>
+    <string name="finish">Finish</string>
+    <string name="finish_order">Finish order</string>
+    <string name="finish_order_dialog_title">Finish order?</string>
+    <string name="finish_order_dialog_body">Saved positions: %1$d.\nProceed to order summary for %2$s?</string>
+    <string name="cyclic_list_empty">Cyclic list is empty!</string>
+    <string name="cyclic_list_empty_hint">Add positions in settings</string>
+    <string name="weight_error">Scale error: %1$s</string>
+    <string name="position_saved">Position saved</string>
+
+    <!-- Screen 3 — order completion -->
+    <string name="completion_title">Order Summary</string>
+    <string name="total_weight">Total weight</string>
+    <string name="positions_count">Positions</string>
+    <string name="box_size">Box size (cm)</string>
+    <string name="box_l">L</string>
+    <string name="box_w">W</string>
+    <string name="box_h">H</string>
+    <string name="apply_default">Default</string>
+    <string name="save_as_default">Save →</string>
+    <string name="default_saved">Saved as default size</string>
+    <string name="default_applied">Default size applied</string>
+    <string name="share_order">Share order</string>
+    <string name="save_and_finish">Save and finish</string>
+    <string name="order_saved">Order saved!</string>
+    <string name="processed_positions">Processed positions</string>
+    <string name="no_positions">No processed positions</string>
+
+    <!-- Clients -->
+    <string name="clients_title">Clients</string>
+    <string name="clients_count">%1$d in list</string>
+    <string name="clients_empty">List is empty</string>
+    <string name="add_client">Add client</string>
+    <string name="new_client">New client</string>
+    <string name="last_name">Last name</string>
+    <string name="delete_client_title">Delete client?</string>
+    <string name="delete_client_body">«%1$s» will be removed from the list.</string>
+    <string name="import_done">Imported: %1$d clients</string>
+    <string name="export_done">Export complete</string>
+
+    <!-- Cyclic list -->
+    <string name="cyclic_title">Cyclic list</string>
+    <string name="cyclic_count">%1$d positions • long-press to delete</string>
+    <string name="cyclic_empty">List is empty</string>
+    <string name="add_position">Add position</string>
+    <string name="new_position">New position</string>
+    <string name="position_hint">First Last</string>
+    <string name="add_to_end">Add to end</string>
+    <string name="delete_position_title">Delete position?</string>
+    <string name="delete_position_body">«%1$s» will be removed from the list.</string>
+    <string name="clear">Clear</string>
+    <string name="clear_list">Clear list</string>
+    <string name="clear_list_title">Clear list?</string>
+    <string name="clear_list_body">All %1$d positions will be deleted. This cannot be undone.\n\nAfterwards you can load a new list via import.</string>
+    <string name="list_cleared">List cleared</string>
+    <string name="import_preview_title">Confirm import</string>
+    <string name="import_found">Positions found: %1$d</string>
+    <string name="import_first_rows">First rows:</string>
+    <string name="import_more">…%1$d more</string>
+    <string name="import_will_fill">The list will be filled.</string>
+    <string name="import_will_replace">⚠️ Current list (%1$d pos.) will be replaced.</string>
+    <string name="import_load">Load</string>
+    <string name="import_cyclic_done">Imported: %1$d positions</string>
+    <string name="import_empty_error">File is empty or not recognised</string>
+
+    <!-- History -->
+    <string name="history_title">History</string>
+    <string name="history_subtitle">%1$s  •  %2$d orders</string>
+    <string name="daily_report_for">📊 Daily report: %1$s</string>
+    <string name="daily_report">Daily report</string>
+    <string name="orders_today">Orders</string>
+    <string name="orders_done">Completed</string>
+    <string name="orders_in_progress">In progress</string>
+    <string name="no_orders_today">No orders today</string>
+    <string name="order_positions_count">%1$d pos.</string>
+    <string name="delete_order_title">Delete order?</string>
+    <string name="delete_order_body">Order for client «%1$s» will be deleted.</string>
+    <string name="delete_position_from_order_title">Delete position?</string>
+    <string name="delete_position_from_order_body">«%1$s» will be removed from the order.</string>
+    <string name="order_total">Total</string>
+    <string name="box_label">Box: %1$d×%2$d×%3$d cm</string>
+    <string name="no_positions_in_order">No positions</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Settings</string>
+    <string name="theme_section">Theme</string>
+    <string name="theme_system">System</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="scale_section">Scale</string>
+    <string name="scale_ip_label">Scale IP</string>
+    <string name="scale_ip_hint">192.168.1.50</string>
+    <string name="scale_ip_saved">Scale IP saved</string>
+    <string name="scale_description">HTTP address of the scale. Expected JSON: {\"weight\":0.00,\"unit\":\"kg\"}</string>
+    <string name="printer_section">Zebra Printer (100×150mm)</string>
+    <string name="printer_ip_label">Printer IP</string>
+    <string name="printer_ip_saved">Printer IP saved</string>
+    <string name="printer_description">Sends ZPL via TCP:9100. Printer and phone must be on the same network.</string>
+    <string name="printer_test">Test</string>
+    <string name="printer_test_ok">✅ Print successful!</string>
+    <string name="printer_test_fail">❌ %1$s</string>
+</resources>

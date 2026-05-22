@@ -7,6 +7,8 @@ import com.orderpackager.data.db.entity.OrderPosition
 import com.orderpackager.repository.AppRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.orderpackager.R
 
 data class WorkingState(
     val clientName: String = "",
@@ -115,7 +117,8 @@ class WorkingViewModel(
                 .onSuccess { w -> _state.update { it.copy(weightKg = w, isLoadingWeight = false) } }
                 .onFailure { e -> _state.update { it.copy(
                     isLoadingWeight = false,
-                    weightError = "Ошибка весов: ${e.localizedMessage}"
+                    //weightError = "Ошибка весов: ${e.localizedMessage}"
+                    weightError = stringResource(R.string.weight_error,e.localizedMessage)
                 )}}
         }
     }
@@ -144,7 +147,7 @@ class WorkingViewModel(
         viewModelScope.launch {
             saveCurrentPosition()
             goNext()
-            _state.update { it.copy(snackbarMessage = "Позиция сохранена") }
+            _state.update { it.copy(snackbarMessage = stringResource(R.string.position_saved)) }
         }
     }
 

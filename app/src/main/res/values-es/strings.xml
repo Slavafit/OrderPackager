@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Order Packer</string>
+
+    <!-- General -->
+    <string name="cancel">Cancelar</string>
+    <string name="save">Guardar</string>
+    <string name="delete">Eliminar</string>
+    <string name="add">Añadir</string>
+    <string name="import_csv">Importar</string>
+    <string name="export_csv">Exportar</string>
+    <string name="confirm">Confirmar</string>
+    <string name="close">Cerrar</string>
+    <string name="done">Listo</string>
+    <string name="back">Atrás</string>
+    <string name="error">Error</string>
+    <string name="loading">Cargando…</string>
+
+    <!-- Screen 1 -->
+    <string name="no_client">Sin clientes</string>
+    <string name="select_client">Seleccionar cliente</string>
+    <string name="search_client">Buscar cliente…</string>
+    <string name="start_work">Comenzar con %1$s</string>
+    <string name="no_clients">Añada clientes en menú → Clientes</string>
+    <string name="no_search_results">Sin resultados para «%1$s»</string>
+    <string name="history">Historial</string>
+    <string name="settings">Ajustes</string>
+    <string name="clients_list">Clientes</string>
+    <string name="cyclic_list">Lista cíclica</string>
+    <string name="menu">Menú</string>
+    <string name="search">Buscar</string>
+    <string name="results">Resultados: %1$d</string>
+
+
+    <!-- Screen 2 -->
+    <string name="client_label">Cliente: %1$s</string>
+    <string name="position_counter">%1$d / %2$d</string>
+    <string name="saved_check">Guardado ✓</string>
+    <string name="prev">Anterior</string>
+    <string name="next">Siguiente</string>
+    <string name="composition">Contenido</string>
+    <string name="clothes">👔 Ropa</string>
+    <string name="shoes">👟 Calzado</string>
+    <string name="cosmetics">💄 Cosmética</string>
+    <string name="accessories">💍 Accesorios</string>
+    <string name="other">👜 Bolso</string>
+    <string name="other_hint">¿Qué exactamente?</string>
+    <string name="weight">Peso</string>
+    <string name="weight_kg">%1$s kg</string>
+    <string name="weight_empty">— kg</string>
+    <string name="get_weight">Obtener peso</string>
+    <string name="print_label">🖨 Imprimir etiqueta → siguiente</string>
+    <string name="printing">Imprimiendo…</string>
+    <string name="finish">Finalizar</string>
+    <string name="finish_order">Finalizar pedido</string>
+    <string name="finish_order_dialog_title">¿Finalizar pedido?</string>
+    <string name="finish_order_dialog_body">Posiciones guardadas: %1$d.\n¿Ir al resumen del pedido de %2$s?</string>
+    <string name="cyclic_list_empty">¡La lista cíclica está vacía!</string>
+    <string name="cyclic_list_empty_hint">Añada posiciones en los ajustes</string>
+    <string name="weight_error">Error de báscula: %1$s</string>
+    <string name="position_saved">Posición guardada</string>
+
+    <!-- Screen 3 -->
+    <string name="completion_title">Resumen del pedido</string>
+    <string name="total_weight">Peso total</string>
+    <string name="positions_count">Posiciones</string>
+    <string name="box_size">Tamaño de caja (cm)</string>
+    <string name="box_l">L</string>
+    <string name="box_w">A</string>
+    <string name="box_h">H</string>
+    <string name="apply_default">Por defecto</string>
+    <string name="save_as_default">Guardar →</string>
+    <string name="default_saved">Guardado como tamaño por defecto</string>
+    <string name="default_applied">Tamaño por defecto aplicado</string>
+    <string name="share_order">Compartir pedido</string>
+    <string name="save_and_finish">Guardar y finalizar</string>
+    <string name="order_saved">¡Pedido guardado!</string>
+    <string name="processed_positions">Posiciones procesadas</string>
+    <string name="no_positions">Sin posiciones procesadas</string>
+
+    <!-- Clients -->
+    <string name="clients_title">Clientes</string>
+    <string name="clients_count">%1$d en la lista</string>
+    <string name="clients_empty">La lista está vacía</string>
+    <string name="add_client">Añadir cliente</string>
+    <string name="new_client">Nuevo cliente</string>
+    <string name="last_name">Apellido</string>
+    <string name="delete_client_title">¿Eliminar cliente?</string>
+    <string name="delete_client_body">«%1$s» será eliminado de la lista.</string>
+    <string name="import_done">Importados: %1$d clientes</string>
+    <string name="export_done">Exportación completada</string>
+
+    <!-- Cyclic list -->
+    <string name="cyclic_title">Lista cíclica</string>
+    <string name="cyclic_count">%1$d posiciones • mantén pulsado para eliminar</string>
+    <string name="cyclic_empty">La lista está vacía</string>
+    <string name="add_position">Añadir posición</string>
+    <string name="new_position">Nueva posición</string>
+    <string name="position_hint">Nombre Apellido</string>
+    <string name="add_to_end">Añadir al final</string>
+    <string name="delete_position_title">¿Eliminar posición?</string>
+    <string name="delete_position_body">«%1$s» será eliminada de la lista.</string>
+    <string name="clear">Limpiar</string>
+    <string name="clear_list">Limpiar lista</string>
+    <string name="clear_list_title">¿Limpiar lista?</string>
+    <string name="clear_list_body">Todas las %1$d posiciones serán eliminadas. Esto no se puede deshacer.\n\nDespués podrá cargar una nueva lista mediante importación.</string>
+    <string name="list_cleared">Lista limpiada</string>
+    <string name="import_preview_title">Confirmar importación</string>
+    <string name="import_found">Posiciones encontradas: %1$d</string>
+    <string name="import_first_rows">Primeras filas:</string>
+    <string name="import_more">…%1$d más</string>
+    <string name="import_will_fill">La lista será rellenada.</string>
+    <string name="import_will_replace">⚠️ La lista actual (%1$d pos.) será reemplazada.</string>
+    <string name="import_load">Cargar</string>
+    <string name="import_cyclic_done">Importadas: %1$d posiciones</string>
+    <string name="import_empty_error">El archivo está vacío o no se reconoce</string>
+
+    <!-- History -->
+    <string name="history_title">Historial</string>
+    <string name="history_subtitle">%1$s  •  %2$d pedidos</string>
+    <string name="daily_report_for">📊 Informe diario: %1$s</string>
+    <string name="daily_report">Informe diario</string>
+    <string name="orders_today">Pedidos</string>
+    <string name="orders_done">Completados</string>
+    <string name="orders_in_progress">En curso</string>
+    <string name="no_orders_today">Sin pedidos hoy</string>
+    <string name="order_positions_count">%1$d pos.</string>
+    <string name="delete_order_title">¿Eliminar pedido?</string>
+    <string name="delete_order_body">El pedido del cliente «%1$s» será eliminado.</string>
+    <string name="delete_position_from_order_title">¿Eliminar posición?</string>
+    <string name="delete_position_from_order_body">«%1$s» será eliminada del pedido.</string>
+    <string name="order_total">Total</string>
+    <string name="box_label">Caja: %1$d×%2$d×%3$d cm</string>
+    <string name="no_positions_in_order">Sin posiciones</string>
+
+    <!-- Settings -->
+    <string name="settings_title">Ajustes</string>
+    <string name="theme_section">Tema</string>
+    <string name="theme_system">Sistema</string>
+    <string name="theme_light">Claro</string>
+    <string name="theme_dark">Oscuro</string>
+    <string name="scale_section">Báscula</string>
+    <string name="scale_ip_label">IP de báscula</string>
+    <string name="scale_ip_hint">192.168.1.50</string>
+    <string name="scale_ip_saved">IP de báscula guardada</string>
+    <string name="scale_description">Dirección HTTP de la báscula. JSON esperado: {\"weight\":0.00,\"unit\":\"kg\"}</string>
+    <string name="printer_section">Impresora Zebra (100×150mm)</string>
+    <string name="printer_ip_label">IP de impresora</string>
+    <string name="printer_ip_saved">IP de impresora guardada</string>
+    <string name="printer_description">Envía ZPL por TCP:9100. La impresora y el teléfono deben estar en la misma red.</string>
+    <string name="printer_test">Prueba</string>
+    <string name="printer_test_ok">✅ ¡Impresión correcta!</string>
+    <string name="printer_test_fail">❌ %1$s</string>
+</resources>

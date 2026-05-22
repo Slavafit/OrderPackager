@@ -30,6 +30,8 @@ import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.orderpackager.R
 
 class EditCyclicListViewModel(private val repo: AppRepository) : ViewModel() {
     val items: StateFlow<List<CyclicItem>> = repo.getAllCyclicItems()
@@ -106,7 +108,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                     Column {
                         Text("Циклический список", fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary)
-                        Text("${items.size} позиций • удержите для удаления", fontSize = 12.sp,
+                        Text(stringResource(R.string.cyclic_count, items.size), fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f))
                     }
                 },
@@ -213,11 +215,11 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                 Modifier.padding(horizontal = 24.dp).padding(bottom = 32.dp),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("Новая позиция", style = MaterialTheme.typography.titleLarge,
+                Text(stringResource(R.string.new_position), style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold)
                 OutlinedTextField(
                     value = newName, onValueChange = { newName = it },
-                    label = { Text("Имя Фамилия") },
+                    label = { Text(stringResource(R.string.position_hint)) },
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
@@ -239,7 +241,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
         AlertDialog(
             onDismissRequest = { deleteTarget = null },
             icon  = { Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error) },
-            title = { Text("Удалить позицию?") },
+            title = { Text(stringResource(R.string.delete_position_title)) },
             text  = { Text("«${target.name}» будет удалена из списка.") },
             confirmButton = {
                 Button(
@@ -258,7 +260,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
         AlertDialog(
             onDismissRequest = { showClearDialog = false },
             icon  = { Icon(Icons.Default.DeleteSweep, null, tint = MaterialTheme.colorScheme.error) },
-            title = { Text("Очистить список?") },
+            title = { Text(stringResource(R.string.clear_list_title)) },
             text  = { Text("Все ${items.size} позиций будут удалены. Это нельзя отменить.\n\nПосле этого вы сможете загрузить новый список через импорт.") },
             confirmButton = {
                 Button(
@@ -266,14 +268,14 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                         scope.launch {
                             vm.clearAll()
                             showClearDialog = false
-                            snackbarHostState.showSnackbar("Список очищен")
+                            snackbarHostState.showSnackbar(stringResource(R.string.list_cleared))
                         }
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
-                ) { Text("Очистить") }
+                ) { Text(stringResource(R.string.clear)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showClearDialog = false }) { Text("Отмена") }
+                OutlinedButton(onClick = { showClearDialog = false }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
@@ -284,12 +286,12 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
         AlertDialog(
             onDismissRequest = { showImportPreview = false; pendingImport = null },
             icon  = { Icon(Icons.Default.FileUpload, null, tint = MaterialTheme.colorScheme.primary) },
-            title = { Text("Подтвердить импорт") },
+            title = { Text(stringResource(R.string.import_preview_title)) },
             text  = {
                 Column {
-                    Text("Найдено позиций: ${names.size}")
+                    Text(stringResource(R.string.import_found, names.size) )
                     Spacer(Modifier.height(4.dp))
-                    Text("Первые строки:", fontSize = 13.sp,
+                    Text(stringResource(R.string.import_first_rows), fontSize = 13.sp,
                         color = MaterialTheme.colorScheme.outline)
                     names.take(5).forEach {
                         Text("• $it", fontSize = 13.sp)

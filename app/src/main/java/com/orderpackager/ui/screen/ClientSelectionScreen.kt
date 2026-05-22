@@ -28,6 +28,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.orderpackager.R
 
 // ─── ViewModel ────────────────────────────────────────────────────────────────
 class ClientSelectionViewModel(private val repo: AppRepository) : ViewModel() {
@@ -90,7 +92,7 @@ fun ClientSelectionScreen(
                             modifier      = Modifier
                                 .fillMaxWidth()
                                 .focusRequester(focusRequester),
-                            placeholder   = { Text("Поиск клиента…") },
+                            placeholder   = { Text(stringResource(R.string.search_client)) },
                             singleLine    = true,
                             colors        = OutlinedTextFieldDefaults.colors(
                                 unfocusedBorderColor      = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.3f),
@@ -108,7 +110,7 @@ fun ClientSelectionScreen(
                             showSearch = false
                             vm.setSearch("")
                         }) {
-                            Icon(Icons.Default.ArrowBack, "Назад",
+                            Icon(Icons.Default.ArrowBack, stringResource(R.string.back),
                                 tint = MaterialTheme.colorScheme.onPrimary)
                         }
                     },
@@ -118,23 +120,23 @@ fun ClientSelectionScreen(
                 // Обычный топбар
                 TopAppBar(
                     title = {
-                        Text("Order Packer", fontWeight = FontWeight.Bold,
+                        Text(stringResource(R.string.app_name), fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary)
                     },
                     actions = {
                         IconButton(onClick = { showSearch = true }) {
-                            Icon(Icons.Default.Search, "Поиск",
+                            Icon(Icons.Default.Search, stringResource(R.string.search),
                                 tint = MaterialTheme.colorScheme.onPrimary)
                         }
                         IconButton(onClick = onHistory) {
-                            Icon(Icons.Default.History, "История",
+                            Icon(Icons.Default.History, stringResource(R.string.history),
                                 tint = MaterialTheme.colorScheme.onPrimary)
                         }
                         // Меню
                         var menuExpanded by remember { mutableStateOf(false) }
                         Box {
                             IconButton(onClick = { menuExpanded = true }) {
-                                Icon(Icons.Default.MoreVert, "Меню",
+                                Icon(Icons.Default.MoreVert, stringResource(R.string.menu),
                                     tint = MaterialTheme.colorScheme.onPrimary)
                             }
                             DropdownMenu(
@@ -142,18 +144,18 @@ fun ClientSelectionScreen(
                                 onDismissRequest = { menuExpanded = false }
                             ) {
                                 DropdownMenuItem(
-                                    text         = { Text("Список клиентов") },
+                                    text         = { Text(stringResource(R.string.clients_list)) },
                                     leadingIcon  = { Icon(Icons.Default.People, null) },
                                     onClick      = { menuExpanded = false; onEditClients() }
                                 )
                                 DropdownMenuItem(
-                                    text         = { Text("Циклический список") },
+                                    text         = { Text(stringResource(R.string.cyclic_list)) },
                                     leadingIcon  = { Icon(Icons.Default.FormatListNumbered, null) },
                                     onClick      = { menuExpanded = false; onEditCyclic() }
                                 )
                                 HorizontalDivider()
                                 DropdownMenuItem(
-                                    text         = { Text("Настройки") },
+                                    text         = { Text(stringResource(R.string.settings)) },
                                     leadingIcon  = { Icon(Icons.Default.Settings, null) },
                                     onClick      = { menuExpanded = false; onSettings() }
                                 )
@@ -184,7 +186,7 @@ fun ClientSelectionScreen(
                         Icon(Icons.Default.PlayArrow, null)
                         Spacer(Modifier.width(8.dp))
                         Text(
-                            "Начать работу с ${client.lastName}",
+                            stringResource(R.string.start_work, client.lastName),
                             fontSize = 17.sp,
                             fontWeight = FontWeight.SemiBold
                         )
@@ -201,14 +203,15 @@ fun ClientSelectionScreen(
             // ─── Заголовок раздела ─────────────────────────────────────────────
             if (!showSearch || search.isBlank()) {
                 Text(
-                    text  = if (clients.isEmpty()) "Клиентов нет" else "Выберите клиента",
+                    text  = if (clients.isEmpty()) stringResource(R.string.start_work)
+                    else stringResource(R.string.select_client),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.outline,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
                 )
             } else {
                 Text(
-                    text  = "Результаты: ${clients.size}",
+                    text  = stringResource(R.string.results, clients.size),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.outline,
                     modifier = Modifier.padding(horizontal = 16.dp, vertical = 10.dp)
@@ -226,8 +229,8 @@ fun ClientSelectionScreen(
                             tint = MaterialTheme.colorScheme.outlineVariant)
                         Spacer(Modifier.height(12.dp))
                         Text(
-                            if (search.isNotBlank()) "Не найдено по запросу «$search»"
-                            else "Добавьте клиентов через меню → Список клиентов",
+                            if (search.isNotBlank()) stringResource(R.string.no_search_results, search)
+                            else stringResource(R.string.no_clients),
                             textAlign  = TextAlign.Center,
                             color      = MaterialTheme.colorScheme.outline,
                             modifier   = Modifier.padding(horizontal = 32.dp)

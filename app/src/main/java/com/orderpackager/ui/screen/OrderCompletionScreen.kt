@@ -12,6 +12,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -28,6 +29,7 @@ import com.orderpackager.utils.ShareHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import com.orderpackager.R
 
 // ─── ViewModel ────────────────────────────────────────────────────────────────
 data class CompletionState(
@@ -121,7 +123,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
             TopAppBar(
                 title = {
                     Column {
-                        Text("Завершение заказа", fontWeight = FontWeight.Bold,
+                        Text(stringResource(R.string.completion_title), fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary)
                         Text(state.order?.clientLastName ?: "", fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f))
@@ -141,13 +143,13 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                     modifier = Modifier.fillMaxWidth().height(52.dp)
                 ) {
                     Icon(Icons.Default.Share, null); Spacer(Modifier.width(8.dp))
-                    Text("Поделиться заказом", fontSize = 16.sp)
+                    Text(stringResource(R.string.share_order), fontSize = 16.sp)
                 }
                 Button(
                     onClick = {
                         scope.launch {
                             vm.saveOrder()
-                            snackbarHostState.showSnackbar("Заказ сохранён!")
+                            snackbarHostState.showSnackbar(stringResource(R.string.order_saved))
                             delay(600)
                             onDone()
                         }
@@ -156,7 +158,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                 ) {
                     Icon(Icons.Default.CheckCircle, null); Spacer(Modifier.width(8.dp))
-                    Text("Сохранить и завершить", fontSize = 16.sp)
+                    Text(stringResource(R.string.save_and_finish), fontSize = 16.sp)
                 }
             }
         }
@@ -185,7 +187,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            Text("Общий вес", style = MaterialTheme.typography.bodyMedium,
+                            Text(stringResource(R.string.total_weight), style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer)
                             Text(
                                 "${"%.2f".format(state.totalWeight)} кг",
@@ -194,7 +196,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                             )
                         }
                         Column(horizontalAlignment = Alignment.End) {
-                            Text("Позиций", style = MaterialTheme.typography.bodyMedium,
+                            Text(stringResource(R.string.positions_count), style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer)
                             Text("${state.positions.size}",
                                 fontSize = 40.sp, fontWeight = FontWeight.ExtraBold,
@@ -209,28 +211,28 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                 Card(Modifier.fillMaxWidth().padding(horizontal = 12.dp),
                     elevation = CardDefaults.cardElevation(2.dp)) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                        Text("Размер коробки (см)", fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.box_size), fontWeight = FontWeight.Bold)
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            DimField("Д", state.boxL, vm::setBoxL, Modifier.weight(1f))
-                            DimField("Ш", state.boxW, vm::setBoxW, Modifier.weight(1f))
-                            DimField("В", state.boxH, vm::setBoxH, Modifier.weight(1f))
+                            DimField(stringResource(R.string.box_l), state.boxL, vm::setBoxL, Modifier.weight(1f))
+                            DimField(stringResource(R.string.box_w), state.boxW, vm::setBoxW, Modifier.weight(1f))
+                            DimField(stringResource(R.string.box_h), state.boxH, vm::setBoxH, Modifier.weight(1f))
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             OutlinedButton(onClick = { vm.applyDefault() }, Modifier.weight(1f)) {
                                 Icon(Icons.Default.RestartAlt, null, Modifier.size(16.dp))
                                 Spacer(Modifier.width(4.dp))
-                                Text("По умолч.", fontSize = 13.sp)
+                                Text(stringResource(R.string.apply_default), fontSize = 13.sp)
                             }
                             OutlinedButton(
                                 onClick = {
                                     vm.saveDefault()
-                                    scope.launch { snackbarHostState.showSnackbar("Сохранено как размер по умолчанию") }
+                                    scope.launch { snackbarHostState.showSnackbar(stringResource(R.string.default_saved)) }
                                 },
                                 modifier = Modifier.weight(1f)
                             ) {
                                 Icon(Icons.Default.Save, null, Modifier.size(16.dp))
                                 Spacer(Modifier.width(4.dp))
-                                Text("Сохранить →", fontSize = 13.sp)
+                                Text(stringResource(R.string.save_as_default), fontSize = 13.sp)
                             }
                         }
                     }
@@ -240,7 +242,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
             // ─── Заголовок списка позиций ─────────────────────────────────────
             item {
                 Text(
-                    "Обработанные позиции",
+                    stringResource(R.string.processed_positions),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.outline,
                     modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 4.dp)
@@ -252,7 +254,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                 item {
                     Box(Modifier.fillMaxWidth().padding(32.dp),
                         contentAlignment = Alignment.Center) {
-                        Text("Нет обработанных позиций",
+                        Text(stringResource(R.string.no_positions),
                             color = MaterialTheme.colorScheme.outline)
                     }
                 }
@@ -265,7 +267,8 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                                 color = MaterialTheme.colorScheme.outline)
                         },
                         trailingContent = {
-                            Text("${"%.3f".format(pos.weightKg)} кг",
+                            //Text("${"%.3f".format(pos.weightKg)} кг",
+                                Text( stringResource(R.string.weight_kg, pos.weightKg),
                                 fontWeight = FontWeight.Bold,
                                 color = MaterialTheme.colorScheme.primary,
                                 fontSize = 15.sp)

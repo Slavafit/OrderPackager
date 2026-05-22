@@ -31,6 +31,8 @@ import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.res.stringResource
+import com.orderpackager.R
 
 class OrderHistoryViewModel(private val repo: AppRepository) : ViewModel() {
     val todayOrders: StateFlow<List<PackingOrder>> = repo.getTodayOrders()
@@ -38,6 +40,7 @@ class OrderHistoryViewModel(private val repo: AppRepository) : ViewModel() {
 
     suspend fun getPositions(orderId: Long) = repo.getPositionsForOrderOnce(orderId)
     suspend fun deleteOrder(order: PackingOrder) = repo.deleteOrder(order)
+    suspend fun updateOrder(order: PackingOrder) = repo.updateOrder(order)
     suspend fun updatePosition(pos: OrderPosition) = repo.upsertPosition(pos)
     suspend fun deletePosition(pos: OrderPosition) = repo.deletePosition(pos)
 }
@@ -64,15 +67,21 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
     var editingPos       by remember { mutableStateOf<OrderPosition?>(null) }
     var editWeight       by remember { mutableStateOf("") }
     var deletePositionTarget by remember { mutableStateOf<OrderPosition?>(null) }
+    // Редактирование заказа
+    var editingOrder  by remember { mutableStateOf<PackingOrder?>(null) }
+    var editBoxL      by remember { mutableStateOf("") }
+    var editBoxW      by remember { mutableStateOf("") }
+    var editBoxH      by remember { mutableStateOf("") }
+    var editCompleted by remember { mutableStateOf(false) }
 
     Scaffold(
         topBar = {
             TopAppBar(
                 title = {
                     Column {
-                        Text("История", fontWeight = FontWeight.Bold,
+                        Text(stringResource(R.string.history_title), fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary)
-                        Text("$today  •  ${orders.size} заказов", fontSize = 12.sp,
+                        Text(stringResource(R.string.history_subtitle, today, orders.size), fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f))
                     }
                 },
@@ -85,7 +94,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                     IconButton(onClick = {
                         scope.launch {
                             val sb = StringBuilder()
-                            sb.appendLine("📊 ОТЧЁТ ЗА $today")
+                            sb.appendLine(stringResource(R.string.daily_report_for, today))
                             sb.appendLine("═══════════════════")
                             orders.forEach { order ->
                                 val pos = positionsCache[order.id] ?: vm.getPositions(order.id)
@@ -113,7 +122,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                     Icon(Icons.Default.Inbox, null, Modifier.size(72.dp),
                         tint = MaterialTheme.colorScheme.outlineVariant)
                     Spacer(Modifier.height(12.dp))
-                    Text("За сегодня заказов нет", color = MaterialTheme.colorScheme.outline)
+                    Text(stringResource(R.string.no_orders_today), color = MaterialTheme.colorScheme.outline)
                 }
             }
             return@Scaffold
@@ -127,9 +136,9 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    StatChip("Заказов",    "${orders.size}")
-                    StatChip("Завершено",  "${orders.count { it.isCompleted }}")
-                    StatChip("В процессе", "${orders.count { !it.isCompleted }}")
+                    StatChip(stringResource(R.string.orders_today),    "${orders.size}")
+                    StatChip(stringResource(R.string.orders_done), "${orders.count { it.isCompleted }}")
+                    StatChip(stringResource(R.string.orders_in_progress), "${orders.count { !it.isCompleted }}")
                 }
             }
 
@@ -170,7 +179,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                     }
                                     Text(
                                         "${timeFmt.format(Date(order.createdAt))}  •  " +
-                                                "${positionsCache[order.id]?.size ?: "…"} поз.",
+                                                stringResource(R.string.order_positions_count, positionsCache[order.id]?.size ?: "…"),
                                         fontSize = 13.sp, color = MaterialTheme.colorScheme.outline
                                     )
                                 }
@@ -180,6 +189,13 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                         ShareHelper.share(context, ShareHelper.buildOrderText(order, pos))
                                     }
                                 }) { Icon(Icons.Default.Share, null) }
+                                IconButton(onClick = {
+                                    editingOrder  = order
+                                    editBoxL      = if (order.boxLength > 0) order.boxLength.toInt().toString() else ""
+                                    editBoxW      = if (order.boxWidth  > 0) order.boxWidth.toInt().toString()  else ""
+                                    editBoxH      = if (order.boxHeight > 0) order.boxHeight.toInt().toString() else ""
+                                    editCompleted = order.isCompleted
+                                }) { Icon(Icons.Default.Edit, null) }
                                 IconButton(onClick = { deleteTarget = order }) {
                                     Icon(Icons.Default.Delete, null,
                                         tint = MaterialTheme.colorScheme.error)
@@ -206,7 +222,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                             CircularProgressIndicator(Modifier.size(24.dp))
                                         }
                                     } else if (positions.isEmpty()) {
-                                        Text("Нет позиций",
+                                        Text(stringResource(R.string.no_positions_in_order),
                                             color = MaterialTheme.colorScheme.outline,
                                             fontSize = 14.sp)
                                     } else {
@@ -231,7 +247,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                                         onValueChange = { editWeight = it },
                                                         modifier = Modifier.width(90.dp),
                                                         singleLine = true,
-                                                        suffix = { Text("кг") },
+                                                        suffix = { Text(stringResource(R.string.weight_empty)) },
                                                         keyboardOptions = KeyboardOptions(
                                                             keyboardType = KeyboardType.Decimal
                                                         )
@@ -256,7 +272,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                                     }
                                                 } else {
                                                     Text(
-                                                        "${"%.3f".format(pos.weightKg)} кг",
+                                                        stringResource(R.string.weight_kg, pos.weightKg),
                                                         fontSize = 14.sp,
                                                         fontWeight = FontWeight.Bold,
                                                         color = MaterialTheme.colorScheme.primary,
@@ -265,7 +281,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                                     IconButton(
                                                         onClick = {
                                                             editingPos = pos
-                                                            editWeight = "%.3f".format(pos.weightKg)
+                                                            editWeight = "%.f".format(pos.weightKg)
                                                         },
                                                         modifier = Modifier.size(32.dp)
                                                     ) {
@@ -289,7 +305,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                         Spacer(Modifier.height(6.dp))
                                         Row(Modifier.fillMaxWidth(),
                                             horizontalArrangement = Arrangement.SpaceBetween) {
-                                            Text("Итого", fontWeight = FontWeight.Bold)
+                                            Text(stringResource(R.string.order_total), fontWeight = FontWeight.Bold)
                                             Text(
                                                 "${"%.2f".format(positions.sumOf { it.weightKg.toDouble() })} кг",
                                                 fontWeight = FontWeight.Bold,
@@ -297,8 +313,10 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                             )
                                         }
                                         if (order.boxLength > 0) {
-                                            Text(
-                                                "Коробка: ${order.boxLength.toInt()}×${order.boxWidth.toInt()}×${order.boxHeight.toInt()} см",
+                                            Text(stringResource(R.string.box_label,
+                                                order.boxLength.toInt(),
+                                                order.boxWidth.toInt(),
+                                                order.boxHeight.toInt()),
                                                 fontSize = 13.sp,
                                                 color = MaterialTheme.colorScheme.outline
                                             )
@@ -357,6 +375,78 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                 OutlinedButton(onClick = { deletePositionTarget = null }) { Text("Отмена") }
             }
         )
+    }
+    // Bottom sheet — редактирование заказа
+    editingOrder?.let { order ->
+        ModalBottomSheet(onDismissRequest = { editingOrder = null }) {
+            Column(
+                modifier = Modifier
+                    .padding(horizontal = 24.dp)
+                    .padding(bottom = 32.dp)
+                    .imePadding(),
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                Text("Редактировать заказ",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold)
+                Text(order.clientLastName,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.outline)
+
+                HorizontalDivider()
+
+                // Статус завершения
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text("Заказ завершён", style = MaterialTheme.typography.bodyLarge)
+                    Switch(checked = editCompleted, onCheckedChange = { editCompleted = it })
+                }
+
+                // Размер коробки
+                Text("Размер коробки (см)",
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.outline)
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    OutlinedTextField(
+                        value = editBoxL, onValueChange = { editBoxL = it },
+                        label = { Text("Д") }, modifier = Modifier.weight(1f), singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                    OutlinedTextField(
+                        value = editBoxW, onValueChange = { editBoxW = it },
+                        label = { Text("Ш") }, modifier = Modifier.weight(1f), singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                    OutlinedTextField(
+                        value = editBoxH, onValueChange = { editBoxH = it },
+                        label = { Text("В") }, modifier = Modifier.weight(1f), singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                    )
+                }
+
+                Button(
+                    onClick = {
+                        scope.launch {
+                            vm.updateOrder(order.copy(
+                                boxLength   = editBoxL.toFloatOrNull() ?: order.boxLength,
+                                boxWidth    = editBoxW.toFloatOrNull() ?: order.boxWidth,
+                                boxHeight   = editBoxH.toFloatOrNull() ?: order.boxHeight,
+                                isCompleted = editCompleted
+                            ))
+                            editingOrder = null
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth().height(52.dp)
+                ) {
+                    Icon(Icons.Default.Save, null)
+                    Spacer(Modifier.width(8.dp))
+                    Text("Сохранить", fontSize = 16.sp)
+                }
+            }
+        }
     }
 }
 

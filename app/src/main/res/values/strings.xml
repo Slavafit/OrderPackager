@@ -15,9 +15,12 @@
     <string name="back">Назад</string>
     <string name="error">Ошибка</string>
     <string name="loading">Загрузка…</string>
+    <string name="menu">Меню</string>
+    <string name="search">Поиск</string>
 
     <!-- Экран 1 — выбор клиента -->
     <string name="select_client">Выберите клиента</string>
+    <string name="no_client">Клиентов нет</string>
     <string name="search_client">Поиск клиента…</string>
     <string name="start_work">Начать работу с %1$s</string>
     <string name="no_clients">Добавьте клиентов через меню → Клиенты</string>
@@ -26,6 +29,7 @@
     <string name="settings">Настройки</string>
     <string name="clients_list">Список клиентов</string>
     <string name="cyclic_list">Циклический список</string>
+    <string name="results">Результаты: %1$d</string>
 
     <!-- Экран 2 — рабочий -->
     <string name="client_label">Клиент: %1$s</string>
@@ -34,18 +38,19 @@
     <string name="prev">Предыдущий</string>
     <string name="next">Следующий</string>
     <string name="composition">Состав</string>
-    <string name="clothes">Одежда</string>
-    <string name="shoes">Обувь</string>
-    <string name="cosmetics">Косметика</string>
-    <string name="accessories">Аксессуары</string>
-    <string name="other">Другое</string>
+    <string name="clothes">👔 Одежда</string>
+    <string name="shoes">👟 Обувь</string>
+    <string name="cosmetics">💄 Косметика</string>
+    <string name="accessories">💍 Аксессуары</string>
+    <string name="other">👜 Сумка</string>
     <string name="other_hint">Что именно?</string>
     <string name="weight">Вес</string>
     <string name="weight_kg">%1$s кг</string>
     <string name="weight_empty">— кг</string>
     <string name="get_weight">Получить вес</string>
-    <string name="print_label">Печать этикетки → далее</string>
+    <string name="print_label">🖨 Печать этикетки → далее</string>
     <string name="printing">Печать…</string>
+    <string name="finish">Завершить</string>
     <string name="finish_order">Завершить заказ</string>
     <string name="finish_order_dialog_title">Завершить заказ?</string>
     <string name="finish_order_dialog_body">Сохранено позиций: %1$d.\nПерейти к оформлению заказа для %2$s?</string>
@@ -94,6 +99,7 @@
     <string name="add_to_end">Добавить в конец</string>
     <string name="delete_position_title">Удалить позицию?</string>
     <string name="delete_position_body">«%1$s» будет удалена из списка.</string>
+    <string name="clear">Очистить</string>
     <string name="clear_list">Очистить список</string>
     <string name="clear_list_title">Очистить список?</string>
     <string name="clear_list_body">Все %1$d позиций будут удалены. Это нельзя отменить.\n\nПосле этого вы сможете загрузить новый список через импорт.</string>
@@ -112,6 +118,7 @@
     <string name="history_title">История</string>
     <string name="history_subtitle">%1$s  •  %2$d заказов</string>
     <string name="daily_report">Отчёт за день</string>
+    <string name="daily_report_for">📊 ОТЧЁТ ЗА: %1$s</string>
     <string name="orders_today">Заказов</string>
     <string name="orders_done">Завершено</string>
     <string name="orders_in_progress">В процессе</string>
