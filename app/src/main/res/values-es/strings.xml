@@ -77,6 +77,9 @@
     <string name="order_saved">¡Pedido guardado!</string>
     <string name="processed_positions">Posiciones procesadas</string>
     <string name="no_positions">Sin posiciones procesadas</string>
+    <string name="order_finished">Pedido finalizado</string>
+    <string name="edit_order">Editar perido</string>
+
 
     <!-- Clients -->
     <string name="clients_title">Clientes</string>

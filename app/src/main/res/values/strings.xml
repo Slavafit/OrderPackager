@@ -76,6 +76,8 @@
     <string name="order_saved">Заказ сохранён!</string>
     <string name="processed_positions">Обработанные позиции</string>
     <string name="no_positions">Нет обработанных позиций</string>
+    <string name="order_finished">Заказ завершён</string>
+    <string name="edit_order">Редактировать заказ</string>
 
     <!-- Клиенты -->
     <string name="clients_title">Клиенты</string>

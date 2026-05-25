@@ -340,16 +340,16 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
         AlertDialog(
             onDismissRequest = { deleteTarget = null },
             icon  = { Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error) },
-            title = { Text("Удалить заказ?") },
-            text  = { Text("Заказ клиента «${target.clientLastName}» будет удалён.") },
+            title = { Text(stringResource(R.string.delete_order_title)) },
+            text  = { Text(stringResource(R.string.delete_order_body, target.clientLastName)) },
             confirmButton = {
                 Button(
                     onClick = { scope.launch { vm.deleteOrder(target); deleteTarget = null } },
                     colors  = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
-                ) { Text("Удалить") }
+                ) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { deleteTarget = null }) { Text("Отмена") }
+                OutlinedButton(onClick = { deleteTarget = null }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
@@ -360,8 +360,8 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
         AlertDialog(
             onDismissRequest = { deletePositionTarget = null },
             icon  = { Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error) },
-            title = { Text("Удалить позицию?") },
-            text  = { Text("«${target.cyclicItemName}» будет удалена из заказа.") },
+            title = { Text(stringResource(R.string.delete_position_title)) },
+            text  = { Text(stringResource(R.string.delete_position_body, target.cyclicItemName)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -372,10 +372,10 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                         }
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
-                ) { Text("Удалить") }
+                ) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { deletePositionTarget = null }) { Text("Отмена") }
+                OutlinedButton(onClick = { deletePositionTarget = null }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
@@ -389,7 +389,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                     .imePadding(),
                 verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
-                Text("Редактировать заказ",
+                Text( stringResource(R.string.edit_order),
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold)
                 Text(order.clientLastName,
@@ -404,28 +404,28 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Text("Заказ завершён", style = MaterialTheme.typography.bodyLarge)
+                    Text(stringResource(R.string.order_finished), style = MaterialTheme.typography.bodyLarge)
                     Switch(checked = editCompleted, onCheckedChange = { editCompleted = it })
                 }
 
                 // Размер коробки
-                Text("Размер коробки (см)",
+                Text(stringResource(R.string.box_size),
                     style = MaterialTheme.typography.labelLarge,
                     color = MaterialTheme.colorScheme.outline)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     OutlinedTextField(
                         value = editBoxL, onValueChange = { editBoxL = it },
-                        label = { Text("Д") }, modifier = Modifier.weight(1f), singleLine = true,
+                        label = { Text(stringResource(R.string.box_l)) }, modifier = Modifier.weight(1f), singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                     OutlinedTextField(
                         value = editBoxW, onValueChange = { editBoxW = it },
-                        label = { Text("Ш") }, modifier = Modifier.weight(1f), singleLine = true,
+                        label = { Text(stringResource(R.string.box_w)) }, modifier = Modifier.weight(1f), singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                     OutlinedTextField(
                         value = editBoxH, onValueChange = { editBoxH = it },
-                        label = { Text("В") }, modifier = Modifier.weight(1f), singleLine = true,
+                        label = { Text(stringResource(R.string.box_h)) }, modifier = Modifier.weight(1f), singleLine = true,
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                     )
                 }
@@ -446,7 +446,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                 ) {
                     Icon(Icons.Default.Save, null)
                     Spacer(Modifier.width(8.dp))
-                    Text("Сохранить", fontSize = 16.sp)
+                    Text(stringResource(R.string.save), fontSize = 16.sp)
                 }
             }
         }

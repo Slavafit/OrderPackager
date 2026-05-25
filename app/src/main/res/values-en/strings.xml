@@ -77,6 +77,8 @@
     <string name="order_saved">Order saved!</string>
     <string name="processed_positions">Processed positions</string>
     <string name="no_positions">No processed positions</string>
+    <string name="order_finished">Order finished</string>
+    <string name="edit_order">Edit order</string>
 
     <!-- Clients -->
     <string name="clients_title">Clients</string>
