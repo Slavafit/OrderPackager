@@ -268,7 +268,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                         scope.launch {
                             vm.clearAll()
                             showClearDialog = false
-                            snackbarHostState.showSnackbar(stringResource(R.string.list_cleared))
+                            snackbarHostState.showSnackbar(context.getString(R.string.list_cleared))
                         }
                     },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)

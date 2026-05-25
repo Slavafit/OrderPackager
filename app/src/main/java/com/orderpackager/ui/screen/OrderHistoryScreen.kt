@@ -94,7 +94,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                     IconButton(onClick = {
                         scope.launch {
                             val sb = StringBuilder()
-                            sb.appendLine(stringResource(R.string.daily_report_for, today))
+                            sb.appendLine(context.getString(R.string.daily_report_for, today))
                             sb.appendLine("═══════════════════")
                             orders.forEach { order ->
                                 val pos = positionsCache[order.id] ?: vm.getPositions(order.id)
@@ -177,9 +177,12 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                                 tint = MaterialTheme.colorScheme.primary)
                                         }
                                     }
+                                    val posCount = positionsCache[order.id]?.size
                                     Text(
                                         "${timeFmt.format(Date(order.createdAt))}  •  " +
-                                                stringResource(R.string.order_positions_count, positionsCache[order.id]?.size ?: "…"),
+                                                if (posCount != null)
+                                                    stringResource(R.string.order_positions_count, posCount)
+                                                else "…",
                                         fontSize = 13.sp, color = MaterialTheme.colorScheme.outline
                                     )
                                 }

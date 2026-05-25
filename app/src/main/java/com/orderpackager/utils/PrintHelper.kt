@@ -7,6 +7,8 @@ import java.io.OutputStream
 import java.net.Socket
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.res.stringResource
+import com.orderpackager.R
 
 object PrintHelper {
 
@@ -38,7 +40,7 @@ object PrintHelper {
         val ip = getPrinterIp(context)
         if (ip.isBlank()) {
             return@withContext Result.failure(
-                Exception("IP принтера не задан. Укажите его в Настройках.")
+                Exception(context.getString(R.string.printer_unknow))
             )
         }
 

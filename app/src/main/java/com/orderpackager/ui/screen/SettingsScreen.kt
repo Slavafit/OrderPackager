@@ -22,6 +22,8 @@ import com.orderpackager.ui.ThemeMode
 import com.orderpackager.ui.saveThemeMode
 import com.orderpackager.utils.PrintHelper
 import kotlinx.coroutines.launch
+import androidx.compose.ui.res.stringResource
+import com.orderpackager.R
 
 private const val PREF_SCALE_IP   = "scale_ip"
 private const val DEFAULT_SCALE_IP = "192.168.1.50"
@@ -64,12 +66,12 @@ fun SettingsScreen(
         topBar = {
             TopAppBar(
                 title = {
-                    Text("Настройки", fontWeight = FontWeight.Bold,
+                    Text(stringResource(R.string.settings_title), fontWeight = FontWeight.Bold,
                         color = MaterialTheme.colorScheme.onPrimary)
                 },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, "Назад",
+                        Icon(Icons.Default.ArrowBack, stringResource(R.string.back),
                             tint = MaterialTheme.colorScheme.onPrimary)
                     }
                 },
@@ -89,16 +91,16 @@ fun SettingsScreen(
         ) {
 
             // ─── Тема ─────────────────────────────────────────────────────────
-            SettingsCard(icon = Icons.Default.Palette, title = "Тема оформления") {
+            SettingsCard(icon = Icons.Default.Palette, title = stringResource(R.string.theme_section)) {
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ThemeMode.entries.forEach { mode ->
                         val (label, icon) = when (mode) {
-                            ThemeMode.SYSTEM -> "Система" to Icons.Default.AutoMode
-                            ThemeMode.LIGHT  -> "Светлая" to Icons.Default.LightMode
-                            ThemeMode.DARK   -> "Тёмная"  to Icons.Default.DarkMode
+                            ThemeMode.SYSTEM -> stringResource(R.string.theme_system) to Icons.Default.AutoMode
+                            ThemeMode.LIGHT  -> stringResource(R.string.theme_light) to Icons.Default.LightMode
+                            ThemeMode.DARK   -> stringResource(R.string.theme_dark) to Icons.Default.DarkMode
                         }
                         FilterChip(
                             selected    = currentTheme == mode,
@@ -112,9 +114,9 @@ fun SettingsScreen(
             }
 
             // ─── Весы ─────────────────────────────────────────────────────────
-            SettingsCard(icon = Icons.Default.Scale, title = "Весы") {
+            SettingsCard(icon = Icons.Default.Scale, title = stringResource(R.string.scale_section)) {
                 Text(
-                    "IP-адрес весов. JSON: {\"weight\":0.00,\"unit\":\"kg\"}",
+                    stringResource(R.string.scale_description),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.outline
                 )
@@ -122,7 +124,7 @@ fun SettingsScreen(
                 OutlinedTextField(
                     value           = scaleIp,
                     onValueChange   = { scaleIp = it },
-                    label           = { Text("IP весов") },
+                    label           = { Text(stringResource(R.string.scale_ip_label)) },
                     placeholder     = { Text(DEFAULT_SCALE_IP) },
                     leadingIcon     = { Icon(Icons.Default.Wifi, null) },
                     modifier        = Modifier.fillMaxWidth(),
@@ -134,7 +136,7 @@ fun SettingsScreen(
                     keyboardActions = KeyboardActions(onDone = {
                         focusManager.clearFocus()
                         saveScaleIp(context, scaleIp)
-                        scope.launch { snackbarHostState.showSnackbar("IP весов сохранён") }
+                        scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.printer_ip_saved)) }
                     })
                 )
                 Spacer(Modifier.height(8.dp))
@@ -142,21 +144,21 @@ fun SettingsScreen(
                     onClick = {
                         focusManager.clearFocus()
                         saveScaleIp(context, scaleIp)
-                        scope.launch { snackbarHostState.showSnackbar("IP весов сохранён") }
+                        scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.scale_ip_saved)) }
                     },
                     modifier = Modifier.fillMaxWidth(),
                     enabled  = scaleIp.isNotBlank()
                 ) {
                     Icon(Icons.Default.Save, null)
                     Spacer(Modifier.width(6.dp))
-                    Text("Сохранить")
+                    Text(stringResource(R.string.save))
                 }
             }
 
             // ─── Принтер Zebra ────────────────────────────────────────────────
-            SettingsCard(icon = Icons.Default.Print, title = "Принтер Zebra (100×150мм)") {
+            SettingsCard(icon = Icons.Default.Print, title = stringResource(R.string.printer_section)) {
                 Text(
-                    "Отправка ZPL по TCP:9100. Принтер и телефон в одной сети.",
+                    stringResource(R.string.printer_description),
                     style = MaterialTheme.typography.bodySmall,
                     color = MaterialTheme.colorScheme.outline
                 )
@@ -164,7 +166,7 @@ fun SettingsScreen(
                 OutlinedTextField(
                     value           = printerIp,
                     onValueChange   = { printerIp = it },
-                    label           = { Text("IP принтера") },
+                    label           = { Text(stringResource(R.string.printer_ip_label)) },
                     placeholder     = { Text(DEFAULT_PRINTER_IP) },
                     leadingIcon     = { Icon(Icons.Default.Wifi, null) },
                     modifier        = Modifier.fillMaxWidth(),
@@ -176,7 +178,7 @@ fun SettingsScreen(
                     keyboardActions = KeyboardActions(onDone = {
                         focusManager.clearFocus()
                         PrintHelper.savePrinterIp(context, printerIp)
-                        scope.launch { snackbarHostState.showSnackbar("IP принтера сохранён") }
+                        scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.printer_ip_saved)) }
                     })
                 )
                 Spacer(Modifier.height(8.dp))
@@ -185,14 +187,14 @@ fun SettingsScreen(
                         onClick = {
                             focusManager.clearFocus()
                             PrintHelper.savePrinterIp(context, printerIp)
-                            scope.launch { snackbarHostState.showSnackbar("IP принтера сохранён") }
+                            scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.printer_ip_saved)) }
                         },
                         modifier = Modifier.weight(1f),
                         enabled  = printerIp.isNotBlank()
                     ) {
                         Icon(Icons.Default.Save, null)
                         Spacer(Modifier.width(6.dp))
-                        Text("Сохранить")
+                        Text(stringResource(R.string.save))
                     }
                     OutlinedButton(
                         onClick = {
@@ -203,12 +205,12 @@ fun SettingsScreen(
                             scope.launch {
                                 val result = PrintHelper.printLabel(
                                     context,
-                                    personName  = "Тест Печати",
+                                    personName  = context.getString(R.string.printer_test),
                                     weightKg    = 1.234f,
-                                    composition = "Тест / Test"
+                                    composition = context.getString(R.string.printer_test)
                                 )
                                 testResult = result.fold(
-                                    onSuccess = { "✅ Печать успешна!" },
+                                    onSuccess = { context.getString(R.string.printer_test_ok) },
                                     onFailure = { "❌ ${it.message}" }
                                 )
                                 isTesting = false
@@ -222,7 +224,7 @@ fun SettingsScreen(
                         else
                             Icon(Icons.Default.Print, null)
                         Spacer(Modifier.width(6.dp))
-                        Text("Тест")
+                        Text(stringResource(R.string.printer_test))
                     }
                 }
                 testResult?.let { res ->

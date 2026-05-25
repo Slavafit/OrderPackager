@@ -149,7 +149,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                     onClick = {
                         scope.launch {
                             vm.saveOrder()
-                            snackbarHostState.showSnackbar(stringResource(R.string.order_saved))
+                            snackbarHostState.showSnackbar(context.getString(R.string.order_saved))
                             delay(600)
                             onDone()
                         }
@@ -226,7 +226,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                             OutlinedButton(
                                 onClick = {
                                     vm.saveDefault()
-                                    scope.launch { snackbarHostState.showSnackbar(stringResource(R.string.default_saved)) }
+                                    scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.default_saved)) }
                                 },
                                 modifier = Modifier.weight(1f)
                             ) {

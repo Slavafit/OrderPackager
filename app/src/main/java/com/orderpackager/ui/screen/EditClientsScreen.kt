@@ -73,7 +73,7 @@ fun EditClientsScreen(repo: AppRepository, onBack: () -> Unit) {
             scope.launch {
                 val names = CsvHelper.importClients(context, it)
                 vm.importCsv(names)
-                snackbarHostState.showSnackbar(stringResource(R.string.import_done, names.size))
+                snackbarHostState.showSnackbar(context.getString(R.string.import_done, names.size))
             }
         }
     }
@@ -81,7 +81,7 @@ fun EditClientsScreen(repo: AppRepository, onBack: () -> Unit) {
         uri?.let {
             scope.launch {
                 CsvHelper.writeToUri(context, it, vm.exportCsv(clients))
-                snackbarHostState.showSnackbar(stringResource(R.string.export_done))
+                snackbarHostState.showSnackbar(context.getString(R.string.export_done))
             }
         }
     }

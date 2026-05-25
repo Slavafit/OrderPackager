@@ -6,6 +6,8 @@ import com.orderpackager.data.db.entity.OrderPosition
 import com.orderpackager.data.db.entity.PackingOrder
 import java.text.SimpleDateFormat
 import java.util.*
+import androidx.compose.ui.res.stringResource
+import com.orderpackager.R
 
 object ShareHelper {
 
@@ -44,7 +46,7 @@ object ShareHelper {
             type = "text/plain"
             putExtra(Intent.EXTRA_TEXT, text)
         }
-        context.startActivity(Intent.createChooser(intent, "Поделиться заказом"))
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_order)))
     }
 
     fun buildComposition(pos: OrderPosition): String {
@@ -53,8 +55,8 @@ object ShareHelper {
         if (pos.hasShoes) parts += "Обувь"
         if (pos.hasCosmetics) parts += "Косметика"
         if (pos.hasAccessories) parts += "Аксессуары"
-        if (pos.hasOther && pos.otherText.isNotBlank()) parts += "Другое: ${pos.otherText}"
-        else if (pos.hasOther) parts += "Другое"
+        if (pos.hasOther && pos.otherText.isNotBlank()) parts += "Сумка: ${pos.otherText}"
+        else if (pos.hasOther) parts += "Сумка"
         return if (parts.isEmpty()) "—" else parts.joinToString(", ")
     }
 }

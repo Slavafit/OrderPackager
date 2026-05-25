@@ -151,4 +151,6 @@
     <string name="printer_test">Test</string>
     <string name="printer_test_ok">✅ Print successful!</string>
     <string name="printer_test_fail">❌ %1$s</string>
+    <string name="printer_unknow">The printer IP address is not set. Please specify it in Settings.</string>
+
 </resources>

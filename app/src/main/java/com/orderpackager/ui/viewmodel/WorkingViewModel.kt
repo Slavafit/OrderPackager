@@ -7,7 +7,6 @@ import com.orderpackager.data.db.entity.OrderPosition
 import com.orderpackager.repository.AppRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import androidx.compose.ui.res.stringResource
 import com.orderpackager.R
 
 data class WorkingState(
@@ -118,7 +117,7 @@ class WorkingViewModel(
                 .onFailure { e -> _state.update { it.copy(
                     isLoadingWeight = false,
                     //weightError = "Ошибка весов: ${e.localizedMessage}"
-                    weightError = stringResource(R.string.weight_error,e.localizedMessage)
+                    weightError = context.getString(R.string.weight_error,e.localizedMessage)
                 )}}
         }
     }
@@ -147,7 +146,7 @@ class WorkingViewModel(
         viewModelScope.launch {
             saveCurrentPosition()
             goNext()
-            _state.update { it.copy(snackbarMessage = stringResource(R.string.position_saved)) }
+            _state.update { it.copy(snackbarMessage = context.getString(R.string.position_saved)) }
         }
     }
 
@@ -160,8 +159,8 @@ class WorkingViewModel(
         if (s.hasShoes) parts += "Обувь"
         if (s.hasCosmetics) parts += "Косметика"
         if (s.hasAccessories) parts += "Аксессуары"
-        if (s.hasOther && s.otherText.isNotBlank()) parts += "Другое: ${s.otherText}"
-        else if (s.hasOther) parts += "Другое"
+        if (s.hasOther && s.otherText.isNotBlank()) parts += "Сумка: ${s.otherText}"
+        else if (s.hasOther) parts += "Сумка"
         return parts.joinToString(", ")
     }
 }

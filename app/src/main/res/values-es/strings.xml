@@ -151,4 +151,5 @@
     <string name="printer_test">Prueba</string>
     <string name="printer_test_ok">✅ ¡Impresión correcta!</string>
     <string name="printer_test_fail">❌ %1$s</string>
+    <string name="printer_unknow">La dirección IP de la impresora no está configurada. Por favor, especifíquela en Configuración.</string>
 </resources>

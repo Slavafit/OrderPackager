@@ -23,6 +23,8 @@ class OrderPackagerApp : Application() {
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Экран не гаснет пока приложение открыто
+        window.addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         setContent {
             val context = LocalContext.current
             var themeMode by remember { mutableStateOf(loadThemeMode(context)) }

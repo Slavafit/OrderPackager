@@ -150,4 +150,6 @@
     <string name="printer_test">Тест</string>
     <string name="printer_test_ok">✅ Печать успешна!</string>
     <string name="printer_test_fail">❌ %1$s</string>
+    <string name="printer_unknow">IP принтера не задан. Укажите его в Настройках</string>
+
 </resources>
