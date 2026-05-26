@@ -154,4 +154,9 @@
     <string name="printer_test_fail">❌ %1$s</string>
     <string name="printer_unknow">IP принтера не задан. Укажите его в Настройках</string>
 
+    <!-- Недостающие -->
+    <string name="kg_unit">кг</string>
+    <string name="show_all">Все</string>
+    <string name="show_today">Сегодня</string>
+    <string name="all_orders">Все заказы  •  %1$d</string>
 </resources>

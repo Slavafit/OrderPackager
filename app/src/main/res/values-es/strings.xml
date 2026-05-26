@@ -155,4 +155,8 @@
     <string name="printer_test_ok">✅ ¡Impresión correcta!</string>
     <string name="printer_test_fail">❌ %1$s</string>
     <string name="printer_unknow">La dirección IP de la impresora no está configurada. Por favor, especifíquela en Configuración.</string>
+    <string name="kg_unit">kg</string>
+    <string name="show_all">Todo</string>
+    <string name="show_today">Hoy</string>
+    <string name="all_orders">Todos los pedidos  •  %1$d</string>
 </resources>

@@ -154,5 +154,11 @@
     <string name="printer_test_ok">✅ Print successful!</string>
     <string name="printer_test_fail">❌ %1$s</string>
     <string name="printer_unknow">The printer IP address is not set. Please specify it in Settings.</string>
+    <!-- Missing -->
+    <string name="kg_unit">kg</string>
+    <string name="show_all">All</string>
+    <string name="show_today">Today</string>
+    <string name="all_orders">All orders  •  %1$d</string>
+
 
 </resources>
