@@ -159,4 +159,6 @@
     <string name="show_all">Todo</string>
     <string name="show_today">Hoy</string>
     <string name="all_orders">Todos los pedidos  •  %1$d</string>
+    <string name="weight_auto">Auto (cada 2 seg)</string>
+    <string name="weight_manual">Manual</string>
 </resources>

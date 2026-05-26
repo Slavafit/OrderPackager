@@ -11,6 +11,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -19,12 +20,11 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.orderpackager.R
 import com.orderpackager.repository.AppRepository
 import com.orderpackager.ui.viewmodel.WorkingViewModel
 import com.orderpackager.utils.PrintHelper
 import kotlinx.coroutines.launch
-import androidx.compose.ui.res.stringResource
-import com.orderpackager.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -62,12 +62,16 @@ fun WorkingScreen(
             TopAppBar(
                 title = {
                     Column {
-                        Text(stringResource(R.string.client_label, clientName),
+                        Text(
+                            stringResource(R.string.client_label, clientName),
                             fontSize = 13.sp,
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f))
-                        Text("${state.currentIndex + 1} / ${state.totalItems}",
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f)
+                        )
+                        Text(
+                            stringResource(R.string.position_counter, state.currentIndex + 1, state.totalItems),
                             fontSize = 13.sp,
-                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f))
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
+                        )
                     }
                 },
                 navigationIcon = {
@@ -79,7 +83,7 @@ fun WorkingScreen(
                 actions = {
                     TextButton(
                         onClick = { showFinishDialog = true },
-                        colors = ButtonDefaults.textButtonColors(
+                        colors  = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.onPrimary
                         )
                     ) {
@@ -138,18 +142,18 @@ fun WorkingScreen(
                 ) {
                     if (state.isCurrentSaved) {
                         AssistChip(
-                            onClick = {},
-                            label = { Text(stringResource(R.string.saved_check)) },
+                            onClick     = {},
+                            label       = { Text(stringResource(R.string.saved_check)) },
                             leadingIcon = { Icon(Icons.Default.Check, null, Modifier.size(14.dp)) }
                         )
                         Spacer(Modifier.height(4.dp))
                     }
                     Text(
-                        text = state.currentItem?.name ?: "—",
-                        fontSize = 36.sp,
+                        text       = state.currentItem?.name ?: "—",
+                        fontSize   = 36.sp,
                         fontWeight = FontWeight.ExtraBold,
-                        color = MaterialTheme.colorScheme.primary,
-                        textAlign = TextAlign.Center,
+                        color      = MaterialTheme.colorScheme.primary,
+                        textAlign  = TextAlign.Center,
                         lineHeight = 42.sp
                     )
                 }
@@ -160,119 +164,124 @@ fun WorkingScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedButton(
-                    onClick = { vm.goPrev() },
-                    modifier = Modifier.weight(1f)
-                ) {
+                OutlinedButton(onClick = { vm.goPrev() }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Default.ArrowBack, null, Modifier.size(18.dp))
                     Spacer(Modifier.width(4.dp))
                     Text(stringResource(R.string.prev))
                 }
-                OutlinedButton(
-                    onClick = { vm.goNext() },
-                    modifier = Modifier.weight(1f)
-                ) {
+                OutlinedButton(onClick = { vm.goNext() }, modifier = Modifier.weight(1f)) {
                     Text(stringResource(R.string.next))
                     Spacer(Modifier.width(4.dp))
                     Icon(Icons.Default.ArrowForward, null, Modifier.size(18.dp))
                 }
             }
 
-            // ─── Состав — компактные чекбоксы ─────────────────────────────────
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(2.dp)
-            ) {
+            // ─── Состав ───────────────────────────────────────────────────────
+            Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
                 Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text(stringResource(R.string.composition), style = MaterialTheme.typography.labelLarge,
-                        color = MaterialTheme.colorScheme.outline,
-                        modifier = Modifier.padding(bottom = 4.dp))
-
-                    // 2 колонки чекбоксов
+                    Text(
+                        stringResource(R.string.composition),
+                        style    = MaterialTheme.typography.labelLarge,
+                        color    = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.padding(bottom = 4.dp)
+                    )
                     Row(Modifier.fillMaxWidth()) {
                         Column(Modifier.weight(1f)) {
                             CompactCheck(stringResource(R.string.clothes),    state.hasClothes,     vm::setClothes)
-                            CompactCheck(stringResource(R.string.shoes),     state.hasShoes,       vm::setShoes)
-                            CompactCheck(stringResource(R.string.cosmetics), state.hasCosmetics,   vm::setCosmetics)
+                            CompactCheck(stringResource(R.string.shoes),      state.hasShoes,       vm::setShoes)
+                            CompactCheck(stringResource(R.string.cosmetics),  state.hasCosmetics,   vm::setCosmetics)
                         }
                         Column(Modifier.weight(1f)) {
                             CompactCheck(stringResource(R.string.accessories), state.hasAccessories, vm::setAccessories)
-                            CompactCheck(stringResource(R.string.other),     state.hasOther,       vm::setOther)
+                            CompactCheck(stringResource(R.string.other),       state.hasOther,       vm::setOther)
                         }
                     }
-
                     if (state.hasOther) {
                         OutlinedTextField(
-                            value = state.otherText,
+                            value         = state.otherText,
                             onValueChange = vm::setOtherText,
-                            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
-                            placeholder = { Text(stringResource(R.string.other_hint)) },
-                            singleLine = true
+                            modifier      = Modifier.fillMaxWidth().padding(top = 4.dp),
+                            placeholder   = { Text(stringResource(R.string.other_hint)) },
+                            singleLine    = true
                         )
                     }
                 }
             }
 
             // ─── Вес ──────────────────────────────────────────────────────────
-            Card(
-                modifier = Modifier.fillMaxWidth(),
-                elevation = CardDefaults.cardElevation(2.dp)
-            ) {
+            Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
                 Column(Modifier.padding(16.dp)) {
-                    // Крупное отображение веса
+                    // Крупное отображение
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .background(
-                                MaterialTheme.colorScheme.surfaceVariant,
-                                MaterialTheme.shapes.medium
-                            )
+                            .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium)
                             .padding(vertical = 12.dp),
                         contentAlignment = Alignment.Center
                     ) {
-                        if (state.isLoadingWeight) {
+                        if (state.isLoadingWeight && !state.autoWeight) {
                             CircularProgressIndicator(Modifier.size(32.dp))
                         } else {
                             Text(
-                                //text = state.weightKg?.let { "${"%.2f".format(it)} кг" } ?: stringResource(R.string.weight_empty),
-                                text = state.weightKg?.let { stringResource(R.string.weight_kg, it) } ?: stringResource(R.string.weight_empty),
-                                fontSize = 40.sp,
+                                text = state.weightKg
+                                    ?.let { "${"%.3f".format(it)} ${context.getString(R.string.kg_unit)}" }
+                                    ?: stringResource(R.string.weight_empty),
+                                fontSize   = 40.sp,
                                 fontWeight = FontWeight.ExtraBold,
                                 color = if (state.weightKg != null)
                                     MaterialTheme.colorScheme.primary
-                                else MaterialTheme.colorScheme.outline
+                                else
+                                    MaterialTheme.colorScheme.outline
                             )
                         }
                     }
+
                     state.weightError?.let { err ->
                         Text(err, color = MaterialTheme.colorScheme.error,
                             fontSize = 12.sp, modifier = Modifier.padding(top = 4.dp))
                     }
 
                     Spacer(Modifier.height(8.dp))
-                    Button(
-                        onClick = { vm.fetchWeight() },
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = !state.isLoadingWeight
+
+                    // Переключатель авто / вручную
+                    Row(
+                        modifier              = Modifier.fillMaxWidth(),
+                        verticalAlignment     = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
                     ) {
-                        Icon(Icons.Default.Scale, null)
-                        Spacer(Modifier.width(8.dp))
-                        Text(stringResource(R.string.get_weight), fontSize = 16.sp)
+                        Text(
+                            stringResource(if (state.autoWeight) R.string.weight_auto else R.string.weight_manual),
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = if (state.autoWeight) MaterialTheme.colorScheme.primary
+                            else MaterialTheme.colorScheme.outline
+                        )
+                        Switch(
+                            checked         = state.autoWeight,
+                            onCheckedChange = { vm.toggleAutoWeight() }
+                        )
+                    }
+
+                    // Ручная кнопка — только когда авто выключен
+                    if (!state.autoWeight) {
+                        Spacer(Modifier.height(4.dp))
+                        Button(
+                            onClick  = { vm.fetchWeight() },
+                            modifier = Modifier.fillMaxWidth(),
+                            enabled  = !state.isLoadingWeight
+                        ) {
+                            Icon(Icons.Default.Scale, null)
+                            Spacer(Modifier.width(8.dp))
+                            Text(stringResource(R.string.get_weight), fontSize = 16.sp)
+                        }
                     }
                 }
             }
 
             // ─── Ошибка принтера ──────────────────────────────────────────────
             printError?.let { err ->
-                Card(
-                    colors = CardDefaults.cardColors(MaterialTheme.colorScheme.errorContainer)
-                ) {
-                    Row(
-                        Modifier.padding(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(Icons.Default.Warning, null,
-                            tint = MaterialTheme.colorScheme.error)
+                Card(colors = CardDefaults.cardColors(MaterialTheme.colorScheme.errorContainer)) {
+                    Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        Icon(Icons.Default.Warning, null, tint = MaterialTheme.colorScheme.error)
                         Spacer(Modifier.width(8.dp))
                         Text(err, color = MaterialTheme.colorScheme.error,
                             modifier = Modifier.weight(1f), fontSize = 13.sp)
@@ -283,41 +292,41 @@ fun WorkingScreen(
                 }
             }
 
-            // ─── Кнопка Печать (= сохранить + следующий) ──────────────────────
+            // ─── Кнопка Печать ────────────────────────────────────────────────
             Button(
                 onClick = {
                     isPrinting = true
                     printError = null
                     scope.launch {
-                        // 1. Сохраняем позицию
                         vm.saveCurrentPosition()
-                        // 2. Печатаем
                         val item = state.currentItem
                         if (item != null) {
-                            val result = PrintHelper.printLabel(
+                            PrintHelper.printLabel(
                                 context,
-                                personName    = item.name,
-                                weightKg      = state.weightKg ?: 0f,
-                                composition   = vm.buildCompositionText()
-                            )
-                            result.onFailure { e -> printError = e.message }
+                                personName  = item.name,
+                                weightKg    = state.weightKg ?: 0f,
+                                composition = vm.buildCompositionText()
+                            ).onFailure { e -> printError = e.message }
                         }
-                        // 3. Переходим к следующему
                         vm.goNext()
                         isPrinting = false
                     }
                 },
                 modifier = Modifier.fillMaxWidth().height(60.dp),
-                enabled = !isPrinting
+                enabled  = !isPrinting
             ) {
                 if (isPrinting) {
-                    CircularProgressIndicator(Modifier.size(20.dp), color = MaterialTheme.colorScheme.onPrimary, strokeWidth = 2.dp)
+                    CircularProgressIndicator(
+                        Modifier.size(20.dp),
+                        color       = MaterialTheme.colorScheme.onPrimary,
+                        strokeWidth = 2.dp
+                    )
                 } else {
                     Icon(Icons.Default.Print, null)
                 }
                 Spacer(Modifier.width(10.dp))
                 Text(
-                    if (isPrinting) stringResource(R.string.printing) else stringResource(R.string.print_label),
+                    stringResource(if (isPrinting) R.string.printing else R.string.print_label),
                     fontSize = 18.sp
                 )
             }
@@ -326,14 +335,15 @@ fun WorkingScreen(
         }
     }
 
-    // Диалог завершения
+    // Диалог завершения заказа
     if (showFinishDialog) {
         AlertDialog(
             onDismissRequest = { showFinishDialog = false },
-            icon = { Icon(Icons.Default.CheckCircle, null) },
+            icon  = { Icon(Icons.Default.CheckCircle, null) },
             title = { Text(stringResource(R.string.finish_order_dialog_title)) },
-            text = {
-                Text(stringResource(R.string.finish_order_dialog_body, state.savedPositions.size, clientName))
+            text  = {
+                Text(stringResource(R.string.finish_order_dialog_body,
+                    state.savedPositions.size, clientName))
             },
             confirmButton = {
                 Button(onClick = {
@@ -342,10 +352,12 @@ fun WorkingScreen(
                         showFinishDialog = false
                         onFinishOrder()
                     }
-                }) { Text(stringResource(R.string.finish)) }
+                }) { Text(stringResource(R.string.finish_order)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showFinishDialog = false }) { Text(stringResource(R.string.cancel)) }
+                OutlinedButton(onClick = { showFinishDialog = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
             }
         )
     }
@@ -355,13 +367,9 @@ fun WorkingScreen(
 private fun CompactCheck(label: String, checked: Boolean, onChecked: (Boolean) -> Unit) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(vertical = 2.dp)
+        modifier          = Modifier.padding(vertical = 2.dp)
     ) {
-        Checkbox(
-            checked = checked,
-            onCheckedChange = onChecked,
-            modifier = Modifier.size(36.dp)
-        )
+        Checkbox(checked = checked, onCheckedChange = onChecked, modifier = Modifier.size(36.dp))
         Text(label, fontSize = 15.sp)
     }
 }
