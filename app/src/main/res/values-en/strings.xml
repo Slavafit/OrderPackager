@@ -159,7 +159,7 @@
     <string name="show_all">All</string>
     <string name="show_today">Today</string>
     <string name="all_orders">All orders  •  %1$d</string>
-    <string name="weight_auto">Auto (every 2 sec)</string>
+    <string name="weight_auto">Auto (every 1 sec)</string>
     <string name="weight_manual">Manual</string>
 
 </resources>

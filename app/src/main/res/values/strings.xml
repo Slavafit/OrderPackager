@@ -159,6 +159,6 @@
     <string name="show_all">Все</string>
     <string name="show_today">Сегодня</string>
     <string name="all_orders">Все заказы  •  %1$d</string>
-    <string name="weight_auto">Авто (каждые 2 сек)</string>
+    <string name="weight_auto">Авто (каждую 1 сек)</string>
     <string name="weight_manual">Вручную</string>
 </resources>
