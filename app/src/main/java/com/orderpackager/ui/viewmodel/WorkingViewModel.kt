@@ -21,6 +21,7 @@ data class WorkingState(
     val hasShoes: Boolean = false,
     val hasCosmetics: Boolean = false,
     val hasAccessories: Boolean = false,
+    val hasBags: Boolean = false,
     val hasOther: Boolean = false,
     val otherText: String = "",
     val weightKg: Float? = null,
@@ -50,7 +51,7 @@ class WorkingViewModel(
     private var pollingJob: Job? = null
 
     companion object {
-        // Интервал автоопроса — 2 секунды
+        // Интервал автоопроса — 1 секунда
         const val POLL_INTERVAL_MS = 1000L
     }
 
@@ -136,6 +137,7 @@ class WorkingViewModel(
             hasShoes       = saved?.hasShoes ?: false,
             hasCosmetics   = saved?.hasCosmetics ?: false,
             hasAccessories = saved?.hasAccessories ?: false,
+            hasBags         = saved?.hasBags ?: false,
             hasOther       = saved?.hasOther ?: false,
             otherText      = saved?.otherText ?: "",
             // Вес не сбрасываем если включён автоопрос
@@ -151,6 +153,7 @@ class WorkingViewModel(
     fun setShoes(v: Boolean)       = _state.update { it.copy(hasShoes = v) }
     fun setCosmetics(v: Boolean)   = _state.update { it.copy(hasCosmetics = v) }
     fun setAccessories(v: Boolean) = _state.update { it.copy(hasAccessories = v) }
+    fun setBags(v: Boolean)         = _state.update { it.copy(hasBags = v) }
     fun setOther(v: Boolean)       = _state.update { it.copy(hasOther = v) }
     fun setOtherText(v: String)    = _state.update { it.copy(otherText = v) }
 
@@ -181,6 +184,7 @@ class WorkingViewModel(
             hasShoes       = s.hasShoes,
             hasCosmetics   = s.hasCosmetics,
             hasAccessories = s.hasAccessories,
+            hasBags        = s.hasBags,
             hasOther       = s.hasOther,
             otherText      = s.otherText,
             weightKg       = s.weightKg ?: 0f
@@ -205,8 +209,9 @@ class WorkingViewModel(
         if (s.hasShoes) parts += "Обувь"
         if (s.hasCosmetics) parts += "Косметика"
         if (s.hasAccessories) parts += "Аксессуары"
-        if (s.hasOther && s.otherText.isNotBlank()) parts += "Сумка: ${s.otherText}"
-        else if (s.hasOther) parts += "Сумка"
+        if (s.hasBags) parts += "Сумка"
+        if (s.hasOther && s.otherText.isNotBlank()) parts += "Другое: ${s.otherText}"
+        else if (s.hasOther) parts += "Другое"
         return parts.joinToString(", ")
     }
 }

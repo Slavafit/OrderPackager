@@ -43,7 +43,8 @@
     <string name="shoes">👟 Shoes</string>
     <string name="cosmetics">💄 Cosmetics</string>
     <string name="accessories">💍 Accessories</string>
-    <string name="other">👜 Bag</string>
+    <string name="bags">👜 Bag</string>
+    <string name="other">📦 Other</string>
     <string name="other_hint">What exactly?</string>
     <string name="weight">Weight</string>
     <string name="weight_kg">%1$s kg</string>

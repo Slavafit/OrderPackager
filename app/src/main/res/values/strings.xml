@@ -42,7 +42,8 @@
     <string name="shoes">👟 Обувь</string>
     <string name="cosmetics">💄 Косметика</string>
     <string name="accessories">💍 Аксессуары</string>
-    <string name="other">👜 Сумка</string>
+    <string name="bags">👜 Сумка</string>
+    <string name="other">📦 Другое</string>
     <string name="other_hint">Что именно?</string>
     <string name="weight">Вес</string>
     <string name="weight_kg">%1$s кг</string>

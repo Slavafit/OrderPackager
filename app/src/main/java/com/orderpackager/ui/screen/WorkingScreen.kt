@@ -193,6 +193,7 @@ fun WorkingScreen(
                         }
                         Column(Modifier.weight(1f)) {
                             CompactCheck(stringResource(R.string.accessories), state.hasAccessories, vm::setAccessories)
+                            CompactCheck(stringResource(R.string.bags), state.hasBags, vm::setBags)
                             CompactCheck(stringResource(R.string.other),       state.hasOther,       vm::setOther)
                         }
                     }

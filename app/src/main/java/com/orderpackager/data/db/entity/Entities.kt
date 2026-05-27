@@ -42,6 +42,7 @@ data class OrderPosition(
     val hasShoes: Boolean = false,
     val hasCosmetics: Boolean = false,
     val hasAccessories: Boolean = false,
+    val hasBags: Boolean = false,
     val hasOther: Boolean = false,
     val otherText: String = "",
     val weightKg: Float = 0f

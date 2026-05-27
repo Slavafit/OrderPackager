@@ -55,8 +55,9 @@ object ShareHelper {
         if (pos.hasShoes) parts += "Обувь"
         if (pos.hasCosmetics) parts += "Косметика"
         if (pos.hasAccessories) parts += "Аксессуары"
-        if (pos.hasOther && pos.otherText.isNotBlank()) parts += "Сумка: ${pos.otherText}"
-        else if (pos.hasOther) parts += "Сумка"
+        if (pos.hasBags) parts += "Сумка"
+        if (pos.hasOther && pos.otherText.isNotBlank()) parts += "Другое: ${pos.otherText}"
+        else if (pos.hasOther) parts += "Другое"
         return if (parts.isEmpty()) "—" else parts.joinToString(", ")
     }
 }
