@@ -193,13 +193,14 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
+                        val formattedWeight = "%.2f".format(state.totalWeight)
                         Column {
                             Text(stringResource(R.string.total_weight),
                                 style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer)
                             Text(
-                                //"${"%.2f".format(state.totalWeight)} кг",
-                                stringResource(R.string.weight_kg, state.totalWeight ),
+
+                            stringResource(R.string.weight_kg, formattedWeight ),
                                 fontSize = 40.sp, fontWeight = FontWeight.ExtraBold,
                                 color = MaterialTheme.colorScheme.primary
                             )

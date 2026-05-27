@@ -26,7 +26,7 @@ data class WorkingState(
     val weightKg: Float? = null,
     val isLoadingWeight: Boolean = false,
     val weightError: String? = null,
-    val autoWeight: Boolean = false,     // ← автоопрос включён/выключен
+    val autoWeight: Boolean = true,     // ← автоопрос включён/выключен
     val savedPositions: List<OrderPosition> = emptyList(),
     val isLoading: Boolean = true,
     val snackbarMessage: String? = null
@@ -69,6 +69,10 @@ class WorkingViewModel(
                     )
                 }
                 loadCurrentPositionData()
+                // запускаем автоопрос если он включен
+                if (_state.value.autoWeight) {
+                    startPolling()
+                }
             }.collect()
         }
     }

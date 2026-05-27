@@ -224,7 +224,7 @@ fun WorkingScreen(
                         } else {
                             Text(
                                 text = state.weightKg
-                                    ?.let { "${"%.3f".format(it)} ${context.getString(R.string.kg_unit)}" }
+                                    ?.let { "${"%.2f".format(it)} ${context.getString(R.string.kg_unit)}" }
                                     ?: stringResource(R.string.weight_empty),
                                 fontSize   = 40.sp,
                                 fontWeight = FontWeight.ExtraBold,
