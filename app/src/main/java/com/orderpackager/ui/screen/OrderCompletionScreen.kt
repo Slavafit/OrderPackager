@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.orderpackager.R
 import com.orderpackager.data.db.entity.OrderPosition
 import com.orderpackager.data.db.entity.PackingOrder
 import com.orderpackager.repository.AppRepository
@@ -29,7 +30,6 @@ import com.orderpackager.utils.ShareHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import com.orderpackager.R
 
 // ─── ViewModel ────────────────────────────────────────────────────────────────
 data class CompletionState(
@@ -55,15 +55,15 @@ class OrderCompletionViewModel(
 
     init {
         viewModelScope.launch {
-            val order  = repo.getOrderById(orderId)
-            val defL   = prefs.getString("box_l", "70") ?: "70"
-            val defW   = prefs.getString("box_w", "50") ?: "50"
-            val defH   = prefs.getString("box_h", "45") ?: "45"
+            val order = repo.getOrderById(orderId)
+            val defL  = prefs.getString("box_l", "70") ?: "70"
+            val defW  = prefs.getString("box_w", "50") ?: "50"
+            val defH  = prefs.getString("box_h", "45") ?: "45"
             _state.update { it.copy(
-                order    = order,
-                boxL     = if (order != null && order.boxLength > 0) order.boxLength.toInt().toString() else defL,
-                boxW     = if (order != null && order.boxWidth  > 0) order.boxWidth.toInt().toString()  else defW,
-                boxH     = if (order != null && order.boxHeight > 0) order.boxHeight.toInt().toString() else defH,
+                order     = order,
+                boxL      = if (order != null && order.boxLength > 0) order.boxLength.toInt().toString() else defL,
+                boxW      = if (order != null && order.boxWidth  > 0) order.boxWidth.toInt().toString()  else defW,
+                boxH      = if (order != null && order.boxHeight > 0) order.boxHeight.toInt().toString() else defH,
                 isLoading = false
             )}
             repo.getPositionsForOrder(orderId).collect { positions ->
@@ -88,13 +88,15 @@ class OrderCompletionViewModel(
             .putString("box_h", s.boxH).apply()
     }
 
+    suspend fun deletePosition(pos: OrderPosition) = repo.deletePosition(pos)
+
     suspend fun saveOrder() {
         val s = _state.value
         val order = s.order ?: return
         repo.updateOrder(order.copy(
-            boxLength  = s.boxL.toFloatOrNull() ?: 0f,
-            boxWidth   = s.boxW.toFloatOrNull() ?: 0f,
-            boxHeight  = s.boxH.toFloatOrNull() ?: 0f,
+            boxLength   = s.boxL.toFloatOrNull() ?: 0f,
+            boxWidth    = s.boxW.toFloatOrNull()  ?: 0f,
+            boxHeight   = s.boxH.toFloatOrNull()  ?: 0f,
             isCompleted = true
         ))
         _state.update { it.copy(isSaved = true) }
@@ -116,6 +118,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
     val state by vm.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
+    var deleteTarget by remember { mutableStateOf<OrderPosition?>(null) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -133,8 +136,10 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
             )
         },
         bottomBar = {
-            Column(Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(
+                Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalArrangement = Arrangement.spacedBy(8.dp)
+            ) {
                 Button(
                     onClick = {
                         val order = state.order ?: return@Button
@@ -142,7 +147,8 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                     },
                     modifier = Modifier.fillMaxWidth().height(52.dp)
                 ) {
-                    Icon(Icons.Default.Share, null); Spacer(Modifier.width(8.dp))
+                    Icon(Icons.Default.Share, null)
+                    Spacer(Modifier.width(8.dp))
                     Text(stringResource(R.string.share_order), fontSize = 16.sp)
                 }
                 Button(
@@ -157,7 +163,8 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                     modifier = Modifier.fillMaxWidth().height(52.dp),
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                 ) {
-                    Icon(Icons.Default.CheckCircle, null); Spacer(Modifier.width(8.dp))
+                    Icon(Icons.Default.CheckCircle, null)
+                    Spacer(Modifier.width(8.dp))
                     Text(stringResource(R.string.save_and_finish), fontSize = 16.sp)
                 }
             }
@@ -187,16 +194,19 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            Text(stringResource(R.string.total_weight), style = MaterialTheme.typography.bodyMedium,
+                            Text(stringResource(R.string.total_weight),
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer)
                             Text(
-                                "${"%.2f".format(state.totalWeight)} кг",
+                                //"${"%.2f".format(state.totalWeight)} кг",
+                                stringResource(R.string.weight_kg, state.totalWeight ),
                                 fontSize = 40.sp, fontWeight = FontWeight.ExtraBold,
                                 color = MaterialTheme.colorScheme.primary
                             )
                         }
                         Column(horizontalAlignment = Alignment.End) {
-                            Text(stringResource(R.string.positions_count), style = MaterialTheme.typography.bodyMedium,
+                            Text(stringResource(R.string.positions_count),
+                                style = MaterialTheme.typography.bodyMedium,
                                 color = MaterialTheme.colorScheme.onPrimaryContainer)
                             Text("${state.positions.size}",
                                 fontSize = 40.sp, fontWeight = FontWeight.ExtraBold,
@@ -208,8 +218,10 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
 
             // ─── Размер коробки ───────────────────────────────────────────────
             item {
-                Card(Modifier.fillMaxWidth().padding(horizontal = 12.dp),
-                    elevation = CardDefaults.cardElevation(2.dp)) {
+                Card(
+                    Modifier.fillMaxWidth().padding(horizontal = 12.dp),
+                    elevation = CardDefaults.cardElevation(2.dp)
+                ) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         Text(stringResource(R.string.box_size), fontWeight = FontWeight.Bold)
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
@@ -226,7 +238,11 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                             OutlinedButton(
                                 onClick = {
                                     vm.saveDefault()
-                                    scope.launch { snackbarHostState.showSnackbar(context.getString(R.string.default_saved)) }
+                                    scope.launch {
+                                        snackbarHostState.showSnackbar(
+                                            context.getString(R.string.default_saved)
+                                        )
+                                    }
                                 },
                                 modifier = Modifier.weight(1f)
                             ) {
@@ -252,8 +268,10 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
             // ─── Список позиций ───────────────────────────────────────────────
             if (state.positions.isEmpty()) {
                 item {
-                    Box(Modifier.fillMaxWidth().padding(32.dp),
-                        contentAlignment = Alignment.Center) {
+                    Box(
+                        Modifier.fillMaxWidth().padding(32.dp),
+                        contentAlignment = Alignment.Center
+                    ) {
                         Text(stringResource(R.string.no_positions),
                             color = MaterialTheme.colorScheme.outline)
                     }
@@ -261,23 +279,64 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
             } else {
                 items(state.positions, key = { it.id }) { pos ->
                     ListItem(
-                        headlineContent = { Text(pos.cyclicItemName, fontWeight = FontWeight.SemiBold) },
+                        headlineContent = {
+                            Text(pos.cyclicItemName, fontWeight = FontWeight.SemiBold)
+                        },
                         supportingContent = {
                             Text(ShareHelper.buildComposition(pos), fontSize = 13.sp,
                                 color = MaterialTheme.colorScheme.outline)
                         },
                         trailingContent = {
-                            //Text("${"%.3f".format(pos.weightKg)} кг",
-                                Text( stringResource(R.string.weight_kg, pos.weightKg),
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary,
-                                fontSize = 15.sp)
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Text(
+                                    "${"%.2f".format(pos.weightKg)} кг",
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.primary,
+                                    fontSize = 15.sp
+                                )
+                                IconButton(
+                                    onClick = { deleteTarget = pos },
+                                    modifier = Modifier.size(36.dp)
+                                ) {
+                                    Icon(
+                                        Icons.Default.Delete, null,
+                                        modifier = Modifier.size(18.dp),
+                                        tint = MaterialTheme.colorScheme.error
+                                    )
+                                }
+                            }
                         }
                     )
                     HorizontalDivider(modifier = Modifier.padding(start = 16.dp))
                 }
             }
         }
+    }
+
+    // Диалог удаления позиции
+    deleteTarget?.let { pos ->
+        AlertDialog(
+            onDismissRequest = { deleteTarget = null },
+            icon  = { Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error) },
+            title = { Text(stringResource(R.string.delete_position_from_order_title)) },
+            text  = { Text(stringResource(R.string.delete_position_from_order_body, pos.cyclicItemName)) },
+            confirmButton = {
+                Button(
+                    onClick = {
+                        scope.launch {
+                            vm.deletePosition(pos)
+                            deleteTarget = null
+                        }
+                    },
+                    colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
+                ) { Text(stringResource(R.string.delete)) }
+            },
+            dismissButton = {
+                OutlinedButton(onClick = { deleteTarget = null }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            }
+        )
     }
 }
 

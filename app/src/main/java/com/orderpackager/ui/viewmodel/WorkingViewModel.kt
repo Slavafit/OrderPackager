@@ -184,13 +184,13 @@ class WorkingViewModel(
         return true
     }
 
-    fun completePosition() {
-        viewModelScope.launch {
-            saveCurrentPosition()
-            goNext()
-            _state.update { it.copy(snackbarMessage = context.getString(R.string.position_saved)) }
-        }
-    }
+//    fun completePosition() {
+//        viewModelScope.launch {
+//            saveCurrentPosition()
+//            goNext()
+//            _state.update { it.copy(snackbarMessage = context.getString(R.string.position_saved)) }
+//        }
+//    }
 
     fun clearSnackbar() = _state.update { it.copy(snackbarMessage = null) }
 

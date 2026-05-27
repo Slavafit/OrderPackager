@@ -106,7 +106,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
             TopAppBar(
                 title = {
                     Column {
-                        Text("Циклический список", fontWeight = FontWeight.Bold,
+                        Text( stringResource(R.string.cyclic_title), fontWeight = FontWeight.Bold,
                             color = MaterialTheme.colorScheme.onPrimary)
                         Text(stringResource(R.string.cyclic_count, items.size), fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f))
