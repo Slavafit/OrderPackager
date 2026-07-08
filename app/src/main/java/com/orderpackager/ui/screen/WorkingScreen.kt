@@ -46,6 +46,7 @@ fun WorkingScreen(
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var showFinishDialog by remember { mutableStateOf(false) }
+    var isFinishRequested by remember { mutableStateOf(false) }
     var printError by remember { mutableStateOf<String?>(null) }
     var isPrinting by remember { mutableStateOf(false) }
 
@@ -347,13 +348,15 @@ fun WorkingScreen(
                     state.savedPositions.size, clientName))
             },
             confirmButton = {
-                Button(onClick = {
-                    scope.launch {
-                        vm.saveCurrentPosition()
+                Button(
+                    onClick = {
+                        if (isFinishRequested) return@Button
+                        isFinishRequested = true
                         showFinishDialog = false
                         onFinishOrder()
-                    }
-                }) { Text(stringResource(R.string.finish_order)) }
+                    },
+                    enabled = !isFinishRequested
+                ) { Text(stringResource(R.string.finish_order)) }
             },
             dismissButton = {
                 OutlinedButton(onClick = { showFinishDialog = false }) {

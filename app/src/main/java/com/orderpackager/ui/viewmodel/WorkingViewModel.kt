@@ -49,6 +49,7 @@ class WorkingViewModel(
     val state: StateFlow<WorkingState> = _state.asStateFlow()
 
     private var pollingJob: Job? = null
+    private var hasLoadedInitialIndex = false
 
     companion object {
         // Интервал автоопроса — 1 секунда
@@ -63,8 +64,15 @@ class WorkingViewModel(
                 repo.getPositionsForOrder(orderId)
             ) { cyclicItems, saved ->
                 _state.update { s ->
+                    val currentIndex = if (hasLoadedInitialIndex) {
+                        s.currentIndex.coerceIn(0, (cyclicItems.size - 1).coerceAtLeast(0))
+                    } else {
+                        repo.getSavedCyclicIndex(context, cyclicItems.size)
+                    }
+                    hasLoadedInitialIndex = true
                     s.copy(
                         cyclicItems    = cyclicItems,
+                        currentIndex   = currentIndex,
                         savedPositions = saved,
                         isLoading      = false
                     )
@@ -189,6 +197,7 @@ class WorkingViewModel(
             otherText      = s.otherText,
             weightKg       = s.weightKg ?: 0f
         ))
+        repo.saveNextCyclicIndex(context, s.currentIndex, s.cyclicItems.size)
         return true
     }
 
