@@ -10,7 +10,7 @@ import com.orderpackager.data.db.entity.*
 
 @Database(
     entities = [Client::class, CyclicItem::class, PackingOrder::class, OrderPosition::class],
-    version = 1,
+    version = 2,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -57,6 +57,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "packager_db"
                 )
                 .addCallback(seedCallback)
+                .fallbackToDestructiveMigration()
                 .build().also { INSTANCE = it }
             }
     }

@@ -84,7 +84,7 @@ object PrintHelper {
 
 ^FO40,140^GB720,3,3^FS
 
-^FO40,165^A0N,50,50^FDВес: ${"%.3f".format(weightKg)} кг^FS
+^FO40,165^A0N,50,50^FDВес: ${"%.2f".format(weightKg)} кг^FS
 
 ^FO40,240^A0N,40,40^FDСостав:^FS
 ^FO40,290^A0N,35,35^FD$compShort^FS

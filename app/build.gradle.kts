@@ -17,22 +17,22 @@ android {
         versionName = "1.0"
     }
 
-    buildFeatures { compose = true }
+    buildFeatures {
+        compose = true
+    }
 
     dependenciesInfo {
         includeInApk = false
         includeInBundle = false
     }
 
-    composeOptions {
-        kotlinCompilerExtensionVersion = libs.versions.kotlin.get()  // важно для Kotlin 2.1
-    }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions { jvmTarget = "17" }
+    kotlinOptions {
+        jvmTarget = "17"
+    }
 }
 
 dependencies {
@@ -53,17 +53,9 @@ dependencies {
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
     debugImplementation(libs.compose.ui.tooling)
+
     // === Apache POI ===
     implementation("org.apache.poi:poi:5.3.0")
     implementation("org.apache.poi:poi-ooxml:5.3.0")
-
-    // Если нужно работать с XML (xlsx) — рекомендуется добавить:
     implementation("org.apache.poi:poi-ooxml-lite:5.3.0")
-}
-// === FIX для ошибки debugRuntimeClasspathCopy ===
-configurations.configureEach {
-    if (name.contains("ClasspathCopy", ignoreCase = true)) {
-        isCanBeConsumed = false
-        isCanBeResolved = true
-    }
 }
