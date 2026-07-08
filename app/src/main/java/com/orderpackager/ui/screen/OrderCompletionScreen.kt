@@ -93,14 +93,22 @@ class OrderCompletionViewModel(
     suspend fun saveOrder() {
         val s = _state.value
         val order = s.order ?: return
-        repo.updateOrder(order.copy(
-            boxLength   = s.boxL.toFloatOrNull() ?: 0f,
-            boxWidth    = s.boxW.toFloatOrNull()  ?: 0f,
-            boxHeight   = s.boxH.toFloatOrNull()  ?: 0f,
-            isCompleted = true
-        ))
-        _state.update { it.copy(isSaved = true) }
+        val updatedOrder = order.withCurrentBox(s)
+        repo.updateOrder(updatedOrder.copy(isCompleted = true))
+        _state.update { it.copy(order = updatedOrder.copy(isCompleted = true), isSaved = true) }
     }
+
+    fun orderForReport(): PackingOrder? {
+        val s = _state.value
+        return s.order?.withCurrentBox(s)
+    }
+
+    private fun PackingOrder.withCurrentBox(s: CompletionState): PackingOrder =
+        copy(
+            boxLength = s.boxL.toFloatOrNull() ?: 0f,
+            boxWidth  = s.boxW.toFloatOrNull() ?: 0f,
+            boxHeight = s.boxH.toFloatOrNull() ?: 0f
+        )
 }
 
 // ─── Screen ───────────────────────────────────────────────────────────────────
@@ -119,6 +127,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var deleteTarget by remember { mutableStateOf<OrderPosition?>(null) }
+    var isFinishing by remember { mutableStateOf(false) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -142,7 +151,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
             ) {
                 Button(
                     onClick = {
-                        val order = state.order ?: return@Button
+                        val order = vm.orderForReport() ?: return@Button
                         ShareHelper.share(context, ShareHelper.buildOrderText(order, state.positions))
                     },
                     modifier = Modifier.fillMaxWidth().height(52.dp)
@@ -153,6 +162,8 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                 }
                 Button(
                     onClick = {
+                        if (isFinishing) return@Button
+                        isFinishing = true
                         scope.launch {
                             vm.saveOrder()
                             snackbarHostState.showSnackbar(context.getString(R.string.order_saved))
@@ -161,6 +172,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                         }
                     },
                     modifier = Modifier.fillMaxWidth().height(52.dp),
+                    enabled = !isFinishing && !state.isSaved,
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.secondary)
                 ) {
                     Icon(Icons.Default.CheckCircle, null)

@@ -47,6 +47,20 @@ class AppRepository private constructor(private val db: AppDatabase) {
         })
     }
 
+    fun getSavedCyclicIndex(context: Context, itemCount: Int): Int {
+        if (itemCount <= 0) return 0
+        val saved = getPrefs(context).getInt(KEY_NEXT_CYCLIC_INDEX, 0)
+        return ((saved % itemCount) + itemCount) % itemCount
+    }
+
+    fun saveNextCyclicIndex(context: Context, currentIndex: Int, itemCount: Int) {
+        if (itemCount <= 0) return
+        getPrefs(context)
+            .edit()
+            .putInt(KEY_NEXT_CYCLIC_INDEX, (currentIndex + 1) % itemCount)
+            .apply()
+    }
+
     // ─── Заказы ───────────────────────────────────────────────────────────────
     fun getAllOrders(): Flow<List<PackingOrder>> = db.packingOrderDao().getAll()
 
@@ -96,7 +110,14 @@ class AppRepository private constructor(private val db: AppDatabase) {
     }
 
     companion object {
+        private const val PREFS_NAME = "packager_prefs"
+        private const val KEY_NEXT_CYCLIC_INDEX = "next_cyclic_index"
+
         @Volatile private var INSTANCE: AppRepository? = null
+
+        private fun getPrefs(context: Context) =
+            context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
         fun getInstance(context: Context): AppRepository =
             INSTANCE ?: synchronized(this) {
                 AppRepository(AppDatabase.getInstance(context)).also { INSTANCE = it }
