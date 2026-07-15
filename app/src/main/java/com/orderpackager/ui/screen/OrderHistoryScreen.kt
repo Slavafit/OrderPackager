@@ -304,7 +304,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                                     }
                                                 } else {
                                                     Text(
-                                                        "${"%.3f".format(pos.weightKg)} ${context.getString(R.string.kg_unit)}",
+                                                        "${"%.2f".format(pos.weightKg)} ${context.getString(R.string.kg_unit)}",
                                                         fontSize = 14.sp, fontWeight = FontWeight.Bold,
                                                         color = MaterialTheme.colorScheme.primary,
                                                         modifier = Modifier.padding(end = 4.dp)
@@ -312,7 +312,7 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                                     IconButton(
                                                         onClick = {
                                                             editingPos = pos
-                                                            editWeight = "%.3f".format(pos.weightKg)
+                                                            editWeight = "%.2f".format(pos.weightKg)
                                                         },
                                                         modifier = Modifier.size(32.dp)
                                                     ) {
