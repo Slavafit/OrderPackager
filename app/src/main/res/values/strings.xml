@@ -162,4 +162,8 @@
     <string name="all_orders">Все заказы  •  %1$d</string>
     <string name="weight_auto">Авто (каждую 1 сек)</string>
     <string name="weight_manual">Вручную</string>
+    <string name="continue_order">&#x41F;&#x440;&#x43E;&#x434;&#x43E;&#x43B;&#x436;&#x438;&#x442;&#x44C; &#x437;&#x430;&#x43A;&#x430;&#x437;</string>
+    <string name="developer_section">&#x420;&#x430;&#x437;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;</string>
+    <string name="developer_name">Fitlin Viacheslav</string>
+    <string name="developer_telegram">Telegram: @Slavafit</string>
 </resources>

@@ -162,4 +162,8 @@
     <string name="all_orders">Todos los pedidos  •  %1$d</string>
     <string name="weight_auto">Auto (cada 1 seg)</string>
     <string name="weight_manual">Manual</string>
+    <string name="continue_order">Continuar pedido</string>
+    <string name="developer_section">Desarrollador</string>
+    <string name="developer_name">Fitlin Viacheslav</string>
+    <string name="developer_telegram">Telegram: @Slavafit</string>
 </resources>

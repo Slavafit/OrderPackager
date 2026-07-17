@@ -55,7 +55,11 @@ class OrderHistoryViewModel(private val repo: AppRepository) : ViewModel() {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
+fun OrderHistoryScreen(
+    repo: AppRepository,
+    onBack: () -> Unit,
+    onContinueOrder: (orderId: Long, clientName: String) -> Unit
+) {
     val vm: OrderHistoryViewModel = viewModel(factory = object : ViewModelProvider.Factory {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(c: Class<T>) = OrderHistoryViewModel(repo) as T
@@ -220,6 +224,17 @@ fun OrderHistoryScreen(repo: AppRepository, onBack: () -> Unit) {
                                         },
                                         fontSize = 13.sp, color = MaterialTheme.colorScheme.outline
                                     )
+                                }
+                                if (!order.isCompleted) {
+                                    IconButton(onClick = {
+                                        onContinueOrder(order.id, order.clientLastName)
+                                    }) {
+                                        Icon(
+                                            Icons.Default.PlayArrow,
+                                            stringResource(R.string.continue_order),
+                                            tint = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
                                 }
                                 IconButton(onClick = {
                                     scope.launch {

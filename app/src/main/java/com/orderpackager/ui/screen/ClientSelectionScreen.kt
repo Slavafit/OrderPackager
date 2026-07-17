@@ -30,6 +30,7 @@ import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import androidx.compose.ui.res.stringResource
 import com.orderpackager.R
+import com.orderpackager.BuildConfig
 
 // ─── ViewModel ────────────────────────────────────────────────────────────────
 class ClientSelectionViewModel(private val repo: AppRepository) : ViewModel() {
@@ -120,8 +121,19 @@ fun ClientSelectionScreen(
                 // Обычный топбар
                 TopAppBar(
                     title = {
-                        Text(stringResource(R.string.app_name), fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.onPrimary)
+                        Row(verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                stringResource(R.string.app_name),
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                            Spacer(Modifier.width(6.dp))
+                            Text(
+                                BuildConfig.VERSION_NAME,
+                                fontSize = 11.sp,
+                                color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.7f)
+                            )
+                        }
                     },
                     actions = {
                         IconButton(onClick = { showSearch = true }) {

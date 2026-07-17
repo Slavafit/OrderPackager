@@ -96,7 +96,13 @@ fun AppNavGraph(
         }
 
         composable(Route.OrderHistory.path) {
-            OrderHistoryScreen(repo = repo, onBack = { navController.popBackStack() })
+            OrderHistoryScreen(
+                repo = repo,
+                onBack = { navController.popBackStack() },
+                onContinueOrder = { orderId, clientName ->
+                    navController.navigate(Route.WorkingScreen.create(orderId, clientName))
+                }
+            )
         }
 
         composable(Route.Settings.path) {

@@ -241,6 +241,19 @@ fun SettingsScreen(
                 }
             }
 
+            SettingsCard(icon = Icons.Default.Info, title = stringResource(R.string.developer_section)) {
+                Text(
+                    stringResource(R.string.developer_name),
+                    fontWeight = FontWeight.Medium
+                )
+                Spacer(Modifier.height(4.dp))
+                Text(
+                    stringResource(R.string.developer_telegram),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.primary
+                )
+            }
+
             // Отступ снизу — чтобы последняя карточка не прилипала к клавиатуре
             Spacer(Modifier.height(32.dp))
         }

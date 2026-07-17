@@ -163,4 +163,8 @@
     <string name="weight_auto">Auto (every 1 sec)</string>
     <string name="weight_manual">Manual</string>
 
+    <string name="continue_order">Continue order</string>
+    <string name="developer_section">Developer</string>
+    <string name="developer_name">Fitlin Viacheslav</string>
+    <string name="developer_telegram">Telegram: @Slavafit</string>
 </resources>
