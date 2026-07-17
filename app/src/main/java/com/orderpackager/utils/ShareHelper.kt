@@ -30,7 +30,7 @@ object ShareHelper {
             sb.appendLine("   ${"%.2f".format(pos.weightKg)} кг")
         }
 
-        sb.appendLine("──────────────────")
+        sb.appendLine("─────────────────")
         sb.appendLine("Итого позиций: ${positions.size}")
         sb.appendLine("Общий вес: ${"%.2f".format(totalWeight)} кг")
 
