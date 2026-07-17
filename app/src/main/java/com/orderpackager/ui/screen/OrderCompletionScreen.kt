@@ -99,11 +99,6 @@ class OrderCompletionViewModel(
         _state.update { it.copy(order = updatedOrder.copy(isCompleted = true), isSaved = true) }
     }
 
-    fun orderForReport(): PackingOrder? {
-        val s = _state.value
-        return s.order?.withCurrentBox(s)
-    }
-
     private fun PackingOrder.withCurrentBox(s: CompletionState): PackingOrder =
         copy(
             boxLength = s.boxL.toFloatOrNull() ?: 0f,
@@ -155,17 +150,6 @@ fun OrderCompletionScreen(
                 Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Button(
-                    onClick = {
-                        val order = vm.orderForReport() ?: return@Button
-                        ShareHelper.share(context, ShareHelper.buildOrderText(order, state.positions))
-                    },
-                    modifier = Modifier.fillMaxWidth().height(52.dp)
-                ) {
-                    Icon(Icons.Default.Share, null)
-                    Spacer(Modifier.width(8.dp))
-                    Text(stringResource(R.string.share_order), fontSize = 16.sp)
-                }
                 Button(
                     onClick = {
                         if (isFinishing) return@Button
