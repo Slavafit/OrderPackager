@@ -57,6 +57,64 @@ object PrintHelper {
         }
     }
 
+    suspend fun printOrderSummaryLabel(
+        context: Context,
+        clientName: String,
+        positionsCount: Int,
+        totalWeightKg: Float
+    ): Result<Unit> = withContext(Dispatchers.IO) {
+        val ip = getPrinterIp(context)
+        if (ip.isBlank()) {
+            return@withContext Result.failure(
+                Exception(context.getString(R.string.printer_unknow))
+            )
+        }
+
+        val date = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())
+        val zpl = buildOrderSummaryZpl(
+            clientName = clientName,
+            positionsCount = positionsCount,
+            totalWeightKg = totalWeightKg,
+            date = date
+        )
+
+        runCatching {
+            Socket(ip, PRINT_PORT).use { socket ->
+                socket.soTimeout = 5_000
+                val out: OutputStream = socket.getOutputStream()
+                out.write(zpl.toByteArray(Charsets.UTF_8))
+                out.flush()
+            }
+        }
+    }
+
+    private fun buildOrderSummaryZpl(
+        clientName: String,
+        positionsCount: Int,
+        totalWeightKg: Float,
+        date: String
+    ): String {
+        val nameShort = clientName.take(30)
+        return """
+^XA
+^PW800
+^LL1200
+^CI28
+
+^FO40,40^A0N,70,70^FD$nameShort^FS
+^FO40,140^GB720,3,3^FS
+
+^FO40,180^A0N,50,50^FDПозиций: $positionsCount^FS
+^FO40,260^A0N,50,50^FDОбщий вес: ${"%.2f".format(totalWeightKg)} кг^FS
+
+^FO40,350^GB720,3,3^FS
+^FO40,380^A0N,35,35^FD$date^FS
+
+^PQ1
+^XZ
+        """.trimIndent()
+    }
+
     /**
      * ZPL для Zebra, 100×150мм при 203 dpi:
      *   ширина  = 100мм × 8 dot/мм = 800 dot  → ^PW800

@@ -27,6 +27,7 @@ import com.orderpackager.data.db.entity.OrderPosition
 import com.orderpackager.data.db.entity.PackingOrder
 import com.orderpackager.repository.AppRepository
 import com.orderpackager.utils.ShareHelper
+import com.orderpackager.utils.PrintHelper
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -165,6 +166,27 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                         if (isFinishing) return@Button
                         isFinishing = true
                         scope.launch {
+                            val order = state.order
+                            if (order == null) {
+                                isFinishing = false
+                                return@launch
+                            }
+                            val printResult = PrintHelper.printOrderSummaryLabel(
+                                context = context,
+                                clientName = order.clientLastName,
+                                positionsCount = state.positions.size,
+                                totalWeightKg = state.totalWeight
+                            )
+                            if (printResult.isFailure) {
+                                snackbarHostState.showSnackbar(
+                                    context.getString(
+                                        R.string.printer_test_fail,
+                                        printResult.exceptionOrNull()?.localizedMessage.orEmpty()
+                                    )
+                                )
+                                isFinishing = false
+                                return@launch
+                            }
                             vm.saveOrder()
                             snackbarHostState.showSnackbar(context.getString(R.string.order_saved))
                             delay(600)
