@@ -129,6 +129,7 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
     val snackbarHostState = remember { SnackbarHostState() }
     var deleteTarget by remember { mutableStateOf<OrderPosition?>(null) }
     var isFinishing by remember { mutableStateOf(false) }
+    var printSummaryLabel by remember { mutableStateOf(true) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -161,6 +162,24 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                     Spacer(Modifier.width(8.dp))
                     Text(stringResource(R.string.share_order), fontSize = 16.sp)
                 }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        stringResource(R.string.print_summary_label),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Switch(
+                        checked = printSummaryLabel,
+                        onCheckedChange = { printSummaryLabel = it },
+                        enabled = !isFinishing && !state.isSaved
+                    )
+                }
                 Button(
                     onClick = {
                         if (isFinishing) return@Button
@@ -171,21 +190,23 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                                 isFinishing = false
                                 return@launch
                             }
-                            val printResult = PrintHelper.printOrderSummaryLabel(
-                                context = context,
-                                clientName = order.clientLastName,
-                                positionsCount = state.positions.size,
-                                totalWeightKg = state.totalWeight
-                            )
-                            if (printResult.isFailure) {
-                                snackbarHostState.showSnackbar(
-                                    context.getString(
-                                        R.string.printer_test_fail,
-                                        printResult.exceptionOrNull()?.localizedMessage.orEmpty()
-                                    )
+                            if (printSummaryLabel) {
+                                val printResult = PrintHelper.printOrderSummaryLabel(
+                                    context = context,
+                                    clientName = order.clientLastName,
+                                    positionsCount = state.positions.size,
+                                    totalWeightKg = state.totalWeight
                                 )
-                                isFinishing = false
-                                return@launch
+                                if (printResult.isFailure) {
+                                    snackbarHostState.showSnackbar(
+                                        context.getString(
+                                            R.string.printer_test_fail,
+                                            printResult.exceptionOrNull()?.localizedMessage.orEmpty()
+                                        )
+                                    )
+                                    isFinishing = false
+                                    return@launch
+                                }
                             }
                             vm.saveOrder()
                             snackbarHostState.showSnackbar(context.getString(R.string.order_saved))

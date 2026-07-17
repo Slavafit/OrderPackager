@@ -74,6 +74,7 @@
     <string name="default_saved">Saved as default size</string>
     <string name="default_applied">Default size applied</string>
     <string name="share_order">Share order</string>
+    <string name="print_summary_label">Print final label</string>
     <string name="save_and_finish">Save and finish</string>
     <string name="order_saved">Order saved!</string>
     <string name="processed_positions">Processed positions</string>
@@ -167,4 +168,5 @@
     <string name="developer_section">Developer</string>
     <string name="developer_name">Fitlin Viacheslav</string>
     <string name="developer_telegram">Telegram: @Slavafit</string>
+    <string name="developer_signature">by Slavafit</string>
 </resources>

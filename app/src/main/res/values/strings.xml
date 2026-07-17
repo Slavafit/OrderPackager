@@ -73,6 +73,7 @@
     <string name="default_saved">Сохранено как размер по умолчанию</string>
     <string name="default_applied">Размер по умолчанию применён</string>
     <string name="share_order">Поделиться заказом</string>
+    <string name="print_summary_label">&#x41F;&#x435;&#x447;&#x430;&#x442;&#x430;&#x442;&#x44C; &#x438;&#x442;&#x43E;&#x433;&#x43E;&#x432;&#x443;&#x44E; &#x44D;&#x442;&#x438;&#x43A;&#x435;&#x442;&#x43A;&#x443;</string>
     <string name="save_and_finish">Сохранить и завершить</string>
     <string name="order_saved">Заказ сохранён!</string>
     <string name="processed_positions">Обработанные позиции</string>
@@ -166,4 +167,5 @@
     <string name="developer_section">&#x420;&#x430;&#x437;&#x440;&#x430;&#x431;&#x43E;&#x442;&#x447;&#x438;&#x43A;</string>
     <string name="developer_name">Fitlin Viacheslav</string>
     <string name="developer_telegram">Telegram: @Slavafit</string>
+    <string name="developer_signature">by Slavafit</string>
 </resources>

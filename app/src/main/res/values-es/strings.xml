@@ -74,6 +74,7 @@
     <string name="default_saved">Guardado como tamaño por defecto</string>
     <string name="default_applied">Tamaño por defecto aplicado</string>
     <string name="share_order">Compartir pedido</string>
+    <string name="print_summary_label">Imprimir etiqueta final</string>
     <string name="save_and_finish">Guardar y finalizar</string>
     <string name="order_saved">¡Pedido guardado!</string>
     <string name="processed_positions">Posiciones procesadas</string>
@@ -166,4 +167,5 @@
     <string name="developer_section">Desarrollador</string>
     <string name="developer_name">Fitlin Viacheslav</string>
     <string name="developer_telegram">Telegram: @Slavafit</string>
+    <string name="developer_signature">by Slavafit</string>
 </resources>

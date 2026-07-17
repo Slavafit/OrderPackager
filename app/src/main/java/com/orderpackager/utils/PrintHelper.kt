@@ -77,7 +77,7 @@ object PrintHelper {
             positionsCount = positionsCount,
             totalWeightKg = totalWeightKg,
             date = date,
-            appInfo = "${context.getString(R.string.app_name)} ${BuildConfig.VERSION_NAME}"
+            appInfo = "${context.getString(R.string.app_name)} ${BuildConfig.VERSION_NAME} ${context.getString(R.string.developer_signature)}"
         )
 
         runCatching {
