@@ -9,6 +9,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 import androidx.compose.ui.res.stringResource
 import com.orderpackager.R
+import com.orderpackager.BuildConfig
 
 object PrintHelper {
 
@@ -75,7 +76,8 @@ object PrintHelper {
             clientName = clientName,
             positionsCount = positionsCount,
             totalWeightKg = totalWeightKg,
-            date = date
+            date = date,
+            appInfo = "${context.getString(R.string.app_name)} ${BuildConfig.VERSION_NAME}"
         )
 
         runCatching {
@@ -92,7 +94,8 @@ object PrintHelper {
         clientName: String,
         positionsCount: Int,
         totalWeightKg: Float,
-        date: String
+        date: String,
+        appInfo: String
     ): String {
         val nameShort = clientName.take(30)
         return """
@@ -109,6 +112,9 @@ object PrintHelper {
 
 ^FO40,350^GB720,3,3^FS
 ^FO40,380^A0N,35,35^FD$date^FS
+
+^FO40,1100^GB720,2,2^FS
+^FO40,1120^A0N,28,28^FB720,1,0,C^FD$appInfo^FS
 
 ^PQ1
 ^XZ
