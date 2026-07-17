@@ -16,8 +16,8 @@ sealed class Route(val path: String) {
     object WorkingScreen   : Route("working/{orderId}/{clientName}") {
         fun create(orderId: Long, clientName: String) = "working/$orderId/$clientName"
     }
-    object OrderCompletion : Route("order_completion/{orderId}") {
-        fun create(orderId: Long) = "order_completion/$orderId"
+    object OrderCompletion : Route("order_completion/{orderId}/{printSummaryLabel}") {
+        fun create(orderId: Long, printSummaryLabel: Boolean) = "order_completion/$orderId/$printSummaryLabel"
     }
     object EditClients     : Route("edit_clients")
     object EditCyclicList  : Route("edit_cyclic_list")
@@ -62,8 +62,8 @@ fun AppNavGraph(
                 repo          = repo,
                 orderId       = orderId,
                 clientName    = clientName,
-                onFinishOrder = {
-                    navController.navigate(Route.OrderCompletion.create(orderId)) {
+                onFinishOrder = { printSummaryLabel ->
+                    navController.navigate(Route.OrderCompletion.create(orderId, printSummaryLabel)) {
                         popUpTo(Route.ClientSelection.path)
                     }
                 },
@@ -73,13 +73,18 @@ fun AppNavGraph(
 
         composable(
             route     = Route.OrderCompletion.path,
-            arguments = listOf(navArgument("orderId") { type = NavType.LongType })
+            arguments = listOf(
+                navArgument("orderId") { type = NavType.LongType },
+                navArgument("printSummaryLabel") { type = NavType.BoolType }
+            )
         ) { back ->
             val orderId = back.arguments!!.getLong("orderId")
+            val printSummaryLabel = back.arguments!!.getBoolean("printSummaryLabel")
             OrderCompletionScreen(
-                repo    = repo,
-                orderId = orderId,
-                onDone  = {
+                repo              = repo,
+                orderId           = orderId,
+                printSummaryLabel = printSummaryLabel,
+                onDone            = {
                     navController.navigate(Route.ClientSelection.path) {
                         popUpTo(Route.ClientSelection.path) { inclusive = true }
                     }

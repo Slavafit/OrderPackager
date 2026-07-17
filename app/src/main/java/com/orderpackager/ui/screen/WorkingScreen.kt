@@ -32,7 +32,7 @@ fun WorkingScreen(
     repo: AppRepository,
     orderId: Long,
     clientName: String,
-    onFinishOrder: () -> Unit,
+    onFinishOrder: (printSummaryLabel: Boolean) -> Unit,
     onBack: () -> Unit
 ) {
     val context = LocalContext.current
@@ -47,6 +47,7 @@ fun WorkingScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var showFinishDialog by remember { mutableStateOf(false) }
     var isFinishRequested by remember { mutableStateOf(false) }
+    var printSummaryLabel by remember { mutableStateOf(true) }
     var printError by remember { mutableStateOf<String?>(null) }
     var isPrinting by remember { mutableStateOf(false) }
 
@@ -344,8 +345,25 @@ fun WorkingScreen(
             icon  = { Icon(Icons.Default.CheckCircle, null) },
             title = { Text(stringResource(R.string.finish_order_dialog_title)) },
             text  = {
-                Text(stringResource(R.string.finish_order_dialog_body,
-                    state.savedPositions.size, clientName))
+                Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                    Text(stringResource(R.string.finish_order_dialog_body,
+                        state.savedPositions.size, clientName))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            stringResource(R.string.print_summary_label),
+                            modifier = Modifier.weight(1f)
+                        )
+                        Switch(
+                            checked = printSummaryLabel,
+                            onCheckedChange = { printSummaryLabel = it },
+                            enabled = !isFinishRequested
+                        )
+                    }
+                }
             },
             confirmButton = {
                 Button(
@@ -353,7 +371,7 @@ fun WorkingScreen(
                         if (isFinishRequested) return@Button
                         isFinishRequested = true
                         showFinishDialog = false
-                        onFinishOrder()
+                        onFinishOrder(printSummaryLabel)
                     },
                     enabled = !isFinishRequested
                 ) { Text(stringResource(R.string.finish_order)) }

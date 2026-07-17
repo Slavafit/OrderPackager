@@ -115,7 +115,12 @@ class OrderCompletionViewModel(
 // ─── Screen ───────────────────────────────────────────────────────────────────
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit) {
+fun OrderCompletionScreen(
+    repo: AppRepository,
+    orderId: Long,
+    printSummaryLabel: Boolean,
+    onDone: () -> Unit
+) {
     val context = LocalContext.current
     val prefs   = remember { context.getSharedPreferences("packager_prefs", Context.MODE_PRIVATE) }
     val vm: OrderCompletionViewModel = viewModel(factory = object : ViewModelProvider.Factory {
@@ -129,7 +134,6 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
     val snackbarHostState = remember { SnackbarHostState() }
     var deleteTarget by remember { mutableStateOf<OrderPosition?>(null) }
     var isFinishing by remember { mutableStateOf(false) }
-    var printSummaryLabel by remember { mutableStateOf(true) }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -161,24 +165,6 @@ fun OrderCompletionScreen(repo: AppRepository, orderId: Long, onDone: () -> Unit
                     Icon(Icons.Default.Share, null)
                     Spacer(Modifier.width(8.dp))
                     Text(stringResource(R.string.share_order), fontSize = 16.sp)
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 4.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        stringResource(R.string.print_summary_label),
-                        style = MaterialTheme.typography.bodyMedium,
-                        modifier = Modifier.weight(1f)
-                    )
-                    Switch(
-                        checked = printSummaryLabel,
-                        onCheckedChange = { printSummaryLabel = it },
-                        enabled = !isFinishing && !state.isSaved
-                    )
                 }
                 Button(
                     onClick = {
