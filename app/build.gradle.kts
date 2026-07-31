@@ -13,8 +13,8 @@ android {
         applicationId = "com.orderpackager"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "v1.3"
+        versionCode = 2
+        versionName = "v1.4"
     }
 
     buildFeatures {
