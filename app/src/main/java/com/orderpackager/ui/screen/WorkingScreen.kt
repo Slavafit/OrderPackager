@@ -298,6 +298,15 @@ fun WorkingScreen(
             // ─── Кнопка Печать ────────────────────────────────────────────────
             Button(
                 onClick = {
+                    if (!state.hasSelectedComposition) {
+                        scope.launch {
+                            snackbarHostState.showSnackbar(
+                                context.getString(R.string.composition_required),
+                                duration = SnackbarDuration.Short
+                            )
+                        }
+                        return@Button
+                    }
                     isPrinting = true
                     printError = null
                     scope.launch {

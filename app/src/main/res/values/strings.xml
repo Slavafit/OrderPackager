@@ -38,6 +38,7 @@
     <string name="prev">Предыдущий</string>
     <string name="next">Следующий</string>
     <string name="composition">Состав</string>
+    <string name="composition_required">Отметьте содержимое перед печатью этикетки</string>
     <string name="clothes">👔 Одежда</string>
     <string name="shoes">👟 Обувь</string>
     <string name="cosmetics">💄 Косметика</string>

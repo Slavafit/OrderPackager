@@ -39,6 +39,7 @@
     <string name="prev">Previous</string>
     <string name="next">Next</string>
     <string name="composition">Contents</string>
+    <string name="composition_required">Select the contents before printing the label</string>
     <string name="clothes">👔 Clothes</string>
     <string name="shoes">👟 Shoes</string>
     <string name="cosmetics">💄 Cosmetics</string>

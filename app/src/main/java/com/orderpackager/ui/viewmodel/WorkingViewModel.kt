@@ -33,6 +33,8 @@ data class WorkingState(
     val snackbarMessage: String? = null
 ) {
     val currentItem: CyclicItem? get() = cyclicItems.getOrNull(currentIndex)
+    val hasSelectedComposition: Boolean get() =
+        hasClothes || hasShoes || hasCosmetics || hasAccessories || hasBags || hasOther
     val isCurrentSaved: Boolean get() =
         currentItem != null && savedPositions.any { it.cyclicItemId == currentItem!!.id }
     val totalItems: Int get() = cyclicItems.size
@@ -183,6 +185,7 @@ class WorkingViewModel(
 
     suspend fun saveCurrentPosition(): Boolean {
         val s = _state.value
+        if (!s.hasSelectedComposition) return false
         val currentItem = s.currentItem ?: return false
         repo.upsertPosition(OrderPosition(
             orderId        = orderId,

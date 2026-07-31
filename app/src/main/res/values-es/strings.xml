@@ -39,6 +39,7 @@
     <string name="prev">Anterior</string>
     <string name="next">Siguiente</string>
     <string name="composition">Contenido</string>
+    <string name="composition_required">Seleccione el contenido antes de imprimir la etiqueta</string>
     <string name="clothes">👔 Ropa</string>
     <string name="shoes">👟 Calzado</string>
     <string name="cosmetics">💄 Cosmética</string>
