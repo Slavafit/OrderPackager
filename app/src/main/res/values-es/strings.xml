@@ -49,7 +49,6 @@
     <string name="other_hint">¿Qué exactamente?</string>
     <string name="weight">Peso</string>
     <string name="current_position_weight">Peso de la posición actual</string>
-    <string name="order_total_weight_value">Peso total del pedido: %1$s kg</string>
     <string name="weight_kg">%1$s kg</string>
     <string name="weight_empty">— kg</string>
     <string name="get_weight">Obtener peso</string>

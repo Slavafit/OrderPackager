@@ -49,7 +49,6 @@
     <string name="other_hint">What exactly?</string>
     <string name="weight">Weight</string>
     <string name="current_position_weight">Current position weight</string>
-    <string name="order_total_weight_value">Order total: %1$s kg</string>
     <string name="weight_kg">%1$s kg</string>
     <string name="weight_empty">— kg</string>
     <string name="get_weight">Get weight</string>

@@ -215,24 +215,36 @@ fun WorkingScreen(
             Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
                 Column(Modifier.padding(16.dp)) {
                     Row(
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(
+                                MaterialTheme.colorScheme.primaryContainer,
+                                MaterialTheme.shapes.medium
+                            )
+                            .padding(horizontal = 16.dp, vertical = 12.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Text(
-                            stringResource(R.string.current_position_weight),
-                            style = MaterialTheme.typography.labelLarge,
-                            color = MaterialTheme.colorScheme.outline
+                            stringResource(R.string.total_weight),
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer
                         )
                         Text(
-                            stringResource(
-                                R.string.order_total_weight_value,
-                                "%.2f".format(state.totalOrderWeight)
-                            ),
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.secondary
+                            "${"%.2f".format(state.totalOrderWeight)} ${context.getString(R.string.kg_unit)}",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.ExtraBold,
+                            color = MaterialTheme.colorScheme.primary
                         )
                     }
+
+                    Text(
+                        stringResource(R.string.current_position_weight),
+                        style = MaterialTheme.typography.labelLarge,
+                        color = MaterialTheme.colorScheme.outline,
+                        modifier = Modifier.padding(top = 14.dp, bottom = 6.dp)
+                    )
                     // Крупное отображение
                     Box(
                         modifier = Modifier
