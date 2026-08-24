@@ -7,7 +7,6 @@ import java.io.OutputStream
 import java.net.Socket
 import java.text.SimpleDateFormat
 import java.util.*
-import androidx.compose.ui.res.stringResource
 import com.orderpackager.R
 import com.orderpackager.BuildConfig
 
@@ -46,7 +45,13 @@ object PrintHelper {
         }
 
         val date = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())
-        val zpl  = buildZpl(personName, weightKg, composition, date)
+        val zpl  = buildZpl(
+            name = personName,
+            weightKg = weightKg,
+            composition = composition,
+            date = date,
+            appInfo = buildAppInfo(context)
+        )
 
         runCatching {
             Socket(ip, PRINT_PORT).use { socket ->
@@ -77,7 +82,7 @@ object PrintHelper {
             positionsCount = positionsCount,
             totalWeightKg = totalWeightKg,
             date = date,
-            appInfo = "${context.getString(R.string.app_name)} ${BuildConfig.VERSION_NAME} ${context.getString(R.string.developer_signature)}"
+            appInfo = buildAppInfo(context)
         )
 
         runCatching {
@@ -132,7 +137,8 @@ object PrintHelper {
         name:        String,
         weightKg:    Float,
         composition: String,
-        date:        String
+        date:        String,
+        appInfo:     String
     ): String {
         // Обрезаем строки — Zebra не переносит автоматически
         val nameShort  = name.take(30)
@@ -157,8 +163,15 @@ object PrintHelper {
 
 ^FO40,380^A0N,35,35^FD$date^FS
 
+^FO40,1100^GB720,2,2^FS
+^FO40,1120^A0N,28,28^FB720,1,0,C^FD$appInfo^FS
+
 ^PQ1
 ^XZ
         """.trimIndent()
     }
+
+    private fun buildAppInfo(context: Context): String =
+        "${context.getString(R.string.app_name)} ${BuildConfig.VERSION_NAME} - " +
+            context.getString(R.string.developer_signature)
 }
