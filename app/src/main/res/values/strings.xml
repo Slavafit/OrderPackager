@@ -47,6 +47,8 @@
     <string name="other">📦 Другое</string>
     <string name="other_hint">Что именно?</string>
     <string name="weight">Вес</string>
+    <string name="current_position_weight">Вес текущей позиции</string>
+    <string name="order_total_weight_value">Общий вес заказа: %1$s кг</string>
     <string name="weight_kg">%1$s кг</string>
     <string name="weight_empty">— кг</string>
     <string name="get_weight">Получить вес</string>

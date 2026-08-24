@@ -214,6 +214,25 @@ fun WorkingScreen(
             // ─── Вес ──────────────────────────────────────────────────────────
             Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
                 Column(Modifier.padding(16.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Text(
+                            stringResource(R.string.current_position_weight),
+                            style = MaterialTheme.typography.labelLarge,
+                            color = MaterialTheme.colorScheme.outline
+                        )
+                        Text(
+                            stringResource(
+                                R.string.order_total_weight_value,
+                                "%.2f".format(state.totalOrderWeight)
+                            ),
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
                     // Крупное отображение
                     Box(
                         modifier = Modifier

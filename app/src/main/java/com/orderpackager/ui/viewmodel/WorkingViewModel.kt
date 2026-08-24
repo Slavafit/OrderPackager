@@ -37,6 +37,7 @@ data class WorkingState(
         hasClothes || hasShoes || hasCosmetics || hasAccessories || hasBags || hasOther
     val isCurrentSaved: Boolean get() =
         currentItem != null && savedPositions.any { it.cyclicItemId == currentItem!!.id }
+    val totalOrderWeight: Float get() = savedPositions.sumOf { it.weightKg.toDouble() }.toFloat()
     val totalItems: Int get() = cyclicItems.size
 }
 
