@@ -104,7 +104,7 @@ object PrintHelper {
         }
     }
 
-    private fun buildOrderSummaryZpl(
+    internal fun buildOrderSummaryZpl(
         boxNumber: String,
         batchNumber: String,
         totalWeightKg: Float,

@@ -62,6 +62,8 @@ dependencies {
 
     // Если нужно работать с XML (xlsx) — рекомендуется добавить:
     implementation("org.apache.poi:poi-ooxml-lite:5.3.0")
+
+    testImplementation("junit:junit:4.13.2")
 }
 // === FIX для ошибки debugRuntimeClasspathCopy ===
 configurations.configureEach {
