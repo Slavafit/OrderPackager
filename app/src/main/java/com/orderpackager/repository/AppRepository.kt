@@ -4,6 +4,7 @@ import android.content.Context
 import com.orderpackager.data.db.AppDatabase
 import com.orderpackager.data.db.entity.*
 import com.orderpackager.data.network.ScaleApiProvider
+import com.orderpackager.utils.BoxNumberGenerator
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
 
@@ -75,7 +76,13 @@ class AppRepository private constructor(private val db: AppDatabase) {
     suspend fun getOrderById(id: Long): PackingOrder? = db.packingOrderDao().getById(id)
 
     suspend fun createOrder(clientId: Long, clientLastName: String): Long =
-        db.packingOrderDao().insert(PackingOrder(clientId = clientId, clientLastName = clientLastName))
+        db.packingOrderDao().insert(
+            PackingOrder(
+                clientId = clientId,
+                clientLastName = clientLastName,
+                boxNumber = BoxNumberGenerator.generate()
+            )
+        )
 
     suspend fun updateOrder(order: PackingOrder) = db.packingOrderDao().update(order)
     suspend fun deleteOrder(order: PackingOrder) = db.packingOrderDao().delete(order)

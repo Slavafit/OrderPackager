@@ -28,6 +28,7 @@ import com.orderpackager.data.db.entity.PackingOrder
 import com.orderpackager.repository.AppRepository
 import com.orderpackager.utils.ShareHelper
 import com.orderpackager.utils.PrintHelper
+import com.orderpackager.utils.BoxNumberGenerator
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -99,6 +100,19 @@ class OrderCompletionViewModel(
         _state.update { it.copy(order = updatedOrder.copy(isCompleted = true), isSaved = true) }
     }
 
+    fun orderForReport(): PackingOrder? {
+        val s = _state.value
+        val order = s.order?.withCurrentBox(s) ?: return null
+        val prepared = if (order.boxNumber.isBlank()) {
+            order.copy(boxNumber = BoxNumberGenerator.generate())
+        } else {
+            order
+        }
+        if (prepared != s.order) {
+            _state.update { it.copy(order = prepared) }
+        }
+        return prepared
+    }
     private fun PackingOrder.withCurrentBox(s: CompletionState): PackingOrder =
         copy(
             boxLength = s.boxL.toFloatOrNull() ?: 0f,
@@ -163,6 +177,7 @@ fun OrderCompletionScreen(
                             if (printSummaryLabel) {
                                 val printResult = PrintHelper.printOrderSummaryLabel(
                                     context = context,
+                                    boxNumber = order.boxNumber,
                                     totalWeightKg = state.totalWeight,
                                     boxLengthCm = order.boxLength,
                                     boxWidthCm = order.boxWidth,

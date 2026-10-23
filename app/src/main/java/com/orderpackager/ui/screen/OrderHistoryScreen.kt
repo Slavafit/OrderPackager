@@ -129,7 +129,10 @@ fun OrderHistoryScreen(
                             orders.forEach { order ->
                                 val pos = positionsCache[order.id] ?: vm.getPositions(order.id)
                                 val w   = pos.sumOf { it.weightKg.toDouble() }
-                                sb.appendLine("• ${order.clientLastName} — ${pos.size} поз. / ${"%.2f".format(w)} кг")
+                                sb.appendLine(
+                                    "• ${order.clientLastName} — ${order.boxNumber.ifBlank { "—" }} — " +
+                                        "${pos.size} поз. / ${"%.2f".format(w)} кг"
+                                )
                             }
                             sb.appendLine("═══════════════════")
                             val grand = orders

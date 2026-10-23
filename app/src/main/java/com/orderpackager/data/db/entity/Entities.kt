@@ -1,6 +1,7 @@
 package com.orderpackager.data.db.entity
 
 import androidx.room.Entity
+import androidx.room.ColumnInfo
 import androidx.room.PrimaryKey
 
 // ─── Клиент ───────────────────────────────────────────────────────────────────
@@ -24,6 +25,7 @@ data class PackingOrder(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     val clientId: Long,
     val clientLastName: String,
+    @ColumnInfo(defaultValue = "''") val boxNumber: String = "",
     val createdAt: Long = System.currentTimeMillis(),
     val boxLength: Float = 0f,
     val boxWidth: Float = 0f,

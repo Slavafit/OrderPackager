@@ -6,7 +6,6 @@ import kotlinx.coroutines.withContext
 import java.io.OutputStream
 import java.net.Socket
 import java.text.SimpleDateFormat
-import java.security.SecureRandom
 import java.util.*
 import com.orderpackager.R
 import com.orderpackager.BuildConfig
@@ -66,6 +65,7 @@ object PrintHelper {
 
     suspend fun printOrderSummaryLabel(
         context: Context,
+        boxNumber: String,
         totalWeightKg: Float,
         boxLengthCm: Float,
         boxWidthCm: Float,
@@ -80,7 +80,6 @@ object PrintHelper {
 
         val now = Date()
         val date = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(now)
-        val boxNumber = buildBoxNumber(now)
         val zpl = buildOrderSummaryZpl(
             boxNumber = boxNumber,
             totalWeightKg = totalWeightKg,
@@ -149,12 +148,6 @@ object PrintHelper {
 ^PQ1
 ^XZ
         """.trimIndent()
-    }
-
-    private fun buildBoxNumber(date: Date): String {
-        val dateTime = SimpleDateFormat("MMddHHmm", Locale.US).format(date)
-        val randomDigits = SecureRandom().nextInt(10_000).toString().padStart(4, '0')
-        return "NBX$dateTime$randomDigits"
     }
 
     private fun formatDimension(value: Float): String =

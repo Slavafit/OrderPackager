@@ -4,13 +4,14 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.orderpackager.data.db.dao.*
 import com.orderpackager.data.db.entity.*
 
 @Database(
     entities = [Client::class, CyclicItem::class, PackingOrder::class, OrderPosition::class],
-    version = 2,
+    version = 3,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -49,6 +50,23 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_2_3 = object : Migration(2, 3) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE packing_orders ADD COLUMN boxNumber TEXT NOT NULL DEFAULT ''"
+                )
+                db.execSQL(
+                    """
+                    UPDATE packing_orders
+                    SET boxNumber = 'NBX' ||
+                        strftime('%m%d%H%M', createdAt / 1000, 'unixepoch', 'localtime') ||
+                        printf('%04d', abs(random()) % 10000)
+                    WHERE boxNumber = ''
+                    """.trimIndent()
+                )
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase =
             INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
@@ -57,6 +75,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "packager_db"
                 )
                 .addCallback(seedCallback)
+                .addMigrations(MIGRATION_2_3)
                 .fallbackToDestructiveMigration()
                 .build().also { INSTANCE = it }
             }
