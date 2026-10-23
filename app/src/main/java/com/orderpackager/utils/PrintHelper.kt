@@ -6,6 +6,7 @@ import kotlinx.coroutines.withContext
 import java.io.OutputStream
 import java.net.Socket
 import java.text.SimpleDateFormat
+import java.security.SecureRandom
 import java.util.*
 import com.orderpackager.R
 import com.orderpackager.BuildConfig
@@ -65,9 +66,10 @@ object PrintHelper {
 
     suspend fun printOrderSummaryLabel(
         context: Context,
-        clientName: String,
-        positionsCount: Int,
-        totalWeightKg: Float
+        totalWeightKg: Float,
+        boxLengthCm: Float,
+        boxWidthCm: Float,
+        boxHeightCm: Float
     ): Result<Unit> = withContext(Dispatchers.IO) {
         val ip = getPrinterIp(context)
         if (ip.isBlank()) {
@@ -76,13 +78,19 @@ object PrintHelper {
             )
         }
 
-        val date = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(Date())
+        val now = Date()
+        val date = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(now)
+        val boxNumber = buildBoxNumber(now)
         val zpl = buildOrderSummaryZpl(
-            clientName = clientName,
-            positionsCount = positionsCount,
+            boxNumber = boxNumber,
             totalWeightKg = totalWeightKg,
+            boxLengthCm = boxLengthCm,
+            boxWidthCm = boxWidthCm,
+            boxHeightCm = boxHeightCm,
             date = date,
-            appInfo = buildAppInfo(context)
+            appName = context.getString(R.string.app_name),
+            version = BuildConfig.VERSION_NAME,
+            developer = context.getString(R.string.developer_signature)
         )
 
         runCatching {
@@ -96,35 +104,62 @@ object PrintHelper {
     }
 
     private fun buildOrderSummaryZpl(
-        clientName: String,
-        positionsCount: Int,
+        boxNumber: String,
         totalWeightKg: Float,
+        boxLengthCm: Float,
+        boxWidthCm: Float,
+        boxHeightCm: Float,
         date: String,
-        appInfo: String
+        appName: String,
+        version: String,
+        developer: String
     ): String {
-        val nameShort = clientName.take(30)
+        val shortNumber = boxNumber.takeLast(4)
+        val sizes = listOf(boxLengthCm, boxWidthCm, boxHeightCm)
+            .joinToString("x") { formatDimension(it) }
         return """
 ^XA
 ^PW800
 ^LL1200
 ^CI28
 
-^FO40,40^A0N,70,70^FD$nameShort^FS
-^FO40,140^GB720,3,3^FS
+^FO60,45^A0N,58,58^FDOnza España^FS
 
-^FO40,180^A0N,50,50^FDПозиций: $positionsCount^FS
-^FO40,260^A0N,50,50^FDОбщий вес: ${"%.2f".format(totalWeightKg)} кг^FS
+^FO60,130^BY3,2,120^BCN,120,N,N,N^FD$boxNumber^FS
+^FO40,260^A0N,28,28^FB720,1,0,C^FD$boxNumber^FS
 
-^FO40,350^GB720,3,3^FS
-^FO40,380^A0N,35,35^FD$date^FS
+^FO60,325^A0N,82,82^FD$shortNumber^FS
+
+^FO60,425^GB680,3,3^FS
+^FO60,445^A0N,30,30^FDPacked in Malaga: $date^FS
+^FO60,490^GB680,3,3^FS
+
+^FO60,540^A0N,54,54^FDWeight total: ${"%.2f".format(Locale.US, totalWeightKg)} kg^FS
+
+^FO60,665^A0N,44,44^FDSizes: $sizes cm^FS
+
+^FO70,825^BQN,2,6^FDLA,$boxNumber^FS
+^FO315,850^A0N,34,34^FD$appName^FS
+^FO315,900^A0N,27,27^FDVersion $version^FS
+^FO315,940^A0N,27,27^FD$developer^FS
 
 ^FO40,1100^GB720,2,2^FS
-^FO40,1120^A0N,28,28^FB720,1,0,C^FD$appInfo^FS
+^FO40,1120^A0N,24,24^FB720,1,0,C^FD$boxNumber^FS
 
 ^PQ1
 ^XZ
         """.trimIndent()
     }
+
+    private fun buildBoxNumber(date: Date): String {
+        val dateTime = SimpleDateFormat("MMddHHmm", Locale.US).format(date)
+        val randomDigits = SecureRandom().nextInt(10_000).toString().padStart(4, '0')
+        return "NBX$dateTime$randomDigits"
+    }
+
+    private fun formatDimension(value: Float): String =
+        if (value % 1f == 0f) value.toInt().toString()
+        else "%.1f".format(Locale.US, value)
 
     /**
      * ZPL для Zebra, 100×150мм при 203 dpi:

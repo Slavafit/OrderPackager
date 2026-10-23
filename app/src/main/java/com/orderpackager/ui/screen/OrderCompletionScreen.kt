@@ -155,7 +155,7 @@ fun OrderCompletionScreen(
                         if (isFinishing) return@Button
                         isFinishing = true
                         scope.launch {
-                            val order = state.order
+                            val order = vm.orderForReport()
                             if (order == null) {
                                 isFinishing = false
                                 return@launch
@@ -163,9 +163,10 @@ fun OrderCompletionScreen(
                             if (printSummaryLabel) {
                                 val printResult = PrintHelper.printOrderSummaryLabel(
                                     context = context,
-                                    clientName = order.clientLastName,
-                                    positionsCount = state.positions.size,
-                                    totalWeightKg = state.totalWeight
+                                    totalWeightKg = state.totalWeight,
+                                    boxLengthCm = order.boxLength,
+                                    boxWidthCm = order.boxWidth,
+                                    boxHeightCm = order.boxHeight
                                 )
                                 if (printResult.isFailure) {
                                     snackbarHostState.showSnackbar(
