@@ -67,6 +67,9 @@
     <string name="total_weight">Общий вес</string>
     <string name="positions_count">Позиций</string>
     <string name="box_size">Размер коробки (см)</string>
+    <string name="batch_number">Номер партии</string>
+    <string name="batch_number_hint">Введите номер партии</string>
+    <string name="batch_number_required">Введите номер партии перед завершением заказа</string>
     <string name="box_l">Д</string>
     <string name="box_w">Ш</string>
     <string name="box_h">В</string>

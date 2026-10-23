@@ -68,6 +68,9 @@
     <string name="total_weight">Total weight</string>
     <string name="positions_count">Positions</string>
     <string name="box_size">Box size (cm)</string>
+    <string name="batch_number">Batch number</string>
+    <string name="batch_number_hint">Enter batch number</string>
+    <string name="batch_number_required">Enter the batch number before completing the order</string>
     <string name="box_l">L</string>
     <string name="box_w">W</string>
     <string name="box_h">H</string>

@@ -83,6 +83,7 @@ fun OrderHistoryScreen(
     var editBoxL             by remember { mutableStateOf("") }
     var editBoxW             by remember { mutableStateOf("") }
     var editBoxH             by remember { mutableStateOf("") }
+    var editBatchNumber      by remember { mutableStateOf("") }
     var editCompleted        by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -131,6 +132,7 @@ fun OrderHistoryScreen(
                                 val w   = pos.sumOf { it.weightKg.toDouble() }
                                 sb.appendLine(
                                     "• ${order.clientLastName} — ${order.boxNumber.ifBlank { "—" }} — " +
+                                        "партия ${order.batchNumber.ifBlank { "—" }} — " +
                                         "${pos.size} поз. / ${"%.2f".format(w)} кг"
                                 )
                             }
@@ -250,6 +252,7 @@ fun OrderHistoryScreen(
                                     editBoxL      = if (order.boxLength > 0) order.boxLength.toInt().toString() else ""
                                     editBoxW      = if (order.boxWidth  > 0) order.boxWidth.toInt().toString()  else ""
                                     editBoxH      = if (order.boxHeight > 0) order.boxHeight.toInt().toString() else ""
+                                    editBatchNumber = order.batchNumber
                                     editCompleted = order.isCompleted
                                 }) { Icon(Icons.Default.Edit, null) }
                                 IconButton(onClick = { deleteTarget = order }) {
@@ -448,6 +451,14 @@ fun OrderHistoryScreen(
 
                 HorizontalDivider()
 
+                OutlinedTextField(
+                    value = editBatchNumber,
+                    onValueChange = { editBatchNumber = it },
+                    label = { Text(stringResource(R.string.batch_number)) },
+                    modifier = Modifier.fillMaxWidth(),
+                    singleLine = true
+                )
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -489,6 +500,7 @@ fun OrderHistoryScreen(
                                 boxLength   = editBoxL.toFloatOrNull() ?: order.boxLength,
                                 boxWidth    = editBoxW.toFloatOrNull() ?: order.boxWidth,
                                 boxHeight   = editBoxH.toFloatOrNull() ?: order.boxHeight,
+                                batchNumber = editBatchNumber.trim(),
                                 isCompleted = editCompleted
                             ))
                             editingOrder = null

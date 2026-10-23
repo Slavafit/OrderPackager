@@ -22,6 +22,7 @@ object ShareHelper {
         val sb = StringBuilder()
         sb.appendLine("📦 ЗАКАЗ — ${order.clientLastName}")
         sb.appendLine("Номер бокса: ${order.boxNumber.ifBlank { "—" }}")
+        sb.appendLine("Номер партии: ${order.batchNumber.ifBlank { "—" }}")
         sb.appendLine("Дата: $date")
         sb.appendLine("──────────────────")
 

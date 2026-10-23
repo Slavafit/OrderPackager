@@ -11,7 +11,7 @@ import com.orderpackager.data.db.entity.*
 
 @Database(
     entities = [Client::class, CyclicItem::class, PackingOrder::class, OrderPosition::class],
-    version = 3,
+    version = 4,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -67,6 +67,14 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_3_4 = object : Migration(3, 4) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL(
+                    "ALTER TABLE packing_orders ADD COLUMN batchNumber TEXT NOT NULL DEFAULT ''"
+                )
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase =
             INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
@@ -75,7 +83,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "packager_db"
                 )
                 .addCallback(seedCallback)
-                .addMigrations(MIGRATION_2_3)
+                .addMigrations(MIGRATION_2_3, MIGRATION_3_4)
                 .fallbackToDestructiveMigration()
                 .build().also { INSTANCE = it }
             }

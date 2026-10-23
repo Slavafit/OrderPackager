@@ -66,6 +66,7 @@ object PrintHelper {
     suspend fun printOrderSummaryLabel(
         context: Context,
         boxNumber: String,
+        batchNumber: String,
         totalWeightKg: Float,
         boxLengthCm: Float,
         boxWidthCm: Float,
@@ -82,6 +83,7 @@ object PrintHelper {
         val date = SimpleDateFormat("dd.MM.yyyy HH:mm", Locale.getDefault()).format(now)
         val zpl = buildOrderSummaryZpl(
             boxNumber = boxNumber,
+            batchNumber = batchNumber,
             totalWeightKg = totalWeightKg,
             boxLengthCm = boxLengthCm,
             boxWidthCm = boxWidthCm,
@@ -104,6 +106,7 @@ object PrintHelper {
 
     private fun buildOrderSummaryZpl(
         boxNumber: String,
+        batchNumber: String,
         totalWeightKg: Float,
         boxLengthCm: Float,
         boxWidthCm: Float,
@@ -133,14 +136,16 @@ object PrintHelper {
 ^FO60,445^A0N,30,30^FDPacked in Malaga: $date^FS
 ^FO60,490^GB680,3,3^FS
 
-^FO60,540^A0N,54,54^FDWeight total: ${"%.2f".format(Locale.US, totalWeightKg)} kg^FS
+^FO60,520^A0N,34,34^FDBatch: $batchNumber^FS
 
-^FO60,665^A0N,44,44^FDSizes: $sizes cm^FS
+^FO60,590^A0N,54,54^FDWeight total: ${"%.2f".format(Locale.US, totalWeightKg)} kg^FS
 
-^FO70,825^BQN,2,6^FDLA,$boxNumber^FS
-^FO315,850^A0N,34,34^FD$appName^FS
-^FO315,900^A0N,27,27^FDVersion $version^FS
-^FO315,940^A0N,27,27^FD$developer^FS
+^FO60,715^A0N,44,44^FDSizes: $sizes cm^FS
+
+^FO70,850^BQN,2,6^FDLA,$boxNumber^FS
+^FO315,875^A0N,34,34^FD$appName^FS
+^FO315,925^A0N,27,27^FDVersion $version^FS
+^FO315,965^A0N,27,27^FD$developer^FS
 
 ^FO40,1100^GB720,2,2^FS
 ^FO40,1120^A0N,24,24^FB720,1,0,C^FD$boxNumber^FS

@@ -26,6 +26,7 @@ data class PackingOrder(
     val clientId: Long,
     val clientLastName: String,
     @ColumnInfo(defaultValue = "''") val boxNumber: String = "",
+    @ColumnInfo(defaultValue = "''") val batchNumber: String = "",
     val createdAt: Long = System.currentTimeMillis(),
     val boxLength: Float = 0f,
     val boxWidth: Float = 0f,

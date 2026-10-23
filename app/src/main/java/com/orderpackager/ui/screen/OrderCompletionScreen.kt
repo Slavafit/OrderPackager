@@ -40,6 +40,7 @@ data class CompletionState(
     val boxL: String = "",
     val boxW: String = "",
     val boxH: String = "",
+    val batchNumber: String = "",
     val isLoading: Boolean = true,
     val isSaved: Boolean = false
 ) {
@@ -66,6 +67,7 @@ class OrderCompletionViewModel(
                 boxL      = if (order != null && order.boxLength > 0) order.boxLength.toInt().toString() else defL,
                 boxW      = if (order != null && order.boxWidth  > 0) order.boxWidth.toInt().toString()  else defW,
                 boxH      = if (order != null && order.boxHeight > 0) order.boxHeight.toInt().toString() else defH,
+                batchNumber = order?.batchNumber.orEmpty(),
                 isLoading = false
             )}
             repo.getPositionsForOrder(orderId).collect { positions ->
@@ -77,6 +79,7 @@ class OrderCompletionViewModel(
     fun setBoxL(v: String) = _state.update { it.copy(boxL = v) }
     fun setBoxW(v: String) = _state.update { it.copy(boxW = v) }
     fun setBoxH(v: String) = _state.update { it.copy(boxH = v) }
+    fun setBatchNumber(v: String) = _state.update { it.copy(batchNumber = v) }
 
     fun applyDefault() = _state.update { it.copy(
         boxL = prefs.getString("box_l", "70") ?: "70",
@@ -117,7 +120,8 @@ class OrderCompletionViewModel(
         copy(
             boxLength = s.boxL.toFloatOrNull() ?: 0f,
             boxWidth  = s.boxW.toFloatOrNull() ?: 0f,
-            boxHeight = s.boxH.toFloatOrNull() ?: 0f
+            boxHeight = s.boxH.toFloatOrNull() ?: 0f,
+            batchNumber = s.batchNumber.trim()
         )
 }
 
@@ -167,6 +171,14 @@ fun OrderCompletionScreen(
                 Button(
                     onClick = {
                         if (isFinishing) return@Button
+                        if (state.batchNumber.isBlank()) {
+                            scope.launch {
+                                snackbarHostState.showSnackbar(
+                                    context.getString(R.string.batch_number_required)
+                                )
+                            }
+                            return@Button
+                        }
                         isFinishing = true
                         scope.launch {
                             val order = vm.orderForReport()
@@ -178,6 +190,7 @@ fun OrderCompletionScreen(
                                 val printResult = PrintHelper.printOrderSummaryLabel(
                                     context = context,
                                     boxNumber = order.boxNumber,
+                                    batchNumber = order.batchNumber,
                                     totalWeightKg = state.totalWeight,
                                     boxLengthCm = order.boxLength,
                                     boxWidthCm = order.boxWidth,
@@ -265,6 +278,14 @@ fun OrderCompletionScreen(
                     elevation = CardDefaults.cardElevation(2.dp)
                 ) {
                     Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                        OutlinedTextField(
+                            value = state.batchNumber,
+                            onValueChange = vm::setBatchNumber,
+                            label = { Text(stringResource(R.string.batch_number)) },
+                            placeholder = { Text(stringResource(R.string.batch_number_hint)) },
+                            modifier = Modifier.fillMaxWidth(),
+                            singleLine = true
+                        )
                         Text(stringResource(R.string.box_size), fontWeight = FontWeight.Bold)
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             DimField(stringResource(R.string.box_l), state.boxL, vm::setBoxL, Modifier.weight(1f))
