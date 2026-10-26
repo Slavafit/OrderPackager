@@ -48,6 +48,8 @@ The application is designed for warehouse employees. It allows you to quickly pr
 ## Requirements
 
 - Android 8.0+ (minSdk 26)
+- Android SDK 36
+- JDK 17+
 - Tablet is highly recommended
 - Access to local network scales (`http://192.168.1.50/`)
 - Network printer for label printing
@@ -72,8 +74,9 @@ OrderPackager/
 
 1. Clone the repository
 2. Open the project in Android Studio
-3. Click **Sync Project with Gradle Files**
-4. Run on a phone or emulator
+3. Add the local Supabase settings described in [`supabase/README.md`](supabase/README.md)
+4. Click **Sync Project with Gradle Files**
+5. Run on a phone or emulator
 
 ---
 
@@ -95,3 +98,16 @@ OrderPackager/
 Приложение сохраняет данные локально в Room и синхронизирует завершённые заказы с
 Supabase в фоне. Инструкция первоначальной настройки находится в
 [`supabase/README.md`](supabase/README.md).
+
+## Google Play
+
+Проект подготовлен для сборки Android App Bundle с `targetSdk 36`. Чек-лист первой
+публикации, настройки подписи, Data safety и необходимые материалы описаны в
+[`docs/GOOGLE_PLAY_RELEASE.md`](docs/GOOGLE_PLAY_RELEASE.md).
+
+Черновик политики конфиденциальности находится в
+[`docs/PRIVACY_POLICY_DRAFT.md`](docs/PRIVACY_POLICY_DRAFT.md). Перед публикацией в
+Google Play его необходимо заполнить и разместить на публичной HTTPS-странице.
+
+Текущий общий токен Supabase допустим только для доверенного внутреннего тестирования.
+Перед публичным Production-релизом требуется заменить его на Supabase Auth и RLS.

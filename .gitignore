@@ -10,5 +10,8 @@ out/
 # Служебные файлы Android
 *.iml
 local.properties
+*.jks
+*.keystore
+keystore.properties
 .DS_Store
 *.hprof
