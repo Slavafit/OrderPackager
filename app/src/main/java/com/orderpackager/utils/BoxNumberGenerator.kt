@@ -11,6 +11,6 @@ object BoxNumberGenerator {
     fun generate(date: Date = Date()): String {
         val dateTime = SimpleDateFormat("MMddHHmm", Locale.US).format(date)
         val randomDigits = random.nextInt(10_000).toString().padStart(4, '0')
-        return "NBX$dateTime$randomDigits"
+        return "NBX${dateTime}${randomDigits}B"
     }
 }

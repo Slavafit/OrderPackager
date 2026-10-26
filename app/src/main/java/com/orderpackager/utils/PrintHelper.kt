@@ -116,7 +116,7 @@ object PrintHelper {
         version: String,
         developer: String
     ): String {
-        val shortNumber = boxNumber.takeLast(4)
+        val shortNumber = boxNumber.takeLast(5)
         val sizes = listOf(boxLengthCm, boxWidthCm, boxHeightCm)
             .joinToString("x") { formatDimension(it) }
         return """

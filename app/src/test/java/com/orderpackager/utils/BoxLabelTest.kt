@@ -9,7 +9,7 @@ import java.util.Calendar
 class BoxLabelTest {
 
     @Test
-    fun `box number contains NBX date time and four random digits`() {
+    fun `box number contains NBX date time four random digits and B suffix`() {
         val date = Calendar.getInstance().apply {
             set(2026, Calendar.OCTOBER, 23, 15, 42, 0)
             set(Calendar.MILLISECOND, 0)
@@ -17,13 +17,13 @@ class BoxLabelTest {
 
         val boxNumber = BoxNumberGenerator.generate(date)
 
-        assertTrue(boxNumber.matches(Regex("NBX10231542\\d{4}")))
-        assertEquals(15, boxNumber.length)
+        assertTrue(boxNumber.matches(Regex("NBX10231542\\d{4}B")))
+        assertEquals(16, boxNumber.length)
     }
 
     @Test
     fun `summary label matches requested content and excludes client data`() {
-        val boxNumber = "NBX102315421234"
+        val boxNumber = "NBX102315421234B"
         val zpl = PrintHelper.buildOrderSummaryZpl(
             boxNumber = boxNumber,
             batchNumber = "LOTE-77",
@@ -41,7 +41,7 @@ class BoxLabelTest {
         assertTrue(zpl.contains("^LL1200"))
         assertTrue(zpl.contains("Onza España"))
         assertTrue(zpl.contains("^BCN,120,N,N,N^FD$boxNumber^FS"))
-        assertTrue(zpl.contains("^FD1234^FS"))
+        assertTrue(zpl.contains("^FD1234B^FS"))
         assertTrue(zpl.contains("Packed in Malaga: 23.10.2026 15:42"))
         assertTrue(zpl.contains("Batch: LOTE-77"))
         assertTrue(zpl.contains("Weight total: 18.86 kg"))
@@ -60,7 +60,7 @@ class BoxLabelTest {
     @Test
     fun `all printed elements fit inside 1200 dot label`() {
         val zpl = PrintHelper.buildOrderSummaryZpl(
-            boxNumber = "NBX102315421234",
+            boxNumber = "NBX102315421234B",
             batchNumber = "LOTE-77",
             totalWeightKg = 18.86f,
             boxLengthCm = 70f,

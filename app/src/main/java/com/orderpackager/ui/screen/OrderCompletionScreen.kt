@@ -106,10 +106,10 @@ class OrderCompletionViewModel(
     fun orderForReport(): PackingOrder? {
         val s = _state.value
         val order = s.order?.withCurrentBox(s) ?: return null
-        val prepared = if (order.boxNumber.isBlank()) {
-            order.copy(boxNumber = BoxNumberGenerator.generate())
-        } else {
-            order
+        val prepared = when {
+            order.boxNumber.isBlank() -> order.copy(boxNumber = BoxNumberGenerator.generate())
+            !order.boxNumber.endsWith("B") -> order.copy(boxNumber = "${order.boxNumber}B")
+            else -> order
         }
         if (prepared != s.order) {
             _state.update { it.copy(order = prepared) }
