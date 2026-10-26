@@ -50,6 +50,8 @@ class BoxLabelTest {
         assertTrue(zpl.contains("Order Packer"))
         assertTrue(zpl.contains("Version v1.10"))
         assertTrue(zpl.contains("by Slavafit"))
+        assertTrue(zpl.contains("^PQ2"))
+        assertFalse(zpl.contains("^PQ1"))
 
         assertFalse(zpl.contains("Иванов"))
         assertFalse(zpl.contains("Фамилия"))

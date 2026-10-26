@@ -150,7 +150,7 @@ object PrintHelper {
 ^FO40,1100^GB720,2,2^FS
 ^FO40,1120^A0N,24,24^FB720,1,0,C^FD$boxNumber^FS
 
-^PQ1
+^PQ2
 ^XZ
         """.trimIndent()
     }
