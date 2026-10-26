@@ -79,43 +79,36 @@ data class CloudOrder(
     }
 }
 
-data class CloudUpsertRequest(
-    @SerializedName("p_sync_token") val syncToken: String,
-    @SerializedName("p_order") val order: CloudOrder
-)
-
-data class CloudPullRequest(
-    @SerializedName("p_sync_token") val syncToken: String
-)
+data class CloudUpsertRequest(@SerializedName("p_order") val order: CloudOrder)
 
 interface SupabaseApi {
     @POST("rest/v1/rpc/order_packer_upsert")
     suspend fun upsert(@Body request: CloudUpsertRequest): Response<Unit>
 
     @POST("rest/v1/rpc/order_packer_pull")
-    suspend fun pull(@Body request: CloudPullRequest): Response<List<CloudOrder>>
+    suspend fun pull(@Body request: Map<String, String> = emptyMap()): Response<List<CloudOrder>>
 }
 
 object SupabaseApiProvider {
     val isConfigured: Boolean
         get() = BuildConfig.SUPABASE_URL.isNotBlank() &&
-            BuildConfig.SUPABASE_PUBLISHABLE_KEY.isNotBlank() &&
-            BuildConfig.SUPABASE_SYNC_TOKEN.isNotBlank()
+            BuildConfig.SUPABASE_PUBLISHABLE_KEY.isNotBlank()
 
-    val api: SupabaseApi by lazy {
+    fun api(accessToken: String): SupabaseApi {
         val baseUrl = BuildConfig.SUPABASE_URL.trimEnd('/') + "/"
         val client = OkHttpClient.Builder()
             .addInterceptor { chain ->
                 chain.proceed(
                     chain.request().newBuilder()
                         .header("apikey", BuildConfig.SUPABASE_PUBLISHABLE_KEY)
+                        .header("Authorization", "Bearer $accessToken")
                         .header("Content-Type", "application/json")
                         .build()
                 )
             }
             .build()
 
-        Retrofit.Builder()
+        return Retrofit.Builder()
             .baseUrl(baseUrl)
             .client(client)
             .addConverterFactory(GsonConverterFactory.create())

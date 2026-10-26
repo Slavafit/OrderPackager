@@ -3,10 +3,10 @@ package com.orderpackager.data.sync
 import android.content.Context
 import androidx.room.withTransaction
 import com.orderpackager.data.db.AppDatabase
+import com.orderpackager.data.auth.SupabaseAuthManager
 import com.orderpackager.data.db.entity.Client
 import com.orderpackager.data.db.entity.PackingOrder
 import com.orderpackager.data.network.CloudOrder
-import com.orderpackager.data.network.CloudPullRequest
 import com.orderpackager.data.network.CloudUpsertRequest
 import com.orderpackager.data.network.SupabaseApiProvider
 import kotlinx.coroutines.CoroutineScope
@@ -21,12 +21,18 @@ import kotlinx.coroutines.flow.asStateFlow
 
 sealed interface CloudSyncStatus {
     data object NotConfigured : CloudSyncStatus
+    data object AuthRequired : CloudSyncStatus
     data object Syncing : CloudSyncStatus
     data class Synced(val completedAt: Long) : CloudSyncStatus
     data class Offline(val lastSuccessAt: Long?) : CloudSyncStatus
 }
 
-class CloudSyncManager private constructor(private val db: AppDatabase) {
+private class AuthenticationRequiredException : Exception()
+
+class CloudSyncManager private constructor(
+    private val db: AppDatabase,
+    private val auth: SupabaseAuthManager
+) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val mutex = Mutex()
     private val _status = MutableStateFlow<CloudSyncStatus>(
@@ -49,15 +55,23 @@ class CloudSyncManager private constructor(private val db: AppDatabase) {
                     lastSuccessAt = completedAt
                     _status.value = CloudSyncStatus.Synced(completedAt)
                 }
-                .onFailure {
-                    _status.value = CloudSyncStatus.Offline(lastSuccessAt)
+                .onFailure { error ->
+                    _status.value = if (error is AuthenticationRequiredException) {
+                        CloudSyncStatus.AuthRequired
+                    } else {
+                        CloudSyncStatus.Offline(lastSuccessAt)
+                    }
                 }
         }
     }
 
     suspend fun synchronize(): Int = mutex.withLock {
         if (!SupabaseApiProvider.isConfigured) return@withLock 0
-        restoreMissingOrders()
+        val accessToken = auth.getValidAccessToken() ?: run {
+            throw AuthenticationRequiredException()
+        }
+        val api = SupabaseApiProvider.api(accessToken)
+        restoreMissingOrders(api)
 
         var synced = 0
         db.packingOrderDao().getPendingCloudSync().forEach { order ->
@@ -65,9 +79,7 @@ class CloudSyncManager private constructor(private val db: AppDatabase) {
                 order,
                 db.orderPositionDao().getForOrderOnce(order.id)
             )
-            val response = SupabaseApiProvider.api.upsert(
-                CloudUpsertRequest(BuildConfigToken.value, cloudOrder)
-            )
+            val response = api.upsert(CloudUpsertRequest(cloudOrder))
             if (!response.isSuccessful) {
                 error("Supabase sync failed: HTTP ${response.code()}")
             }
@@ -77,8 +89,8 @@ class CloudSyncManager private constructor(private val db: AppDatabase) {
         synced
     }
 
-    private suspend fun restoreMissingOrders() {
-        val response = SupabaseApiProvider.api.pull(CloudPullRequest(BuildConfigToken.value))
+    private suspend fun restoreMissingOrders(api: com.orderpackager.data.network.SupabaseApi) {
+        val response = api.pull()
         if (!response.isSuccessful) error("Supabase restore failed: HTTP ${response.code()}")
 
         response.body().orEmpty().forEach { cloud ->
@@ -105,16 +117,15 @@ class CloudSyncManager private constructor(private val db: AppDatabase) {
         cloudSynced = true
     )
 
-    private object BuildConfigToken {
-        val value: String get() = com.orderpackager.BuildConfig.SUPABASE_SYNC_TOKEN
-    }
-
     companion object {
         @Volatile private var INSTANCE: CloudSyncManager? = null
 
         fun getInstance(context: Context): CloudSyncManager =
             INSTANCE ?: synchronized(this) {
-                CloudSyncManager(AppDatabase.getInstance(context.applicationContext))
+                CloudSyncManager(
+                    AppDatabase.getInstance(context.applicationContext),
+                    SupabaseAuthManager.getInstance(context.applicationContext)
+                )
                     .also { INSTANCE = it }
             }
     }

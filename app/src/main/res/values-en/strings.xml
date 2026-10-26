@@ -23,6 +23,13 @@
     <string name="cloud_offline_last_sync">No connection • last sync %1$s.</string>
     <string name="cloud_not_configured">Cloud sync is not configured</string>
     <string name="cloud_retry">Retry</string>
+    <string name="cloud_auth_required">Supabase sign-in required</string>
+    <string name="cloud_login_title">Sign in to Order Packer</string>
+    <string name="cloud_login_description">Use the Supabase user you created. The password is not stored.</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="sign_in">Sign in</string>
+    <string name="password_not_saved">Only the session is stored, never your password.</string>
 
 
     <!-- Screen 1 — client selection -->

@@ -1,6 +1,7 @@
 package com.orderpackager.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -10,6 +11,13 @@ import androidx.navigation.navArgument
 import com.orderpackager.repository.AppRepository
 import com.orderpackager.ui.ThemeMode
 import com.orderpackager.ui.screen.*
+import com.orderpackager.data.auth.AuthState
+import com.orderpackager.data.auth.SupabaseAuthManager
+import com.orderpackager.data.sync.CloudSyncManager
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.compose.runtime.getValue
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Box
 
 sealed class Route(val path: String) {
     object ClientSelection : Route("client_selection")
@@ -33,6 +41,22 @@ fun AppNavGraph(
 ) {
     val context = LocalContext.current
     val repo    = AppRepository.getInstance(context)
+    val auth = SupabaseAuthManager.getInstance(context)
+    val authState by auth.state.collectAsStateWithLifecycle()
+
+    when (authState) {
+        AuthState.Loading -> Box(
+            androidx.compose.ui.Modifier.fillMaxSize(),
+            contentAlignment = androidx.compose.ui.Alignment.Center
+        ) { androidx.compose.material3.CircularProgressIndicator() }
+        AuthState.SignedOut, is AuthState.Error -> {
+            LoginScreen(auth, authState)
+            return
+        }
+        is AuthState.SignedIn -> LaunchedEffect(authState) {
+            CloudSyncManager.getInstance(context).enqueue()
+        }
+    }
 
     NavHost(navController = navController, startDestination = Route.ClientSelection.path) {
 

@@ -25,19 +25,14 @@ android {
         applicationId = "com.orderpackager"
         minSdk = 26
         targetSdk = 36
-        versionCode = 13
-        versionName = "v1.15"
+        versionCode = 14
+        versionName = "v1.16"
 
         buildConfigField("String", "SUPABASE_URL", "\"${localBuildConfigValue("SUPABASE_URL")}\"")
         buildConfigField(
             "String",
             "SUPABASE_PUBLISHABLE_KEY",
             "\"${localBuildConfigValue("SUPABASE_PUBLISHABLE_KEY")}\""
-        )
-        buildConfigField(
-            "String",
-            "SUPABASE_SYNC_TOKEN",
-            "\"${localBuildConfigValue("SUPABASE_SYNC_TOKEN")}\""
         )
     }
 

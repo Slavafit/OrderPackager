@@ -2,7 +2,7 @@
 
 Mobile application for fast and convenient order packing at the warehouse.
 
-Current version: **v1.15**.
+Current version: **v1.16**.
 
 ## Project Description
 
@@ -109,5 +109,5 @@ Supabase в фоне. Инструкция первоначальной наст
 [`docs/PRIVACY_POLICY_DRAFT.md`](docs/PRIVACY_POLICY_DRAFT.md). Перед публикацией в
 Google Play его необходимо заполнить и разместить на публичной HTTPS-странице.
 
-Текущий общий токен Supabase допустим только для доверенного внутреннего тестирования.
-Перед публичным Production-релизом требуется заменить его на Supabase Auth и RLS.
+Синхронизация использует Supabase Auth и RLS: пользователь входит в приложение, а
+облачные заказы доступны только владельцу записи.

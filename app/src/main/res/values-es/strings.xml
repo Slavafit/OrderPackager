@@ -21,6 +21,13 @@
     <string name="cloud_offline_last_sync">Sin conexión • última sincronización %1$s.</string>
     <string name="cloud_not_configured">La sincronización en la nube no está configurada</string>
     <string name="cloud_retry">Reintentar</string>
+    <string name="cloud_auth_required">Se requiere iniciar sesión en Supabase</string>
+    <string name="cloud_login_title">Iniciar sesión en Order Packer</string>
+    <string name="cloud_login_description">Use el usuario de Supabase que creó. La contraseña no se guarda.</string>
+    <string name="email">Correo electrónico</string>
+    <string name="password">Contraseña</string>
+    <string name="sign_in">Iniciar sesión</string>
+    <string name="password_not_saved">Solo se guarda la sesión, nunca la contraseña.</string>
 
     <!-- Screen 1 -->
     <string name="no_client">Sin clientes</string>

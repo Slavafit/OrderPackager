@@ -44,12 +44,14 @@ fun CloudSyncIndicator(modifier: Modifier = Modifier) {
         is CloudSyncStatus.Synced -> MaterialTheme.colorScheme.primaryContainer
         is CloudSyncStatus.Offline -> MaterialTheme.colorScheme.errorContainer
         CloudSyncStatus.NotConfigured -> MaterialTheme.colorScheme.secondaryContainer
+        CloudSyncStatus.AuthRequired -> MaterialTheme.colorScheme.secondaryContainer
         CloudSyncStatus.Syncing -> MaterialTheme.colorScheme.surfaceVariant
     }
     val contentColor = when (status) {
         is CloudSyncStatus.Offline -> MaterialTheme.colorScheme.onErrorContainer
         is CloudSyncStatus.Synced -> MaterialTheme.colorScheme.onPrimaryContainer
         CloudSyncStatus.NotConfigured -> MaterialTheme.colorScheme.onSecondaryContainer
+        CloudSyncStatus.AuthRequired -> MaterialTheme.colorScheme.onSecondaryContainer
         CloudSyncStatus.Syncing -> MaterialTheme.colorScheme.onSurfaceVariant
     }
 
@@ -74,6 +76,7 @@ fun CloudSyncIndicator(modifier: Modifier = Modifier) {
                 is CloudSyncStatus.Synced -> Icon(Icons.Default.CloudDone, null, Modifier.size(18.dp))
                 is CloudSyncStatus.Offline -> Icon(Icons.Default.CloudOff, null, Modifier.size(18.dp))
                 CloudSyncStatus.NotConfigured -> Icon(Icons.Default.Settings, null, Modifier.size(18.dp))
+                CloudSyncStatus.AuthRequired -> Icon(Icons.Default.Settings, null, Modifier.size(18.dp))
             }
             Spacer(Modifier.width(8.dp))
             Text(
@@ -87,6 +90,7 @@ fun CloudSyncIndicator(modifier: Modifier = Modifier) {
                         stringResource(R.string.cloud_offline_last_sync, formatSyncTime(it))
                     } ?: stringResource(R.string.cloud_offline)
                     CloudSyncStatus.NotConfigured -> stringResource(R.string.cloud_not_configured)
+                    CloudSyncStatus.AuthRequired -> stringResource(R.string.cloud_auth_required)
                 },
                 fontSize = 12.sp
             )
