@@ -17,6 +17,12 @@
     <string name="loading">Loading…</string>
     <string name="menu">Menu</string>
     <string name="search">Search</string>
+    <string name="cloud_syncing">Syncing with cloud…</string>
+    <string name="cloud_synced_at">Cloud synced • %1$s</string>
+    <string name="cloud_offline">No cloud connection.</string>
+    <string name="cloud_offline_last_sync">No connection • last sync %1$s.</string>
+    <string name="cloud_not_configured">Cloud sync is not configured</string>
+    <string name="cloud_retry">Retry</string>
 
 
     <!-- Screen 1 — client selection -->

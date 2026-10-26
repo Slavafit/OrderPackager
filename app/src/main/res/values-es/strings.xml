@@ -15,6 +15,12 @@
     <string name="back">Atrás</string>
     <string name="error">Error</string>
     <string name="loading">Cargando…</string>
+    <string name="cloud_syncing">Sincronizando con la nube…</string>
+    <string name="cloud_synced_at">Nube sincronizada • %1$s</string>
+    <string name="cloud_offline">Sin conexión con la nube.</string>
+    <string name="cloud_offline_last_sync">Sin conexión • última sincronización %1$s.</string>
+    <string name="cloud_not_configured">La sincronización en la nube no está configurada</string>
+    <string name="cloud_retry">Reintentar</string>
 
     <!-- Screen 1 -->
     <string name="no_client">Sin clientes</string>

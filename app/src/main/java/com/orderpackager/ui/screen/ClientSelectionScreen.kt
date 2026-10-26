@@ -31,6 +31,7 @@ import kotlinx.coroutines.launch
 import androidx.compose.ui.res.stringResource
 import com.orderpackager.R
 import com.orderpackager.BuildConfig
+import com.orderpackager.ui.components.CloudSyncIndicator
 
 // ─── ViewModel ────────────────────────────────────────────────────────────────
 class ClientSelectionViewModel(private val repo: AppRepository) : ViewModel() {
@@ -212,6 +213,8 @@ fun ClientSelectionScreen(
                 .fillMaxSize()
                 .padding(padding)
         ) {
+            CloudSyncIndicator()
+
             // ─── Заголовок раздела ─────────────────────────────────────────────
             if (!showSearch || search.isBlank()) {
                 Text(

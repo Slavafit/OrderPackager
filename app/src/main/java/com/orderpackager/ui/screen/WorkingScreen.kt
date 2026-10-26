@@ -24,6 +24,7 @@ import com.orderpackager.R
 import com.orderpackager.repository.AppRepository
 import com.orderpackager.ui.viewmodel.WorkingViewModel
 import com.orderpackager.utils.PrintHelper
+import com.orderpackager.ui.components.CloudSyncIndicator
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -127,6 +128,8 @@ fun WorkingScreen(
                 .padding(horizontal = 16.dp, vertical = 12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
+
+            CloudSyncIndicator()
 
             // ─── Имя позиции ──────────────────────────────────────────────────
             Card(

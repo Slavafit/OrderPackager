@@ -15,14 +15,44 @@ import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
+sealed interface CloudSyncStatus {
+    data object NotConfigured : CloudSyncStatus
+    data object Syncing : CloudSyncStatus
+    data class Synced(val completedAt: Long) : CloudSyncStatus
+    data class Offline(val lastSuccessAt: Long?) : CloudSyncStatus
+}
 
 class CloudSyncManager private constructor(private val db: AppDatabase) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val mutex = Mutex()
+    private val _status = MutableStateFlow<CloudSyncStatus>(
+        if (SupabaseApiProvider.isConfigured) CloudSyncStatus.Syncing
+        else CloudSyncStatus.NotConfigured
+    )
+    val status: StateFlow<CloudSyncStatus> = _status.asStateFlow()
+    private var lastSuccessAt: Long? = null
 
     fun enqueue() {
-        if (!SupabaseApiProvider.isConfigured) return
-        scope.launch { runCatching { synchronize() } }
+        if (!SupabaseApiProvider.isConfigured) {
+            _status.value = CloudSyncStatus.NotConfigured
+            return
+        }
+        scope.launch {
+            _status.value = CloudSyncStatus.Syncing
+            runCatching { synchronize() }
+                .onSuccess {
+                    val completedAt = System.currentTimeMillis()
+                    lastSuccessAt = completedAt
+                    _status.value = CloudSyncStatus.Synced(completedAt)
+                }
+                .onFailure {
+                    _status.value = CloudSyncStatus.Offline(lastSuccessAt)
+                }
+        }
     }
 
     suspend fun synchronize(): Int = mutex.withLock {

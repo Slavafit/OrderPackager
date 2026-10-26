@@ -17,6 +17,12 @@
     <string name="loading">Загрузка…</string>
     <string name="menu">Меню</string>
     <string name="search">Поиск</string>
+    <string name="cloud_syncing">Синхронизация с облаком…</string>
+    <string name="cloud_synced_at">Облако синхронизировано • %1$s</string>
+    <string name="cloud_offline">Нет соединения с облаком.</string>
+    <string name="cloud_offline_last_sync">Нет соединения • последняя синхронизация %1$s.</string>
+    <string name="cloud_not_configured">Облачная синхронизация не настроена</string>
+    <string name="cloud_retry">Повторить</string>
 
     <!-- Экран 1 — выбор клиента -->
     <string name="select_client">Выберите клиента</string>
