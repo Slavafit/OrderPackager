@@ -2,7 +2,7 @@
 
 Mobile application for fast and convenient order packing at the warehouse.
 
-Current version: **v1.16**.
+Current version: **v1.17**.
 
 ## Project Description
 

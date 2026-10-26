@@ -82,8 +82,9 @@
     <string name="positions_count">Posiciones</string>
     <string name="box_size">Tamaño de caja (cm)</string>
     <string name="batch_number">Número de lote</string>
-    <string name="batch_number_hint">Introduzca el número de lote</string>
+    <string name="batch_number_hint">Introduzca solo dígitos</string>
     <string name="batch_number_required">Introduzca el número de lote antes de finalizar el pedido</string>
+    <string name="previous_batch_number">Lote anterior: %1$s</string>
     <string name="box_l">L</string>
     <string name="box_w">A</string>
     <string name="box_h">H</string>

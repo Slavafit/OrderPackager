@@ -29,6 +29,7 @@ import com.orderpackager.repository.AppRepository
 import com.orderpackager.utils.ShareHelper
 import com.orderpackager.utils.PrintHelper
 import com.orderpackager.utils.BoxNumberGenerator
+import com.orderpackager.utils.BatchNumber
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -41,6 +42,7 @@ data class CompletionState(
     val boxW: String = "",
     val boxH: String = "",
     val batchNumber: String = "",
+    val previousBatchNumber: String = "",
     val isLoading: Boolean = true,
     val isSaved: Boolean = false
 ) {
@@ -67,7 +69,8 @@ class OrderCompletionViewModel(
                 boxL      = if (order != null && order.boxLength > 0) order.boxLength.toInt().toString() else defL,
                 boxW      = if (order != null && order.boxWidth  > 0) order.boxWidth.toInt().toString()  else defW,
                 boxH      = if (order != null && order.boxHeight > 0) order.boxHeight.toInt().toString() else defH,
-                batchNumber = order?.batchNumber.orEmpty(),
+                batchNumber = BatchNumber.digits(order?.batchNumber.orEmpty()),
+                previousBatchNumber = prefs.getString("last_batch_number", "").orEmpty(),
                 isLoading = false
             )}
             repo.getPositionsForOrder(orderId).collect { positions ->
@@ -79,7 +82,7 @@ class OrderCompletionViewModel(
     fun setBoxL(v: String) = _state.update { it.copy(boxL = v) }
     fun setBoxW(v: String) = _state.update { it.copy(boxW = v) }
     fun setBoxH(v: String) = _state.update { it.copy(boxH = v) }
-    fun setBatchNumber(v: String) = _state.update { it.copy(batchNumber = v) }
+    fun setBatchNumber(v: String) = _state.update { it.copy(batchNumber = BatchNumber.digits(v)) }
 
     fun applyDefault() = _state.update { it.copy(
         boxL = prefs.getString("box_l", "70") ?: "70",
@@ -100,6 +103,7 @@ class OrderCompletionViewModel(
         val order = s.order ?: return
         val updatedOrder = order.withCurrentBox(s)
         repo.updateOrder(updatedOrder.copy(isCompleted = true))
+        prefs.edit().putString("last_batch_number", updatedOrder.batchNumber).apply()
         _state.update { it.copy(order = updatedOrder.copy(isCompleted = true), isSaved = true) }
     }
 
@@ -121,7 +125,7 @@ class OrderCompletionViewModel(
             boxLength = s.boxL.toFloatOrNull() ?: 0f,
             boxWidth  = s.boxW.toFloatOrNull() ?: 0f,
             boxHeight = s.boxH.toFloatOrNull() ?: 0f,
-            batchNumber = s.batchNumber.trim()
+            batchNumber = BatchNumber.format(s.batchNumber)
         )
 }
 
@@ -284,7 +288,17 @@ fun OrderCompletionScreen(
                             label = { Text(stringResource(R.string.batch_number)) },
                             placeholder = { Text(stringResource(R.string.batch_number_hint)) },
                             modifier = Modifier.fillMaxWidth(),
-                            singleLine = true
+                            singleLine = true,
+                            prefix = { Text(BatchNumber.PREFIX) },
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            supportingText = {
+                                if (state.previousBatchNumber.isNotBlank()) {
+                                    Text(stringResource(
+                                        R.string.previous_batch_number,
+                                        state.previousBatchNumber
+                                    ))
+                                }
+                            }
                         )
                         Text(stringResource(R.string.box_size), fontWeight = FontWeight.Bold)
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {

@@ -26,6 +26,7 @@ import com.orderpackager.R
 import com.orderpackager.data.db.entity.OrderPosition
 import com.orderpackager.data.db.entity.PackingOrder
 import com.orderpackager.repository.AppRepository
+import com.orderpackager.utils.BatchNumber
 import com.orderpackager.utils.ShareHelper
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
@@ -252,7 +253,7 @@ fun OrderHistoryScreen(
                                     editBoxL      = if (order.boxLength > 0) order.boxLength.toInt().toString() else ""
                                     editBoxW      = if (order.boxWidth  > 0) order.boxWidth.toInt().toString()  else ""
                                     editBoxH      = if (order.boxHeight > 0) order.boxHeight.toInt().toString() else ""
-                                    editBatchNumber = order.batchNumber
+                                    editBatchNumber = BatchNumber.digits(order.batchNumber)
                                     editCompleted = order.isCompleted
                                 }) { Icon(Icons.Default.Edit, null) }
                                 IconButton(onClick = { deleteTarget = order }) {
@@ -453,10 +454,12 @@ fun OrderHistoryScreen(
 
                 OutlinedTextField(
                     value = editBatchNumber,
-                    onValueChange = { editBatchNumber = it },
+                    onValueChange = { editBatchNumber = BatchNumber.digits(it) },
                     label = { Text(stringResource(R.string.batch_number)) },
                     modifier = Modifier.fillMaxWidth(),
-                    singleLine = true
+                    singleLine = true,
+                    prefix = { Text(BatchNumber.PREFIX) },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 )
 
                 Row(
@@ -500,7 +503,7 @@ fun OrderHistoryScreen(
                                 boxLength   = editBoxL.toFloatOrNull() ?: order.boxLength,
                                 boxWidth    = editBoxW.toFloatOrNull() ?: order.boxWidth,
                                 boxHeight   = editBoxH.toFloatOrNull() ?: order.boxHeight,
-                                batchNumber = editBatchNumber.trim(),
+                                batchNumber = BatchNumber.format(editBatchNumber),
                                 isCompleted = editCompleted
                             ))
                             editingOrder = null
