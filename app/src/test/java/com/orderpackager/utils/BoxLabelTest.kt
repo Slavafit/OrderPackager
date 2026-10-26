@@ -33,7 +33,7 @@ class BoxLabelTest {
             boxHeightCm = 50f,
             date = "23.10.2026 15:42",
             appName = "Order Packer",
-            version = "v1.10",
+            version = "v1.13",
             developer = "by Slavafit"
         )
 
@@ -43,12 +43,12 @@ class BoxLabelTest {
         assertTrue(zpl.contains("^BCN,120,N,N,N^FD$boxNumber^FS"))
         assertTrue(zpl.contains("^FD1234B^FS"))
         assertTrue(zpl.contains("Packed in Malaga: 23.10.2026 15:42"))
-        assertTrue(zpl.contains("Batch: LOTE-77"))
+        assertTrue(zpl.contains("^A0N,52,52^FDBatch: LOTE-77^FS"))
         assertTrue(zpl.contains("Weight total: 18.86 kg"))
         assertTrue(zpl.contains("Sizes: 70x45x50 cm"))
-        assertTrue(zpl.contains("^BQN,2,6^FDLA,$boxNumber^FS"))
+        assertTrue(zpl.contains("^BQN,2,8^FDLA,$boxNumber^FS"))
         assertTrue(zpl.contains("Order Packer"))
-        assertTrue(zpl.contains("Version v1.10"))
+        assertTrue(zpl.contains("Version v1.13"))
         assertTrue(zpl.contains("by Slavafit"))
         assertTrue(zpl.contains("^PQ2"))
         assertFalse(zpl.contains("^PQ1"))
@@ -57,6 +57,8 @@ class BoxLabelTest {
         assertFalse(zpl.contains("Фамилия"))
         assertFalse(zpl.contains("Позиций"))
         assertFalse(zpl.contains("Orders"))
+        assertFalse(zpl.contains("^FO40,1100^GB720,2,2^FS"))
+        assertFalse(zpl.contains("^FO40,1120"))
     }
 
     @Test
@@ -70,7 +72,7 @@ class BoxLabelTest {
             boxHeightCm = 50f,
             date = "23.10.2026 15:42",
             appName = "Order Packer",
-            version = "v1.10",
+            version = "v1.13",
             developer = "by Slavafit"
         )
 
@@ -81,6 +83,6 @@ class BoxLabelTest {
 
         assertTrue(yCoordinates.isNotEmpty())
         assertTrue(yCoordinates.all { it in 0 until 1200 })
-        assertEquals(1120, yCoordinates.maxOrNull())
+        assertEquals(965, yCoordinates.maxOrNull())
     }
 }
