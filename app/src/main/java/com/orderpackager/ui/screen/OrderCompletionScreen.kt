@@ -172,6 +172,24 @@ fun OrderCompletionScreen(
                 Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 4.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        stringResource(R.string.print_summary_label),
+                        style = MaterialTheme.typography.bodyMedium,
+                        modifier = Modifier.weight(1f)
+                    )
+                    Switch(
+                        checked = printSummaryLabel,
+                        onCheckedChange = { printSummaryLabel = it },
+                        enabled = !isFinishing && !state.isSaved
+                    )
+                }
                 Button(
                     onClick = {
                         if (isFinishing) return@Button
@@ -360,13 +378,13 @@ fun OrderCompletionScreen(
                             Text(pos.cyclicItemName, fontWeight = FontWeight.SemiBold)
                         },
                         supportingContent = {
-                            Text(ShareHelper.buildComposition(pos), fontSize = 13.sp,
+                            Text(ShareHelper.buildComposition(context, pos), fontSize = 13.sp,
                                 color = MaterialTheme.colorScheme.outline)
                         },
                         trailingContent = {
                             Row(verticalAlignment = Alignment.CenterVertically) {
                                 Text(
-                                    "${"%.2f".format(pos.weightKg)} кг",
+                                    stringResource(R.string.weight_kg, "%.2f".format(pos.weightKg)),
                                     fontWeight = FontWeight.Bold,
                                     color = MaterialTheme.colorScheme.primary,
                                     fontSize = 15.sp

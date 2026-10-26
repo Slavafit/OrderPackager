@@ -218,13 +218,13 @@ class WorkingViewModel(
     fun buildCompositionText(): String {
         val s = _state.value
         val parts = mutableListOf<String>()
-        if (s.hasClothes) parts += "Одежда"
-        if (s.hasShoes) parts += "Обувь"
-        if (s.hasCosmetics) parts += "Косметика"
-        if (s.hasAccessories) parts += "Аксессуары"
-        if (s.hasBags) parts += "Сумка"
-        if (s.hasOther && s.otherText.isNotBlank()) parts += "Другое: ${s.otherText}"
-        else if (s.hasOther) parts += "Другое"
+        if (s.hasClothes) parts += context.getString(R.string.content_clothes)
+        if (s.hasShoes) parts += context.getString(R.string.content_shoes)
+        if (s.hasCosmetics) parts += context.getString(R.string.content_cosmetics)
+        if (s.hasAccessories) parts += context.getString(R.string.content_accessories)
+        if (s.hasBags) parts += context.getString(R.string.content_bags)
+        if (s.hasOther && s.otherText.isNotBlank()) parts += context.getString(R.string.content_other_value, s.otherText)
+        else if (s.hasOther) parts += context.getString(R.string.content_other)
         return parts.joinToString(", ")
     }
 }

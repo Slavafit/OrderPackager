@@ -85,7 +85,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                     pendingImport = names
                     showImportPreview = true
                 } else {
-                    snackbarHostState.showSnackbar("Файл пуст или не распознан")
+                    snackbarHostState.showSnackbar(context.getString(R.string.import_empty_error))
                 }
             }
         }
@@ -95,7 +95,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
         uri?.let {
             scope.launch {
                 CsvHelper.writeToUri(context, it, vm.exportCsv(items))
-                snackbarHostState.showSnackbar("Экспорт выполнен")
+                snackbarHostState.showSnackbar(context.getString(R.string.export_done))
             }
         }
     }
@@ -125,15 +125,15 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                             "application/vnd.ms-excel"
                         ))
                     }) {
-                        Icon(Icons.Default.FileUpload, "Импорт", tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Default.FileUpload, stringResource(R.string.import_csv), tint = MaterialTheme.colorScheme.onPrimary)
                     }
                     IconButton(onClick = { exportLauncher.launch("cyclic_list.csv") }) {
-                        Icon(Icons.Default.FileDownload, "Экспорт", tint = MaterialTheme.colorScheme.onPrimary)
+                        Icon(Icons.Default.FileDownload, stringResource(R.string.export_csv), tint = MaterialTheme.colorScheme.onPrimary)
                     }
                     // Очистить всё
                     if (items.isNotEmpty()) {
                         IconButton(onClick = { showClearDialog = true }) {
-                            Icon(Icons.Default.DeleteSweep, "Очистить",
+                            Icon(Icons.Default.DeleteSweep, stringResource(R.string.clear),
                                 tint = MaterialTheme.colorScheme.onPrimary)
                         }
                     }
@@ -143,7 +143,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { newName = ""; showAddSheet = true }) {
-                Icon(Icons.Default.Add, "Добавить")
+                Icon(Icons.Default.Add, stringResource(R.string.add))
             }
         }
     ) { padding ->
@@ -153,9 +153,9 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                     verticalArrangement = Arrangement.spacedBy(12.dp)) {
                     Icon(Icons.Default.FormatListNumbered, null, Modifier.size(64.dp),
                         tint = MaterialTheme.colorScheme.outlineVariant)
-                    Text("Список пуст", color = MaterialTheme.colorScheme.outline)
+                    Text(stringResource(R.string.cyclic_empty), color = MaterialTheme.colorScheme.outline)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(onClick = { showAddSheet = true }) { Text("Добавить") }
+                        Button(onClick = { showAddSheet = true }) { Text(stringResource(R.string.add)) }
                         OutlinedButton(onClick = {
                             importLauncher.launch(arrayOf(
                                 "text/csv", "text/plain",
@@ -165,7 +165,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                         }) {
                             Icon(Icons.Default.FileUpload, null, Modifier.size(16.dp))
                             Spacer(Modifier.width(4.dp))
-                            Text("Импорт")
+                            Text(stringResource(R.string.import_csv))
                         }
                     }
                 }
@@ -231,7 +231,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                     },
                     modifier = Modifier.fillMaxWidth().height(52.dp),
                     enabled = newName.isNotBlank()
-                ) { Text("Добавить", fontSize = 16.sp) }
+                ) { Text(stringResource(R.string.add), fontSize = 16.sp) }
             }
         }
     }
@@ -242,15 +242,15 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
             onDismissRequest = { deleteTarget = null },
             icon  = { Icon(Icons.Default.Delete, null, tint = MaterialTheme.colorScheme.error) },
             title = { Text(stringResource(R.string.delete_position_title)) },
-            text  = { Text("«${target.name}» будет удалена из списка.") },
+            text  = { Text(stringResource(R.string.delete_position_body, target.name)) },
             confirmButton = {
                 Button(
                     onClick = { scope.launch { vm.delete(target); deleteTarget = null } },
                     colors  = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
-                ) { Text("Удалить") }
+                ) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { deleteTarget = null }) { Text("Отмена") }
+                OutlinedButton(onClick = { deleteTarget = null }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
@@ -261,7 +261,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
             onDismissRequest = { showClearDialog = false },
             icon  = { Icon(Icons.Default.DeleteSweep, null, tint = MaterialTheme.colorScheme.error) },
             title = { Text(stringResource(R.string.clear_list_title)) },
-            text  = { Text("Все ${items.size} позиций будут удалены. Это нельзя отменить.\n\nПосле этого вы сможете загрузить новый список через импорт.") },
+            text  = { Text(stringResource(R.string.clear_list_body, items.size)) },
             confirmButton = {
                 Button(
                     onClick = {
@@ -297,15 +297,15 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                         Text("• $it", fontSize = 13.sp)
                     }
                     if (names.size > 5) {
-                        Text("…ещё ${names.size - 5}", fontSize = 13.sp,
+                        Text(stringResource(R.string.import_more, names.size - 5), fontSize = 13.sp,
                             color = MaterialTheme.colorScheme.outline)
                     }
                     Spacer(Modifier.height(8.dp))
                     Text(
                         if (items.isEmpty())
-                            "Список будет заполнен."
+                            stringResource(R.string.import_will_fill)
                         else
-                            "⚠️ Текущий список (${items.size} поз.) будет заменён.",
+                            stringResource(R.string.import_will_replace, items.size),
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Medium,
                         color = if (items.isEmpty()) MaterialTheme.colorScheme.primary
@@ -319,13 +319,13 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                         vm.importAndReplace(names)
                         showImportPreview = false
                         pendingImport = null
-                        snackbarHostState.showSnackbar("Импортировано: ${names.size} позиций")
+                        snackbarHostState.showSnackbar(context.getString(R.string.import_cyclic_done, names.size))
                     }
-                }) { Text("Загрузить") }
+                }) { Text(stringResource(R.string.import_load)) }
             },
             dismissButton = {
                 OutlinedButton(onClick = { showImportPreview = false; pendingImport = null }) {
-                    Text("Отмена")
+                    Text(stringResource(R.string.cancel))
                 }
             }
         )

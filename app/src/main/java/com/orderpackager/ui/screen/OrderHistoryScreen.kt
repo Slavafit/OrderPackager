@@ -132,16 +132,25 @@ fun OrderHistoryScreen(
                                 val pos = positionsCache[order.id] ?: vm.getPositions(order.id)
                                 val w   = pos.sumOf { it.weightKg.toDouble() }
                                 sb.appendLine(
-                                    "• ${order.clientLastName} — ${order.boxNumber.ifBlank { "—" }} — " +
-                                        "партия ${order.batchNumber.ifBlank { "—" }} — " +
-                                        "${pos.size} поз. / ${"%.2f".format(w)} кг"
+                                    context.getString(
+                                        R.string.daily_report_order_line,
+                                        order.clientLastName,
+                                        order.boxNumber.ifBlank { "—" },
+                                        order.batchNumber.ifBlank { "—" },
+                                        pos.size,
+                                        "%.2f".format(w)
+                                    )
                                 )
                             }
                             sb.appendLine("═══════════════════")
                             val grand = orders
                                 .flatMap { positionsCache[it.id] ?: vm.getPositions(it.id) }
                                 .sumOf { it.weightKg.toDouble() }
-                            sb.appendLine("Всего: ${orders.size} зак. / ${"%.2f".format(grand)} кг")
+                            sb.appendLine(context.getString(
+                                R.string.daily_report_total_line,
+                                orders.size,
+                                "%.2f".format(grand)
+                            ))
                             ShareHelper.share(context, sb.toString())
                         }
                     }) {
@@ -245,7 +254,7 @@ fun OrderHistoryScreen(
                                 IconButton(onClick = {
                                     scope.launch {
                                         val pos = positionsCache[order.id] ?: vm.getPositions(order.id)
-                                        ShareHelper.share(context, ShareHelper.buildOrderText(order, pos))
+                                        ShareHelper.share(context, ShareHelper.buildOrderText(context, order, pos))
                                     }
                                 }) { Icon(Icons.Default.Share, null) }
                                 IconButton(onClick = {
@@ -293,7 +302,7 @@ fun OrderHistoryScreen(
                                                 Column(Modifier.weight(1f)) {
                                                     Text(pos.cyclicItemName,
                                                         fontSize = 14.sp, fontWeight = FontWeight.Medium)
-                                                    Text(ShareHelper.buildComposition(pos),
+                                                    Text(ShareHelper.buildComposition(context, pos),
                                                         fontSize = 12.sp,
                                                         color = MaterialTheme.colorScheme.outline)
                                                 }

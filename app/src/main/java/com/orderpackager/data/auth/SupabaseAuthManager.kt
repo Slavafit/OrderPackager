@@ -3,6 +3,7 @@ package com.orderpackager.data.auth
 import android.content.Context
 import com.google.gson.annotations.SerializedName
 import com.orderpackager.BuildConfig
+import com.orderpackager.R
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
@@ -50,6 +51,7 @@ private interface SupabaseAuthApi {
 }
 
 class SupabaseAuthManager private constructor(context: Context) {
+    private val appContext = context.applicationContext
     private val prefs = context.applicationContext.getSharedPreferences("supabase_auth", Context.MODE_PRIVATE)
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
     private val _state = MutableStateFlow<AuthState>(AuthState.Loading)
@@ -81,7 +83,7 @@ class SupabaseAuthManager private constructor(context: Context) {
                 if (!response.isSuccessful || session == null) error("HTTP ${response.code()}")
                 save(session)
                 _state.value = AuthState.SignedIn(session.user?.email ?: email.trim())
-            }.onFailure { _state.value = AuthState.Error("Не удалось войти. Проверьте email и пароль.") }
+            }.onFailure { _state.value = AuthState.Error(appContext.getString(R.string.login_failed)) }
         }
     }
 
