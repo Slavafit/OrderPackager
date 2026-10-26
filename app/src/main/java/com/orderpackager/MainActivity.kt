@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.compose.rememberNavController
 import com.orderpackager.navigation.AppNavGraph
 import com.orderpackager.repository.AppRepository
+import com.orderpackager.data.sync.CloudSyncManager
 import com.orderpackager.ui.PackagerTheme
 import com.orderpackager.ui.ThemeMode
 import com.orderpackager.ui.loadThemeMode
@@ -17,6 +18,7 @@ class OrderPackagerApp : Application() {
     override fun onCreate() {
         super.onCreate()
         AppRepository.getInstance(this)
+        CloudSyncManager.getInstance(this).enqueue()
     }
 }
 

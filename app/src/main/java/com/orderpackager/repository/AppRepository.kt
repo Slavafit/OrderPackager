@@ -4,11 +4,15 @@ import android.content.Context
 import com.orderpackager.data.db.AppDatabase
 import com.orderpackager.data.db.entity.*
 import com.orderpackager.data.network.ScaleApiProvider
+import com.orderpackager.data.sync.CloudSyncManager
 import com.orderpackager.utils.BoxNumberGenerator
 import kotlinx.coroutines.flow.Flow
 import java.util.Calendar
 
-class AppRepository private constructor(private val db: AppDatabase) {
+class AppRepository private constructor(
+    private val context: Context,
+    private val db: AppDatabase
+) {
 
     // ─── Клиенты ──────────────────────────────────────────────────────────────
     fun getAllClients(): Flow<List<Client>> = db.clientDao().getAll()
@@ -84,7 +88,10 @@ class AppRepository private constructor(private val db: AppDatabase) {
             )
         )
 
-    suspend fun updateOrder(order: PackingOrder) = db.packingOrderDao().update(order)
+    suspend fun updateOrder(order: PackingOrder) {
+        db.packingOrderDao().update(order.copy(cloudSynced = false))
+        if (order.isCompleted) CloudSyncManager.getInstance(context).enqueue()
+    }
     suspend fun deleteOrder(order: PackingOrder) = db.packingOrderDao().delete(order)
 
     // ─── Позиции заказа ───────────────────────────────────────────────────────
@@ -99,12 +106,14 @@ class AppRepository private constructor(private val db: AppDatabase) {
 
     suspend fun upsertPosition(position: OrderPosition): Long {
         val existing = db.orderPositionDao().getByOrderAndCyclic(position.orderId, position.cyclicItemId)
-        return if (existing != null) {
+        val result = if (existing != null) {
             db.orderPositionDao().update(position.copy(id = existing.id))
             existing.id
         } else {
             db.orderPositionDao().insert(position)
         }
+        db.packingOrderDao().markCloudPending(position.orderId)
+        return result
     }
 
     suspend fun deletePosition(position: OrderPosition) = db.orderPositionDao().delete(position)
@@ -127,7 +136,10 @@ class AppRepository private constructor(private val db: AppDatabase) {
 
         fun getInstance(context: Context): AppRepository =
             INSTANCE ?: synchronized(this) {
-                AppRepository(AppDatabase.getInstance(context)).also { INSTANCE = it }
+                AppRepository(
+                    context.applicationContext,
+                    AppDatabase.getInstance(context)
+                ).also { INSTANCE = it }
             }
     }
 }

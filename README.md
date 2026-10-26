@@ -2,6 +2,8 @@
 
 Mobile application for fast and convenient order packing at the warehouse.
 
+Current version: **v1.14**.
+
 ## Project Description
 
 The application is designed for warehouse employees. It allows you to quickly process customer orders, where each customer has a list of positions (names/surnames).
@@ -36,7 +38,7 @@ The application is designed for warehouse employees. It allows you to quickly pr
 - **Language:** Kotlin
 - **UI:** Jetpack Compose
 - **Architecture:** Clean Architecture + MVVM
-- **Database:** Room (local)
+- **Database:** Room (offline) + Supabase (cloud synchronization)
 - **Networking:** Retrofit + OkHttp
 - **Printing:** Android PrintManager (network printer)
 - **Build System:** Gradle with Version Catalog
@@ -77,7 +79,6 @@ OrderPackager/
 
 ## Future Plans
 
-- Data synchronization between devices
 - Excel report export
 - Frequent order templates
 - Photo capture of packed orders
@@ -88,3 +89,9 @@ OrderPackager/
 **Developed to optimize the order packing process.**
 
 ---
+
+## Облачная синхронизация
+
+Приложение сохраняет данные локально в Room и синхронизирует завершённые заказы с
+Supabase в фоне. Инструкция первоначальной настройки находится в
+[`supabase/README.md`](supabase/README.md).

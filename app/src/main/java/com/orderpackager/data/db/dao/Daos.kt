@@ -24,6 +24,9 @@ interface ClientDao {
 
     @Query("SELECT * FROM clients WHERE id = :id")
     suspend fun getById(id: Long): Client?
+
+    @Query("SELECT * FROM clients WHERE lastName = :lastName LIMIT 1")
+    suspend fun getByLastName(lastName: String): Client?
 }
 
 // ─── CyclicItemDao ────────────────────────────────────────────────────────────
@@ -63,11 +66,23 @@ interface PackingOrderDao {
     @Query("SELECT * FROM packing_orders WHERE id = :id")
     suspend fun getById(id: Long): PackingOrder?
 
+    @Query("SELECT * FROM packing_orders WHERE boxNumber = :boxNumber LIMIT 1")
+    suspend fun getByBoxNumber(boxNumber: String): PackingOrder?
+
+    @Query("SELECT * FROM packing_orders WHERE isCompleted = 1 AND cloudSynced = 0 ORDER BY createdAt ASC")
+    suspend fun getPendingCloudSync(): List<PackingOrder>
+
     @Insert
     suspend fun insert(order: PackingOrder): Long
 
     @Update
     suspend fun update(order: PackingOrder)
+
+    @Query("UPDATE packing_orders SET cloudSynced = 1 WHERE id = :orderId")
+    suspend fun markCloudSynced(orderId: Long)
+
+    @Query("UPDATE packing_orders SET cloudSynced = 0 WHERE id = :orderId")
+    suspend fun markCloudPending(orderId: Long)
 
     @Delete
     suspend fun delete(order: PackingOrder)

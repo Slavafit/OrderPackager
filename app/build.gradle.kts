@@ -1,9 +1,21 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.ksp)
 }
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use(::load)
+}
+
+fun localBuildConfigValue(name: String): String =
+    localProperties.getProperty(name, "")
+        .replace("\\", "\\\\")
+        .replace("\"", "\\\"")
 
 android {
     namespace = "com.orderpackager"
@@ -13,8 +25,20 @@ android {
         applicationId = "com.orderpackager"
         minSdk = 26
         targetSdk = 35
-        versionCode = 11
-        versionName = "v1.13"
+        versionCode = 12
+        versionName = "v1.14"
+
+        buildConfigField("String", "SUPABASE_URL", "\"${localBuildConfigValue("SUPABASE_URL")}\"")
+        buildConfigField(
+            "String",
+            "SUPABASE_PUBLISHABLE_KEY",
+            "\"${localBuildConfigValue("SUPABASE_PUBLISHABLE_KEY")}\""
+        )
+        buildConfigField(
+            "String",
+            "SUPABASE_SYNC_TOKEN",
+            "\"${localBuildConfigValue("SUPABASE_SYNC_TOKEN")}\""
+        )
     }
 
     buildFeatures {

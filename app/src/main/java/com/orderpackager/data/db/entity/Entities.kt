@@ -31,7 +31,8 @@ data class PackingOrder(
     val boxLength: Float = 0f,
     val boxWidth: Float = 0f,
     val boxHeight: Float = 0f,
-    val isCompleted: Boolean = false
+    val isCompleted: Boolean = false,
+    @ColumnInfo(defaultValue = "0") val cloudSynced: Boolean = false
 )
 
 // ─── Обработанная позиция ─────────────────────────────────────────────────────

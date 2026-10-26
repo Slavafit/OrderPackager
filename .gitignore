@@ -4,6 +4,7 @@ dist/
 bin/
 out/
 .gradle/
+.gradle-user/
 .idea/
 .kotlin/
 # Служебные файлы Android
