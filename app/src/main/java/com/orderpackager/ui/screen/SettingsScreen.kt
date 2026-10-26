@@ -42,6 +42,7 @@ fun saveScaleIp(context: android.content.Context, ip: String) =
 fun SettingsScreen(
     currentTheme:  ThemeMode,
     onThemeChange: (ThemeMode) -> Unit,
+    onPrivacyPolicy: () -> Unit,
     onBack:        () -> Unit
 ) {
     val context      = LocalContext.current
@@ -252,6 +253,12 @@ fun SettingsScreen(
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.primary
                 )
+                Spacer(Modifier.height(12.dp))
+                OutlinedButton(onClick = onPrivacyPolicy, modifier = Modifier.fillMaxWidth()) {
+                    Icon(Icons.Default.PrivacyTip, null)
+                    Spacer(Modifier.width(8.dp))
+                    Text(stringResource(R.string.privacy_title))
+                }
             }
 
             // Отступ снизу — чтобы последняя карточка не прилипала к клавиатуре

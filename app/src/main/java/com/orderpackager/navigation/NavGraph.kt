@@ -31,6 +31,7 @@ sealed class Route(val path: String) {
     object EditCyclicList  : Route("edit_cyclic_list")
     object OrderHistory    : Route("order_history")
     object Settings        : Route("settings")
+    object PrivacyPolicy   : Route("privacy_policy")
 }
 
 @Composable
@@ -138,8 +139,13 @@ fun AppNavGraph(
             SettingsScreen(
                 currentTheme  = themeMode,
                 onThemeChange = onThemeChange,
+                onPrivacyPolicy = { navController.navigate(Route.PrivacyPolicy.path) },
                 onBack        = { navController.popBackStack() }
             )
+        }
+
+        composable(Route.PrivacyPolicy.path) {
+            PrivacyPolicyScreen(onBack = { navController.popBackStack() })
         }
     }
 }

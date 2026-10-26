@@ -204,4 +204,22 @@
     <string name="developer_name">Fitlin Viacheslav</string>
     <string name="developer_telegram">Telegram: @Slavafit</string>
     <string name="developer_signature">by Slavafit</string>
+    <string name="privacy_title">Политика конфиденциальности</string>
+    <string name="privacy_effective_date">Дата вступления в силу: 26 октября 2026 г.</string>
+    <string name="privacy_intro">Order Packer помогает создавать и печатать складские этикетки и сохранять сведения об упакованных заказах.</string>
+    <string name="privacy_data_title">Какие данные обрабатываются</string>
+    <string name="privacy_data_body">Приложение обрабатывает email пользователя, фамилию клиента, номер бокса, номер партии, состав заказа, размеры коробки, вес и дату упаковки. Пароль пользователя не сохраняется.</string>
+    <string name="privacy_use_title">Для чего используются данные</string>
+    <string name="privacy_use_body">Данные используются для авторизации, работы приложения, формирования этикеток и отчётов, синхронизации, резервного копирования и восстановления заказов. Данные не используются для рекламы и не продаются.</string>
+    <string name="privacy_storage_title">Хранение и передача</string>
+    <string name="privacy_storage_body">Данные хранятся локально на устройстве и передаются по защищённому HTTPS-соединению в Supabase. Доступ к облачным заказам ограничен авторизацией и правилами RLS.</string>
+    <string name="privacy_retention_title">Срок хранения и удаление</string>
+    <string name="privacy_retention_body">Данные хранятся до их удаления владельцем приложения. Для запроса на удаление локальных и облачных данных свяжитесь с разработчиком.</string>
+    <string name="privacy_security_title">Безопасность</string>
+    <string name="privacy_security_body">Используются разумные технические меры защиты, включая шифрование при передаче и разграничение доступа. Ни один способ хранения или передачи не обеспечивает абсолютной безопасности.</string>
+    <string name="privacy_contact_title">Разработчик и контакты</string>
+    <string name="privacy_contact_body">Разработчик: Fitlin Viacheslav. Контакт по вопросам конфиденциальности: Telegram @Slavafit.</string>
+    <string name="privacy_changes_title">Изменения политики</string>
+    <string name="privacy_changes_body">При изменении обработки данных политика будет обновлена, а новая дата вступления в силу будет указана в приложении и в онлайн-версии.</string>
+    <string name="privacy_open_online">Открыть актуальную версию онлайн</string>
 </resources>

@@ -2,7 +2,7 @@
 
 Mobile application for fast and convenient order packing at the warehouse.
 
-Current version: **v1.18**.
+Current version: **v1.19**.
 
 ## Project Description
 
@@ -105,9 +105,10 @@ Supabase в фоне. Инструкция первоначальной наст
 публикации, настройки подписи, Data safety и необходимые материалы описаны в
 [`docs/GOOGLE_PLAY_RELEASE.md`](docs/GOOGLE_PLAY_RELEASE.md).
 
-Черновик политики конфиденциальности находится в
-[`docs/PRIVACY_POLICY_DRAFT.md`](docs/PRIVACY_POLICY_DRAFT.md). Перед публикацией в
-Google Play его необходимо заполнить и разместить на публичной HTTPS-странице.
+Финальная политика конфиденциальности находится в
+[`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md), а готовая для
+публикации веб-версия — в [`docs/privacy-policy.html`](docs/privacy-policy.html).
+Для Google Play веб-версию необходимо разместить на публичной HTTPS-странице.
 
 Синхронизация использует Supabase Auth и RLS: пользователь входит в приложение, а
 облачные заказы доступны только владельцу записи.

@@ -205,4 +205,22 @@
     <string name="developer_name">Fitlin Viacheslav</string>
     <string name="developer_telegram">Telegram: @Slavafit</string>
     <string name="developer_signature">by Slavafit</string>
+    <string name="privacy_title">Privacy Policy</string>
+    <string name="privacy_effective_date">Effective date: October 26, 2026</string>
+    <string name="privacy_intro">Order Packer helps create and print warehouse labels and store information about packed orders.</string>
+    <string name="privacy_data_title">Data we process</string>
+    <string name="privacy_data_body">The app processes the user’s email, client surname, box number, batch number, order contents, box dimensions, weight and packing date. The user’s password is not stored.</string>
+    <string name="privacy_use_title">How data is used</string>
+    <string name="privacy_use_body">Data is used for authentication, app functionality, labels and reports, synchronization, backup and order restoration. Data is not used for advertising or sold.</string>
+    <string name="privacy_storage_title">Storage and transfer</string>
+    <string name="privacy_storage_body">Data is stored locally on the device and transferred to Supabase over encrypted HTTPS. Access to cloud orders is restricted by authentication and RLS policies.</string>
+    <string name="privacy_retention_title">Retention and deletion</string>
+    <string name="privacy_retention_body">Data is retained until deleted by the app owner. Contact the developer to request deletion of local and cloud data.</string>
+    <string name="privacy_security_title">Security</string>
+    <string name="privacy_security_body">Reasonable technical safeguards are used, including encryption in transit and access controls. No storage or transmission method is completely secure.</string>
+    <string name="privacy_contact_title">Developer and contact</string>
+    <string name="privacy_contact_body">Developer: Fitlin Viacheslav. Privacy contact: Telegram @Slavafit.</string>
+    <string name="privacy_changes_title">Policy changes</string>
+    <string name="privacy_changes_body">If data handling changes, this policy will be updated and a new effective date will be shown in the app and online version.</string>
+    <string name="privacy_open_online">Open current policy online</string>
 </resources>
