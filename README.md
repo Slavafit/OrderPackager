@@ -109,6 +109,9 @@ Supabase в фоне. Инструкция первоначальной наст
 [`docs/PRIVACY_POLICY.md`](docs/PRIVACY_POLICY.md), а готовая для
 публикации веб-версия — в [`docs/privacy-policy.html`](docs/privacy-policy.html).
 Для Google Play веб-версию необходимо разместить на публичной HTTPS-странице.
+Для других приложений можно использовать
+[`docs/PRIVACY_POLICY_TEMPLATE.md`](docs/PRIVACY_POLICY_TEMPLATE.md) с заменяемыми
+полями и необязательными разделами.
 
 Синхронизация использует Supabase Auth и RLS: пользователь входит в приложение, а
 облачные заказы доступны только владельцу записи.
