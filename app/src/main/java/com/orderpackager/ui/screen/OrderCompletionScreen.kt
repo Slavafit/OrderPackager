@@ -151,6 +151,9 @@ fun OrderCompletionScreen(
     val snackbarHostState = remember { SnackbarHostState() }
     var deleteTarget by remember { mutableStateOf<OrderPosition?>(null) }
     var isFinishing by remember { mutableStateOf(false) }
+    var shouldPrintSummaryLabel by remember(printSummaryLabel) {
+        mutableStateOf(printSummaryLabel)
+    }
 
     Scaffold(
         snackbarHost = { SnackbarHost(snackbarHostState) },
@@ -185,8 +188,8 @@ fun OrderCompletionScreen(
                         modifier = Modifier.weight(1f)
                     )
                     Switch(
-                        checked = printSummaryLabel,
-                        onCheckedChange = { printSummaryLabel = it },
+                        checked = shouldPrintSummaryLabel,
+                        onCheckedChange = { shouldPrintSummaryLabel = it },
                         enabled = !isFinishing && !state.isSaved
                     )
                 }
@@ -208,7 +211,7 @@ fun OrderCompletionScreen(
                                 isFinishing = false
                                 return@launch
                             }
-                            if (printSummaryLabel) {
+                            if (shouldPrintSummaryLabel) {
                                 val printResult = PrintHelper.printOrderSummaryLabel(
                                     context = context,
                                     boxNumber = order.boxNumber,
