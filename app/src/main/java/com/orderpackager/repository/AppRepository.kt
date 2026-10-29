@@ -1,6 +1,7 @@
 package com.orderpackager.repository
 
 import android.content.Context
+import androidx.room.withTransaction
 import com.orderpackager.data.db.AppDatabase
 import com.orderpackager.data.db.entity.*
 import com.orderpackager.data.network.ScaleApiProvider
@@ -27,29 +28,51 @@ class AppRepository private constructor(
     suspend fun getAllCyclicItemsOnce(): List<CyclicItem> = db.cyclicItemDao().getAllOnce()
 
     suspend fun insertCyclicItem(name: String) {
-        val items = db.cyclicItemDao().getAllOnce()
-        db.cyclicItemDao().insert(CyclicItem(name = name.trim(), position = items.size))
+        val trimmedName = name.trim()
+        if (trimmedName.isEmpty()) return
+        CloudSyncManager.getInstance(context).mutateCyclicList {
+            val items = db.cyclicItemDao().getAllOnce()
+            if (items.none { it.name.trim().equals(trimmedName, ignoreCase = true) }) {
+                db.cyclicItemDao().insert(CyclicItem(name = trimmedName, position = items.size))
+            }
+        }
     }
 
     suspend fun deleteCyclicItem(item: CyclicItem) {
-        db.cyclicItemDao().delete(item)
-        // Перенумеровать оставшиеся
-        val remaining = db.cyclicItemDao().getAllOnce().sortedBy { it.position }
-        db.cyclicItemDao().insertAll(remaining.mapIndexed { i, it -> it.copy(position = i) })
+        CloudSyncManager.getInstance(context).mutateCyclicList {
+            db.withTransaction {
+                db.cyclicItemDao().delete(item)
+                val remaining = db.cyclicItemDao().getAllOnce().sortedBy { it.position }
+                db.cyclicItemDao().insertAll(remaining.mapIndexed { i, it -> it.copy(position = i) })
+            }
+        }
     }
 
     suspend fun reorderCyclicItems(items: List<CyclicItem>) {
-        db.cyclicItemDao().deleteAll()
-        db.cyclicItemDao().insertAll(items.mapIndexed { i, item -> item.copy(position = i) })
+        CloudSyncManager.getInstance(context).mutateCyclicList {
+            db.withTransaction {
+                db.cyclicItemDao().deleteAll()
+                db.cyclicItemDao().insertAll(items.mapIndexed { i, item -> item.copy(position = i) })
+            }
+        }
     }
 
-    suspend fun clearCyclicItems() = db.cyclicItemDao().deleteAll()
+    suspend fun clearCyclicItems() {
+        CloudSyncManager.getInstance(context).mutateCyclicList {
+            db.cyclicItemDao().deleteAll()
+        }
+    }
 
     suspend fun importCyclicItems(names: List<String>) {
-        db.cyclicItemDao().deleteAll()
-        db.cyclicItemDao().insertAll(names.mapIndexed { i, name ->
-            CyclicItem(name = name.trim(), position = i)
-        })
+        val normalizedNames = com.orderpackager.data.sync.CyclicListMerger.normalize(names)
+        CloudSyncManager.getInstance(context).mutateCyclicList {
+            db.withTransaction {
+                db.cyclicItemDao().deleteAll()
+                db.cyclicItemDao().insertAll(normalizedNames.mapIndexed { i, name ->
+                    CyclicItem(name = name, position = i)
+                })
+            }
+        }
     }
 
     fun getSavedCyclicIndex(context: Context, itemCount: Int): Int {

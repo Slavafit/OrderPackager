@@ -81,12 +81,29 @@ data class CloudOrder(
 
 data class CloudUpsertRequest(@SerializedName("p_order") val order: CloudOrder)
 
+data class CloudCyclicItem(
+    val name: String,
+    val position: Int
+)
+
+data class CloudCyclicItemsReplaceRequest(
+    @SerializedName("p_items") val items: List<CloudCyclicItem>
+)
+
 interface SupabaseApi {
     @POST("rest/v1/rpc/order_packer_upsert")
     suspend fun upsert(@Body request: CloudUpsertRequest): Response<Unit>
 
     @POST("rest/v1/rpc/order_packer_pull")
     suspend fun pull(@Body request: Map<String, String> = emptyMap()): Response<List<CloudOrder>>
+
+    @POST("rest/v1/rpc/order_packer_cyclic_items_pull")
+    suspend fun pullCyclicItems(
+        @Body request: Map<String, String> = emptyMap()
+    ): Response<List<CloudCyclicItem>>
+
+    @POST("rest/v1/rpc/order_packer_cyclic_items_replace")
+    suspend fun replaceCyclicItems(@Body request: CloudCyclicItemsReplaceRequest): Response<Unit>
 }
 
 object SupabaseApiProvider {

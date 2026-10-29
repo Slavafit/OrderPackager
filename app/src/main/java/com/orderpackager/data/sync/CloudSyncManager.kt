@@ -5,7 +5,10 @@ import androidx.room.withTransaction
 import com.orderpackager.data.db.AppDatabase
 import com.orderpackager.data.auth.SupabaseAuthManager
 import com.orderpackager.data.db.entity.Client
+import com.orderpackager.data.db.entity.CyclicItem
 import com.orderpackager.data.db.entity.PackingOrder
+import com.orderpackager.data.network.CloudCyclicItem
+import com.orderpackager.data.network.CloudCyclicItemsReplaceRequest
 import com.orderpackager.data.network.CloudOrder
 import com.orderpackager.data.network.CloudUpsertRequest
 import com.orderpackager.data.network.SupabaseApiProvider
@@ -30,17 +33,28 @@ sealed interface CloudSyncStatus {
 private class AuthenticationRequiredException : Exception()
 
 class CloudSyncManager private constructor(
+    private val context: Context,
     private val db: AppDatabase,
     private val auth: SupabaseAuthManager
 ) {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-    private val mutex = Mutex()
+    private val syncMutex = Mutex()
+    private val cyclicListMutex = Mutex()
     private val _status = MutableStateFlow<CloudSyncStatus>(
         if (SupabaseApiProvider.isConfigured) CloudSyncStatus.Syncing
         else CloudSyncStatus.NotConfigured
     )
     val status: StateFlow<CloudSyncStatus> = _status.asStateFlow()
     private var lastSuccessAt: Long? = null
+    private val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+
+    suspend fun mutateCyclicList(mutation: suspend () -> Unit) {
+        cyclicListMutex.withLock {
+            mutation()
+            prefs.edit().putBoolean(KEY_CYCLIC_LIST_DIRTY, true).apply()
+        }
+        enqueue()
+    }
 
     fun enqueue() {
         if (!SupabaseApiProvider.isConfigured) {
@@ -65,7 +79,7 @@ class CloudSyncManager private constructor(
         }
     }
 
-    suspend fun synchronize(): Int = mutex.withLock {
+    suspend fun synchronize(): Int = syncMutex.withLock {
         if (!SupabaseApiProvider.isConfigured) return@withLock 0
         val accessToken = auth.getValidAccessToken() ?: run {
             throw AuthenticationRequiredException()
@@ -86,7 +100,63 @@ class CloudSyncManager private constructor(
             db.packingOrderDao().markCloudSynced(order.id)
             synced++
         }
+        synchronizeCyclicList(api)
         synced
+    }
+
+    private suspend fun synchronizeCyclicList(api: com.orderpackager.data.network.SupabaseApi) =
+        cyclicListMutex.withLock {
+        val response = api.pullCyclicItems()
+        if (!response.isSuccessful) {
+            error("Supabase cyclic list pull failed: HTTP ${response.code()}")
+        }
+
+        val cloudNames = response.body().orEmpty()
+            .sortedBy(CloudCyclicItem::position)
+            .map(CloudCyclicItem::name)
+        val localItems = db.cyclicItemDao().getAllOnce().sortedBy(CyclicItem::position)
+        val localNames = localItems.map(CyclicItem::name)
+        val initialized = prefs.getBoolean(KEY_CYCLIC_LIST_INITIALIZED, false)
+        val dirty = prefs.getBoolean(KEY_CYCLIC_LIST_DIRTY, false)
+
+        val names = when {
+            !initialized -> CyclicListMerger.firstSync(
+                cloudNames = cloudNames,
+                localNames = localNames,
+                localIsDefaultSeed = localNames == AppDatabase.INITIAL_CYCLIC_ITEMS
+            )
+            dirty -> CyclicListMerger.normalize(localNames)
+            else -> CyclicListMerger.normalize(cloudNames)
+        }
+
+        if (!initialized || dirty) {
+            val replaceResponse = api.replaceCyclicItems(
+                CloudCyclicItemsReplaceRequest(
+                    names.mapIndexed { index, name -> CloudCyclicItem(name, index) }
+                )
+            )
+            if (!replaceResponse.isSuccessful) {
+                error("Supabase cyclic list update failed: HTTP ${replaceResponse.code()}")
+            }
+        }
+
+        replaceLocalCyclicList(names, localItems)
+        prefs.edit()
+            .putBoolean(KEY_CYCLIC_LIST_INITIALIZED, true)
+            .putBoolean(KEY_CYCLIC_LIST_DIRTY, false)
+            .apply()
+        }
+
+    private suspend fun replaceLocalCyclicList(names: List<String>, existing: List<CyclicItem>) {
+        val existingByName = existing.associateBy { it.name.trim().lowercase() }
+        val replacement = names.mapIndexed { index, name ->
+            existingByName[name.lowercase()]?.copy(name = name, position = index)
+                ?: CyclicItem(name = name, position = index)
+        }
+        db.withTransaction {
+            db.cyclicItemDao().deleteAll()
+            db.cyclicItemDao().insertAll(replacement)
+        }
     }
 
     private suspend fun restoreMissingOrders(api: com.orderpackager.data.network.SupabaseApi) {
@@ -123,10 +193,15 @@ class CloudSyncManager private constructor(
         fun getInstance(context: Context): CloudSyncManager =
             INSTANCE ?: synchronized(this) {
                 CloudSyncManager(
+                    context.applicationContext,
                     AppDatabase.getInstance(context.applicationContext),
                     SupabaseAuthManager.getInstance(context.applicationContext)
                 )
                     .also { INSTANCE = it }
             }
+
+        private const val PREFS_NAME = "cloud_sync"
+        private const val KEY_CYCLIC_LIST_INITIALIZED = "cyclic_list_initialized"
+        private const val KEY_CYCLIC_LIST_DIRTY = "cyclic_list_dirty"
     }
 }
