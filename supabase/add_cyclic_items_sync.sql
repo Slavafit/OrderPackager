@@ -30,13 +30,13 @@ create policy "Cyclic item owner can delete" on public.order_packer_cyclic_items
 for delete to authenticated using (owner_id = auth.uid());
 
 create or replace function public.order_packer_cyclic_items_pull()
-returns table(name text, position integer)
+returns table(name text, sort_order integer)
 language sql
 stable
 security definer
 set search_path = pg_catalog, public
 as $$
-    select item.name, item.position
+    select item.name, item.position as sort_order
     from public.order_packer_cyclic_items as item
     where item.owner_id = auth.uid()
     order by item.position;

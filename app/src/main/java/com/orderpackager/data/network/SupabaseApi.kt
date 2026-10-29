@@ -89,7 +89,7 @@ data class CloudClientsReplaceRequest(
 
 data class CloudCyclicItem(
     val name: String,
-    val position: Int
+    @SerializedName("sort_order") val position: Int
 )
 
 data class CloudCyclicItemsReplaceRequest(
