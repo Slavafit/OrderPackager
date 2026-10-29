@@ -18,9 +18,34 @@ class AppRepository private constructor(
     // ─── Клиенты ──────────────────────────────────────────────────────────────
     fun getAllClients(): Flow<List<Client>> = db.clientDao().getAll()
     fun searchClients(q: String): Flow<List<Client>> = db.clientDao().search(q)
-    suspend fun insertClient(lastName: String) = db.clientDao().insert(Client(lastName = lastName.trim()))
-    suspend fun updateClient(client: Client) = db.clientDao().update(client)
-    suspend fun deleteClient(client: Client) = db.clientDao().delete(client)
+    suspend fun insertClient(lastName: String) {
+        val normalized = lastName.trim()
+        if (normalized.isEmpty()) return
+        CloudSyncManager.getInstance(context).mutateClientList {
+            val clients = db.clientDao().getAllOnce()
+            if (clients.none { it.lastName.trim().equals(normalized, ignoreCase = true) }) {
+                db.clientDao().insert(Client(lastName = normalized))
+            }
+        }
+    }
+    suspend fun updateClient(client: Client) {
+        val normalized = client.lastName.trim()
+        if (normalized.isEmpty()) return
+        CloudSyncManager.getInstance(context).mutateClientList {
+            val clients = db.clientDao().getAllOnce()
+            if (clients.none {
+                    it.id != client.id && it.lastName.trim().equals(normalized, ignoreCase = true)
+                }
+            ) {
+                db.clientDao().update(client.copy(lastName = normalized))
+            }
+        }
+    }
+    suspend fun deleteClient(client: Client) {
+        CloudSyncManager.getInstance(context).mutateClientList {
+            db.clientDao().delete(client)
+        }
+    }
     suspend fun getClientById(id: Long) = db.clientDao().getById(id)
 
     // ─── Циклический список ───────────────────────────────────────────────────
@@ -28,50 +53,33 @@ class AppRepository private constructor(
     suspend fun getAllCyclicItemsOnce(): List<CyclicItem> = db.cyclicItemDao().getAllOnce()
 
     suspend fun insertCyclicItem(name: String) {
-        val trimmedName = name.trim()
-        if (trimmedName.isEmpty()) return
-        CloudSyncManager.getInstance(context).mutateCyclicList {
-            val items = db.cyclicItemDao().getAllOnce()
-            if (items.none { it.name.trim().equals(trimmedName, ignoreCase = true) }) {
-                db.cyclicItemDao().insert(CyclicItem(name = trimmedName, position = items.size))
-            }
-        }
+        val items = db.cyclicItemDao().getAllOnce()
+        db.cyclicItemDao().insert(CyclicItem(name = name.trim(), position = items.size))
     }
 
     suspend fun deleteCyclicItem(item: CyclicItem) {
-        CloudSyncManager.getInstance(context).mutateCyclicList {
-            db.withTransaction {
-                db.cyclicItemDao().delete(item)
-                val remaining = db.cyclicItemDao().getAllOnce().sortedBy { it.position }
-                db.cyclicItemDao().insertAll(remaining.mapIndexed { i, it -> it.copy(position = i) })
-            }
+        db.withTransaction {
+            db.cyclicItemDao().delete(item)
+            val remaining = db.cyclicItemDao().getAllOnce().sortedBy { it.position }
+            db.cyclicItemDao().insertAll(remaining.mapIndexed { i, it -> it.copy(position = i) })
         }
     }
 
     suspend fun reorderCyclicItems(items: List<CyclicItem>) {
-        CloudSyncManager.getInstance(context).mutateCyclicList {
-            db.withTransaction {
-                db.cyclicItemDao().deleteAll()
-                db.cyclicItemDao().insertAll(items.mapIndexed { i, item -> item.copy(position = i) })
-            }
+        db.withTransaction {
+            db.cyclicItemDao().deleteAll()
+            db.cyclicItemDao().insertAll(items.mapIndexed { i, item -> item.copy(position = i) })
         }
     }
 
-    suspend fun clearCyclicItems() {
-        CloudSyncManager.getInstance(context).mutateCyclicList {
-            db.cyclicItemDao().deleteAll()
-        }
-    }
+    suspend fun clearCyclicItems() = db.cyclicItemDao().deleteAll()
 
     suspend fun importCyclicItems(names: List<String>) {
-        val normalizedNames = com.orderpackager.data.sync.CyclicListMerger.normalize(names)
-        CloudSyncManager.getInstance(context).mutateCyclicList {
-            db.withTransaction {
-                db.cyclicItemDao().deleteAll()
-                db.cyclicItemDao().insertAll(normalizedNames.mapIndexed { i, name ->
-                    CyclicItem(name = name, position = i)
-                })
-            }
+        db.withTransaction {
+            db.cyclicItemDao().deleteAll()
+            db.cyclicItemDao().insertAll(names.mapIndexed { i, name ->
+                CyclicItem(name = name.trim(), position = i)
+            })
         }
     }
 

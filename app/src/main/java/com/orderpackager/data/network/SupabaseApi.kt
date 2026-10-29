@@ -81,13 +81,10 @@ data class CloudOrder(
 
 data class CloudUpsertRequest(@SerializedName("p_order") val order: CloudOrder)
 
-data class CloudCyclicItem(
-    val name: String,
-    val position: Int
-)
+data class CloudClient(@SerializedName("last_name") val lastName: String)
 
-data class CloudCyclicItemsReplaceRequest(
-    @SerializedName("p_items") val items: List<CloudCyclicItem>
+data class CloudClientsReplaceRequest(
+    @SerializedName("p_clients") val clients: List<CloudClient>
 )
 
 interface SupabaseApi {
@@ -97,13 +94,13 @@ interface SupabaseApi {
     @POST("rest/v1/rpc/order_packer_pull")
     suspend fun pull(@Body request: Map<String, String> = emptyMap()): Response<List<CloudOrder>>
 
-    @POST("rest/v1/rpc/order_packer_cyclic_items_pull")
-    suspend fun pullCyclicItems(
+    @POST("rest/v1/rpc/order_packer_clients_pull")
+    suspend fun pullClients(
         @Body request: Map<String, String> = emptyMap()
-    ): Response<List<CloudCyclicItem>>
+    ): Response<List<CloudClient>>
 
-    @POST("rest/v1/rpc/order_packer_cyclic_items_replace")
-    suspend fun replaceCyclicItems(@Body request: CloudCyclicItemsReplaceRequest): Response<Unit>
+    @POST("rest/v1/rpc/order_packer_clients_replace")
+    suspend fun replaceClients(@Body request: CloudClientsReplaceRequest): Response<Unit>
 }
 
 object SupabaseApiProvider {

@@ -30,7 +30,7 @@ The application is designed for warehouse employees. It allows you to quickly pr
 - **Share Order** function (WhatsApp, Telegram, etc.)
 - Daily order history and summary report
 - Editing both directories (customers and positions)
-- Cloud backup and synchronization of the cyclic positions directory
+- Cloud backup and synchronization of the clients directory
 
 ---
 

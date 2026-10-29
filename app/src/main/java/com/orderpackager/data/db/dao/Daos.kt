@@ -10,11 +10,17 @@ interface ClientDao {
     @Query("SELECT * FROM clients ORDER BY lastName ASC")
     fun getAll(): Flow<List<Client>>
 
+    @Query("SELECT * FROM clients ORDER BY lastName ASC")
+    suspend fun getAllOnce(): List<Client>
+
     @Query("SELECT * FROM clients WHERE lastName LIKE '%' || :q || '%' ORDER BY lastName ASC")
     fun search(q: String): Flow<List<Client>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insert(client: Client): Long
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAll(clients: List<Client>)
 
     @Update
     suspend fun update(client: Client)
@@ -27,6 +33,9 @@ interface ClientDao {
 
     @Query("SELECT * FROM clients WHERE lastName = :lastName LIMIT 1")
     suspend fun getByLastName(lastName: String): Client?
+
+    @Query("DELETE FROM clients")
+    suspend fun deleteAll()
 }
 
 // ─── CyclicItemDao ────────────────────────────────────────────────────────────
