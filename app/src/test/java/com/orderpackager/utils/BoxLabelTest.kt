@@ -34,7 +34,7 @@ class BoxLabelTest {
             date = "23.10.2026 15:42",
             appName = "Order Packer",
             version = "v1.13",
-            developer = "by Slavafit"
+            developer = "Viacheslav Fitlin"
         )
 
         assertTrue(zpl.contains("^PW800"))
@@ -43,13 +43,13 @@ class BoxLabelTest {
         assertTrue(zpl.contains("^BCN,120,N,N,N^FD$boxNumber^FS"))
         assertTrue(zpl.contains("^FD1234B^FS"))
         assertTrue(zpl.contains("Packed in Malaga: 23.10.2026 15:42"))
-        assertTrue(zpl.contains("^A0N,52,52^FDBatch: LOTE-77^FS"))
+        assertTrue(zpl.contains("^FO60,515^A0N,72,72^FDBatch: LOTE-77^FS"))
         assertTrue(zpl.contains("Weight total: 18.86 kg"))
         assertTrue(zpl.contains("Sizes: 70x45x50 cm"))
         assertTrue(zpl.contains("^BQN,2,8^FDLA,$boxNumber^FS"))
-        assertTrue(zpl.contains("Order Packer"))
-        assertTrue(zpl.contains("Version v1.13"))
-        assertTrue(zpl.contains("by Slavafit"))
+        assertTrue(zpl.contains("^FO315,1055^A0N,34,34^FDOrder Packer^FS"))
+        assertTrue(zpl.contains("^FO315,1105^A0N,27,27^FDVersion v1.13^FS"))
+        assertTrue(zpl.contains("^FO315,1145^A0N,27,27^FDViacheslav Fitlin^FS"))
         assertTrue(zpl.contains("^PQ2"))
         assertFalse(zpl.contains("^PQ1"))
 
@@ -73,7 +73,7 @@ class BoxLabelTest {
             date = "23.10.2026 15:42",
             appName = "Order Packer",
             version = "v1.13",
-            developer = "by Slavafit"
+            developer = "Viacheslav Fitlin"
         )
 
         val yCoordinates = Regex("\\^FO\\d+,(\\d+)")
@@ -83,6 +83,6 @@ class BoxLabelTest {
 
         assertTrue(yCoordinates.isNotEmpty())
         assertTrue(yCoordinates.all { it in 0 until 1200 })
-        assertEquals(965, yCoordinates.maxOrNull())
+        assertEquals(1145, yCoordinates.maxOrNull())
     }
 }

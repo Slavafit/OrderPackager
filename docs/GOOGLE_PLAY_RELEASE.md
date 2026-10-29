@@ -3,7 +3,7 @@
 ## Техническое состояние
 
 - Пакет приложения: `com.orderpackager`.
-- Версия: `v1.20`, `versionCode 18`.
+- Версия: `v1.21`, `versionCode 19`.
 - Минимальная версия Android: 8.0 (API 26).
 - Target/compile SDK: API 36.
 - Формат загрузки: Android App Bundle (`.aab`).
@@ -65,7 +65,7 @@ RELEASE_KEY_PASSWORD=пароль_ключа
 
 `app/build/outputs/bundle/release/app-release.aab`
 
-Проверьте на странице **App bundle explorer**, что versionCode равен 18, затем сначала
+Проверьте на странице **App bundle explorer**, что versionCode равен 19, затем сначала
 загрузите сборку в **Internal testing**. После установки из Google Play проверьте
 печать, весы, завершение заказа и облачную синхронизацию.
 

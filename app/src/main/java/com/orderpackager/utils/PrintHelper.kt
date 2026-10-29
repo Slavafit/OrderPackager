@@ -136,16 +136,16 @@ object PrintHelper {
 ^FO60,445^A0N,30,30^FDPacked in Malaga: $date^FS
 ^FO60,490^GB680,3,3^FS
 
-^FO60,520^A0N,52,52^FDBatch: $batchNumber^FS
+^FO60,515^A0N,72,72^FDBatch: $batchNumber^FS
 
-^FO60,590^A0N,54,54^FDWeight total: ${"%.2f".format(Locale.US, totalWeightKg)} kg^FS
+^FO60,615^A0N,54,54^FDWeight total: ${"%.2f".format(Locale.US, totalWeightKg)} kg^FS
 
-^FO60,715^A0N,44,44^FDSizes: $sizes cm^FS
+^FO60,735^A0N,44,44^FDSizes: $sizes cm^FS
 
 ^FO70,825^BQN,2,8^FDLA,$boxNumber^FS
-^FO315,875^A0N,34,34^FD$appName^FS
-^FO315,925^A0N,27,27^FDVersion $version^FS
-^FO315,965^A0N,27,27^FD$developer^FS
+^FO315,1055^A0N,34,34^FD$appName^FS
+^FO315,1105^A0N,27,27^FDVersion $version^FS
+^FO315,1145^A0N,27,27^FD$developer^FS
 
 ^PQ2
 ^XZ
