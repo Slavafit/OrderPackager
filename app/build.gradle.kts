@@ -25,8 +25,8 @@ android {
         applicationId = "com.orderpackager"
         minSdk = 26
         targetSdk = 36
-        versionCode = 17
-        versionName = "v1.19"
+        versionCode = 18
+        versionName = "v1.20"
 
         buildConfigField("String", "SUPABASE_URL", "\"${localBuildConfigValue("SUPABASE_URL")}\"")
         buildConfigField(
