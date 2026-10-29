@@ -24,7 +24,7 @@ abstract class AppDatabase : RoomDatabase() {
         @Volatile private var INSTANCE: AppDatabase? = null
 
         // ─── Вставь сюда свои имена ───────────────────────────────────────────
-        private val INITIAL_CYCLIC_ITEMS = listOf(
+        internal val INITIAL_CYCLIC_ITEMS = listOf(
             "Иван Иванов",
             "Мария Петрова",
             "Алексей Сидоров",

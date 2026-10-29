@@ -208,11 +208,11 @@
     <string name="privacy_effective_date">Fecha de entrada en vigor: 29 de octubre de 2026</string>
     <string name="privacy_intro">Order Packer ayuda a crear e imprimir etiquetas de almacén y guardar información sobre pedidos empaquetados.</string>
     <string name="privacy_data_title">Datos que tratamos</string>
-    <string name="privacy_data_body">La aplicación trata el correo del usuario, apellido del cliente, número de caja, número de lote, contenido del pedido, dimensiones, peso y fecha de embalaje. La contraseña no se guarda.</string>
+    <string name="privacy_data_body">La aplicación trata el correo del usuario, apellido del cliente, número de caja, número de lote, contenido del pedido, nombres de posiciones de la lista cíclica, dimensiones, peso y fecha de embalaje. La contraseña no se guarda.</string>
     <string name="privacy_use_title">Uso de los datos</string>
     <string name="privacy_use_body">Los datos se utilizan para autenticación, funcionamiento, etiquetas e informes, sincronización, copias de seguridad y restauración. No se usan para publicidad ni se venden.</string>
     <string name="privacy_storage_title">Almacenamiento y transferencia</string>
-    <string name="privacy_storage_body">Los datos se guardan localmente y se transfieren a Supabase mediante HTTPS cifrado. El acceso a pedidos y al directorio de clientes en la nube está limitado por autenticación y políticas RLS.</string>
+    <string name="privacy_storage_body">Los datos se guardan localmente y se transfieren a Supabase mediante HTTPS cifrado. El acceso a pedidos y directorios en la nube está limitado por autenticación y políticas RLS.</string>
     <string name="privacy_retention_title">Conservación y eliminación</string>
     <string name="privacy_retention_body">Los datos se conservan hasta que el propietario los elimine. Contacte con el desarrollador para solicitar la eliminación de datos locales y en la nube.</string>
     <string name="privacy_security_title">Seguridad</string>

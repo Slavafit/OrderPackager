@@ -2,7 +2,7 @@
 
 Mobile application for fast and convenient order packing at the warehouse.
 
-Current version: **v1.22**.
+Current version: **v1.23**.
 
 ## Project Description
 
@@ -31,6 +31,7 @@ The application is designed for warehouse employees. It allows you to quickly pr
 - Daily order history and summary report
 - Editing both directories (customers and positions)
 - Cloud backup and synchronization of the clients directory
+- Cloud backup and synchronization of the cyclic positions directory
 
 ---
 
