@@ -205,7 +205,7 @@
     <string name="developer_telegram">Telegram: @Slavafit</string>
     <string name="developer_signature">Viacheslav Fitlin</string>
     <string name="privacy_title">Политика конфиденциальности</string>
-    <string name="privacy_effective_date">Дата вступления в силу: 26 октября 2026 г.</string>
+    <string name="privacy_effective_date">Дата вступления в силу: 29 октября 2026 г.</string>
     <string name="privacy_intro">Order Packer помогает создавать и печатать складские этикетки и сохранять сведения об упакованных заказах.</string>
     <string name="privacy_data_title">Какие данные обрабатываются</string>
     <string name="privacy_data_body">Приложение обрабатывает email пользователя, фамилию клиента, номер бокса, номер партии, состав заказа, размеры коробки, вес и дату упаковки. Пароль пользователя не сохраняется.</string>

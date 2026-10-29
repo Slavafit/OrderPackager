@@ -206,7 +206,7 @@
     <string name="developer_telegram">Telegram: @Slavafit</string>
     <string name="developer_signature">Viacheslav Fitlin</string>
     <string name="privacy_title">Privacy Policy</string>
-    <string name="privacy_effective_date">Effective date: October 26, 2026</string>
+    <string name="privacy_effective_date">Effective date: October 29, 2026</string>
     <string name="privacy_intro">Order Packer helps create and print warehouse labels and store information about packed orders.</string>
     <string name="privacy_data_title">Data we process</string>
     <string name="privacy_data_body">The app processes the user’s email, client surname, box number, batch number, order contents, box dimensions, weight and packing date. The user’s password is not stored.</string>

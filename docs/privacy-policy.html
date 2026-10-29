@@ -1,20 +1,163 @@
 <!doctype html>
-<html lang="ru">
+<html lang="es">
 <head>
-  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Политика конфиденциальности Order Packer</title>
-  <style>body{max-width:760px;margin:40px auto;padding:0 20px;font:16px/1.6 system-ui,sans-serif;color:#202124}h1,h2{line-height:1.25}small{color:#5f6368}</style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Política de privacidad de la aplicación Order Packer">
+  <title>Política de privacidad — Order Packer</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 32px 20px 64px;
+      font: 16px/1.65 system-ui, -apple-system, "Segoe UI", sans-serif;
+      color: CanvasText;
+      background: Canvas;
+    }
+    h1, h2 { line-height: 1.25; }
+    h1 { margin-top: 24px; }
+    h2 { margin-top: 28px; }
+    .language-picker {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid color-mix(in srgb, CanvasText 20%, transparent);
+    }
+    .language-picker button {
+      border: 1px solid #5f6368;
+      border-radius: 999px;
+      padding: 8px 16px;
+      font: inherit;
+      cursor: pointer;
+      color: inherit;
+      background: transparent;
+    }
+    .language-picker button[aria-pressed="true"] {
+      border-color: #1967d2;
+      color: white;
+      background: #1967d2;
+    }
+    .effective-date { color: #5f6368; }
+    a { color: #1967d2; }
+    [hidden] { display: none !important; }
+  </style>
 </head>
 <body>
-  <h1>Политика конфиденциальности Order Packer</h1>
-  <small>Дата вступления в силу: 26 октября 2026 г.</small>
-  <p>Order Packer помогает создавать и печатать складские этикетки и сохранять сведения об упакованных заказах.</p>
-  <h2>Какие данные обрабатываются</h2><p>Приложение обрабатывает email пользователя, фамилию клиента, номер бокса, номер партии, состав заказа, размеры коробки, вес и дату упаковки. Пароль пользователя не сохраняется.</p>
-  <h2>Для чего используются данные</h2><p>Данные используются для авторизации, работы приложения, формирования этикеток и отчётов, синхронизации, резервного копирования и восстановления заказов. Данные не используются для рекламы и не продаются.</p>
-  <h2>Хранение и передача</h2><p>Данные хранятся локально на устройстве и передаются по защищённому HTTPS-соединению в Supabase. Доступ к облачным заказам ограничен авторизацией и правилами RLS.</p>
-  <h2>Срок хранения и удаление</h2><p>Данные хранятся до их удаления владельцем приложения. Для запроса на удаление локальных и облачных данных свяжитесь с разработчиком.</p>
-  <h2>Безопасность</h2><p>Используются разумные технические меры защиты, включая шифрование при передаче и разграничение доступа. Ни один способ хранения или передачи не обеспечивает абсолютной безопасности.</p>
-  <h2>Разработчик и контакты</h2><p>Разработчик: Fitlin Viacheslav. Контакт по вопросам конфиденциальности: <a href="https://t.me/Slavafit">Telegram @Slavafit</a>.</p>
-  <h2>Изменения политики</h2><p>При изменении обработки данных политика будет обновлена, а новая дата вступления в силу будет указана в приложении и в онлайн-версии.</p>
+  <nav class="language-picker" aria-label="Language / Idioma / Язык">
+    <button type="button" data-language="es" aria-pressed="true">Español</button>
+    <button type="button" data-language="en" aria-pressed="false">English</button>
+    <button type="button" data-language="ru" aria-pressed="false">Русский</button>
+  </nav>
+
+  <main>
+    <article data-policy="es" lang="es">
+      <h1>Política de privacidad de Order Packer</h1>
+      <p class="effective-date">Fecha de entrada en vigor: 29 de octubre de 2026</p>
+      <p>Order Packer ayuda a crear e imprimir etiquetas de almacén y a guardar información sobre pedidos empaquetados.</p>
+
+      <h2>Datos que se tratan</h2>
+      <p>La aplicación trata el correo electrónico del usuario, el apellido del cliente, el número de caja, el número de lote, el contenido del pedido, las dimensiones de la caja, el peso y la fecha de embalaje. La aplicación no guarda la contraseña del usuario.</p>
+
+      <h2>Finalidad del tratamiento</h2>
+      <p>Los datos se utilizan para la autenticación, el funcionamiento de la aplicación, la creación de etiquetas e informes, la sincronización, las copias de seguridad y la restauración de pedidos. Los datos no se utilizan con fines publicitarios ni se venden a terceros.</p>
+
+      <h2>Almacenamiento y transferencia</h2>
+      <p>Los datos se guardan localmente en el dispositivo y pueden transmitirse mediante una conexión HTTPS cifrada a Supabase. El acceso a los pedidos almacenados en la nube está limitado mediante autenticación y políticas de seguridad a nivel de fila (RLS).</p>
+
+      <h2>Conservación y eliminación</h2>
+      <p>Los datos se conservan hasta que el propietario de la aplicación los elimina. Los datos locales pueden eliminarse desde el dispositivo. Para solicitar la eliminación de los datos almacenados en la nube, contacte con el desarrollador.</p>
+
+      <h2>Seguridad</h2>
+      <p>Se aplican medidas técnicas razonables, incluido el cifrado durante la transmisión y el control de acceso. Ningún método de almacenamiento o transmisión garantiza una seguridad absoluta.</p>
+
+      <h2>Desarrollador y contacto</h2>
+      <p>Desarrollador: Viacheslav Fitlin. Contacto para cuestiones de privacidad: <a href="https://t.me/Slavafit">Telegram @Slavafit</a>.</p>
+
+      <h2>Cambios en esta política</h2>
+      <p>Si cambia el tratamiento de los datos, esta política se actualizará y la nueva fecha de entrada en vigor se indicará tanto en la aplicación como en esta página.</p>
+    </article>
+
+    <article data-policy="en" lang="en" hidden>
+      <h1>Order Packer Privacy Policy</h1>
+      <p class="effective-date">Effective date: October 29, 2026</p>
+      <p>Order Packer helps create and print warehouse labels and store information about packed orders.</p>
+
+      <h2>Data we process</h2>
+      <p>The application processes the user's email address, client surname, box number, batch number, order contents, box dimensions, weight, and packing date. The application does not store the user's password.</p>
+
+      <h2>How data is used</h2>
+      <p>Data is used for authentication, application functionality, creating labels and reports, synchronization, backup, and order restoration. Data is not used for advertising and is not sold to third parties.</p>
+
+      <h2>Storage and transfer</h2>
+      <p>Data is stored locally on the device and may be transferred to Supabase over an encrypted HTTPS connection. Access to cloud orders is restricted by authentication and Row Level Security (RLS) policies.</p>
+
+      <h2>Retention and deletion</h2>
+      <p>Data is retained until it is deleted by the application owner. Local data can be removed from the device. To request deletion of cloud data, contact the developer.</p>
+
+      <h2>Security</h2>
+      <p>Reasonable technical safeguards are used, including encryption in transit and access controls. No storage or transmission method can guarantee absolute security.</p>
+
+      <h2>Developer and contact</h2>
+      <p>Developer: Viacheslav Fitlin. Privacy contact: <a href="https://t.me/Slavafit">Telegram @Slavafit</a>.</p>
+
+      <h2>Changes to this policy</h2>
+      <p>If data processing changes, this policy will be updated and the new effective date will be shown in the application and on this page.</p>
+    </article>
+
+    <article data-policy="ru" lang="ru" hidden>
+      <h1>Политика конфиденциальности Order Packer</h1>
+      <p class="effective-date">Дата вступления в силу: 29 октября 2026 г.</p>
+      <p>Order Packer помогает создавать и печатать складские этикетки и сохранять сведения об упакованных заказах.</p>
+
+      <h2>Какие данные обрабатываются</h2>
+      <p>Приложение обрабатывает адрес электронной почты пользователя, фамилию клиента, номер бокса, номер партии, состав заказа, размеры коробки, вес и дату упаковки. Приложение не сохраняет пароль пользователя.</p>
+
+      <h2>Для чего используются данные</h2>
+      <p>Данные используются для авторизации, работы приложения, формирования этикеток и отчётов, синхронизации, резервного копирования и восстановления заказов. Данные не используются для рекламы и не продаются третьим лицам.</p>
+
+      <h2>Хранение и передача</h2>
+      <p>Данные хранятся локально на устройстве и могут передаваться по защищённому HTTPS-соединению в Supabase. Доступ к облачным заказам ограничен авторизацией и правилами Row Level Security (RLS).</p>
+
+      <h2>Срок хранения и удаление</h2>
+      <p>Данные хранятся до их удаления владельцем приложения. Локальные данные можно удалить с устройства. Для запроса на удаление облачных данных свяжитесь с разработчиком.</p>
+
+      <h2>Безопасность</h2>
+      <p>Используются разумные технические меры защиты, включая шифрование при передаче и разграничение доступа. Ни один способ хранения или передачи не гарантирует абсолютную безопасность.</p>
+
+      <h2>Разработчик и контакты</h2>
+      <p>Разработчик: Viacheslav Fitlin. Контакт по вопросам конфиденциальности: <a href="https://t.me/Slavafit">Telegram @Slavafit</a>.</p>
+
+      <h2>Изменения политики</h2>
+      <p>При изменении обработки данных политика будет обновлена, а новая дата вступления в силу будет указана в приложении и на этой странице.</p>
+    </article>
+  </main>
+
+  <script>
+    (() => {
+      const supported = ["es", "en", "ru"];
+      const buttons = [...document.querySelectorAll("[data-language]")];
+      const policies = [...document.querySelectorAll("[data-policy]")];
+
+      const selectLanguage = (language, remember = true) => {
+        const selected = supported.includes(language) ? language : "es";
+        policies.forEach((policy) => {
+          policy.hidden = policy.dataset.policy !== selected;
+        });
+        buttons.forEach((button) => {
+          button.setAttribute("aria-pressed", String(button.dataset.language === selected));
+        });
+        document.documentElement.lang = selected;
+        if (remember) localStorage.setItem("order-packer-policy-language", selected);
+      };
+
+      buttons.forEach((button) => {
+        button.addEventListener("click", () => selectLanguage(button.dataset.language));
+      });
+
+      selectLanguage(localStorage.getItem("order-packer-policy-language") || "es", false);
+    })();
+  </script>
 </body>
 </html>
