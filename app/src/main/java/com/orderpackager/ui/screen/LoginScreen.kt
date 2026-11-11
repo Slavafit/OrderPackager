@@ -48,7 +48,7 @@ fun LoginScreen(auth: SupabaseAuthManager, state: AuthState) {
                 if (state is AuthState.Error) {
                     Text(state.message, color = MaterialTheme.colorScheme.error)
                 }
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = { auth.signIn(email, password) },
                     enabled = email.isNotBlank() && password.isNotBlank() && !loading,
                     modifier = Modifier.fillMaxWidth().height(50.dp)

@@ -49,6 +49,7 @@ fun WorkingScreen(
     if (showComposition) {
         CompositionScreen(
             initial = state.composition,
+            clientName = state.currentItem?.name ?: clientName,
             onCancel = { showComposition = false },
             onSave = { items ->
                 vm.saveComposition(items)
@@ -97,7 +98,7 @@ fun WorkingScreen(
                     }
                 },
                 actions = {
-                    TextButton(
+                    TextButton(shape = MaterialTheme.shapes.medium,
                         onClick = { showFinishDialog = true },
                         colors  = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.onPrimary
@@ -180,19 +181,19 @@ fun WorkingScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedButton(onClick = { vm.goPrev() }, modifier = Modifier.weight(1f)) {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { vm.goPrev() }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Default.ArrowBack, null, Modifier.size(18.dp))
                     Spacer(Modifier.width(4.dp))
                     Text(stringResource(R.string.prev))
                 }
-                OutlinedButton(onClick = { vm.goNext() }, modifier = Modifier.weight(1f)) {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { vm.goNext() }, modifier = Modifier.weight(1f)) {
                     Text(stringResource(R.string.next))
                     Spacer(Modifier.width(4.dp))
                     Icon(Icons.Default.ArrowForward, null, Modifier.size(18.dp))
                 }
             }
 
-            Button(
+            Button(shape = MaterialTheme.shapes.medium,
                 onClick = { showComposition = true },
                 enabled = state.currentItem != null,
                 modifier = Modifier.fillMaxWidth().heightIn(min = 64.dp)
@@ -287,7 +288,7 @@ fun WorkingScreen(
                     // Ручная кнопка — только когда авто выключен
                     if (!state.autoWeight) {
                         Spacer(Modifier.height(4.dp))
-                        Button(
+                        Button(shape = MaterialTheme.shapes.medium,
                             onClick  = { vm.fetchWeight() },
                             modifier = Modifier.fillMaxWidth(),
                             enabled  = !state.isLoadingWeight
@@ -316,7 +317,7 @@ fun WorkingScreen(
             }
 
             // ─── Кнопка Печать ────────────────────────────────────────────────
-            Button(
+            Button(shape = MaterialTheme.shapes.medium,
                 onClick = {
                     if (!state.hasSelectedComposition) {
                         scope.launch {
@@ -353,10 +354,8 @@ fun WorkingScreen(
                         color       = MaterialTheme.colorScheme.onPrimary,
                         strokeWidth = 2.dp
                     )
-                } else {
-                    Icon(Icons.Default.Print, null)
                 }
-                Spacer(Modifier.width(10.dp))
+                if (isPrinting) Spacer(Modifier.width(10.dp))
                 Text(
                     stringResource(if (isPrinting) R.string.printing else R.string.print_label),
                     fontSize = 18.sp
@@ -395,7 +394,7 @@ fun WorkingScreen(
                 }
             },
             confirmButton = {
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         if (isFinishRequested) return@Button
                         isFinishRequested = true
@@ -406,7 +405,7 @@ fun WorkingScreen(
                 ) { Text(stringResource(R.string.finish_order)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showFinishDialog = false }) {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { showFinishDialog = false }) {
                     Text(stringResource(R.string.cancel))
                 }
             }

@@ -240,4 +240,6 @@
     <string name="catalog_save_error">Could not save contents. Please try again.</string>
     <string name="report_product_totals">Product totals</string>
     <string name="report_missing_quantities">Legacy positions without product quantities are excluded from these totals.</string>
+    <string name="composition_client">Contents: %1$s</string>
+    <string name="composition_stats">Categories: %1$d · Quantity: %2$d</string>
 </resources>

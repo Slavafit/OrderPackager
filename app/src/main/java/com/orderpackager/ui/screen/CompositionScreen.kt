@@ -25,6 +25,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun CompositionScreen(
     initial: List<CompositionItem>,
+    clientName: String,
     onCancel: () -> Unit,
     onSave: suspend (List<CompositionItem>) -> Unit
 ) {
@@ -44,10 +45,10 @@ fun CompositionScreen(
     val product = catalog.products.firstOrNull { it.id == productId }
     val number = quantity.toIntOrNull()?.takeIf { it in 0..Composition.MAX_QUANTITY }
 
-    fun pendingItems(): List<CompositionItem> {
-        if (product == null || number == null) return items
+    fun pendingItems(selectedQuantity: Int? = number): List<CompositionItem> {
+        if (product == null || selectedQuantity == null) return items
         return items.filterNot { it.product.id == product.id } +
-            if (number > 0) listOf(CompositionItem(product, number)) else emptyList()
+            if (selectedQuantity > 0) listOf(CompositionItem(product, selectedQuantity)) else emptyList()
     }
     fun back() {
         when {
@@ -61,16 +62,16 @@ fun CompositionScreen(
     BackHandler { back() }
 
     Scaffold(
-        topBar = { TopAppBar(title = { Text(stringResource(R.string.composition)) }) },
+        topBar = { TopAppBar(title = { Text(stringResource(R.string.composition_client, clientName)) }) },
         bottomBar = {
             Row(Modifier.fillMaxWidth().navigationBarsPadding().padding(12.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                OutlinedButton(onClick = { back() }, enabled = !saving) { Text(stringResource(R.string.catalog_back)) }
-                OutlinedButton(onClick = {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { back() }, enabled = !saving) { Text(stringResource(R.string.catalog_back)) }
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = {
                     draftJson = Composition.encode(pendingItems())
                     productId = null
                     showList = true
                 }, enabled = !saving && (product == null || number != null)) { Text(stringResource(R.string.catalog_list)) }
-                Button(onClick = {
+                Button(shape = MaterialTheme.shapes.medium, onClick = {
                     val result = pendingItems()
                     saving = true
                     saveError = false
@@ -96,14 +97,19 @@ fun CompositionScreen(
                 product != null -> {
                     Text(product.names.localized(language), style = MaterialTheme.typography.headlineSmall)
                     Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(20.dp)) {
-                        OutlinedButton(onClick = { quantity = ((number ?: 1) - 1).coerceAtLeast(0).toString() }) { Text("−") }
+                        OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { quantity = ((number ?: 1) - 1).coerceAtLeast(0).toString() }) { Text("−") }
                         Text(quantity, fontSize = 32.sp)
-                        Button(onClick = { quantity = ((number ?: 0) + 1).coerceAtMost(Composition.MAX_QUANTITY).toString() }) { Text("+") }
+                        Button(shape = MaterialTheme.shapes.medium, onClick = { quantity = ((number ?: 0) + 1).coerceAtMost(Composition.MAX_QUANTITY).toString() }) { Text("+") }
                     }
                     listOf(listOf(1, 2, 3, 4), listOf(5, 6, 8, 10)).forEach { row ->
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             row.forEach { value ->
-                                OutlinedButton(onClick = { quantity = value.toString() }, modifier = Modifier.weight(1f)) { Text("$value") }
+                                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = {
+                                    draftJson = Composition.encode(pendingItems(value))
+                                    productId = null
+                                    categoryId = null
+                                    showList = false
+                                }, modifier = Modifier.weight(1f)) { Text("$value") }
                             }
                         }
                     }
@@ -117,7 +123,7 @@ fun CompositionScreen(
                         isError = number == null,
                         modifier = Modifier.fillMaxWidth()
                     )
-                    Button(onClick = {
+                    Button(shape = MaterialTheme.shapes.medium, onClick = {
                         draftJson = Composition.encode(pendingItems())
                         productId = null
                         categoryId = null
@@ -131,12 +137,12 @@ fun CompositionScreen(
                             Column(Modifier.padding(12.dp)) {
                                 Text(Composition.text(listOf(item), language))
                                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                    TextButton(onClick = {
+                                    TextButton(shape = MaterialTheme.shapes.medium, onClick = {
                                         categoryId = item.product.categoryId
                                         productId = item.product.id
                                         quantity = item.quantity.toString()
                                     }) { Text(stringResource(R.string.catalog_edit)) }
-                                    TextButton(onClick = {
+                                    TextButton(shape = MaterialTheme.shapes.medium, onClick = {
                                         draftJson = Composition.encode(items.filterNot { it.product.id == item.product.id })
                                     }) { Text(stringResource(R.string.catalog_remove)) }
                                 }
@@ -145,11 +151,11 @@ fun CompositionScreen(
                     }
                 }
                 categoryId == null -> {
-                    Text(stringResource(R.string.composition_count, Composition.categoryCount(items)))
+                    Text(stringResource(R.string.composition_stats, Composition.categoryCount(items), items.sumOf { it.quantity.toLong() }))
                     catalog.categories.sortedBy { it.sortOrder }.chunked(2).forEach { row ->
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             row.forEach { category ->
-                                Button(onClick = { categoryId = category.id }, modifier = Modifier.weight(1f).heightIn(min = 88.dp)) {
+                                Button(shape = MaterialTheme.shapes.medium, onClick = { categoryId = category.id }, modifier = Modifier.weight(1f).heightIn(min = 88.dp)) {
                                     Text(category.names.localized(language))
                                 }
                             }
@@ -161,7 +167,7 @@ fun CompositionScreen(
                     catalog.products.filter { it.categoryId == categoryId }.sortedBy { it.sortOrder }.chunked(2).forEach { row ->
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             row.forEach { entry ->
-                                Button(onClick = {
+                                Button(shape = MaterialTheme.shapes.medium, onClick = {
                                     productId = entry.id
                                     quantity = (items.firstOrNull { it.product.id == entry.id }?.quantity ?: 1).toString()
                                 }, modifier = Modifier.weight(1f).heightIn(min = 88.dp)) { Text(entry.names.localized(language)) }
@@ -175,7 +181,7 @@ fun CompositionScreen(
     if (discardDialog) AlertDialog(
         onDismissRequest = { discardDialog = false },
         title = { Text(stringResource(R.string.catalog_discard)) },
-        confirmButton = { TextButton(onClick = onCancel) { Text(stringResource(R.string.catalog_leave)) } },
-        dismissButton = { TextButton(onClick = { discardDialog = false }) { Text(stringResource(R.string.catalog_continue)) } }
+        confirmButton = { TextButton(shape = MaterialTheme.shapes.medium, onClick = onCancel) { Text(stringResource(R.string.catalog_leave)) } },
+        dismissButton = { TextButton(shape = MaterialTheme.shapes.medium, onClick = { discardDialog = false }) { Text(stringResource(R.string.catalog_continue)) } }
     )
 }

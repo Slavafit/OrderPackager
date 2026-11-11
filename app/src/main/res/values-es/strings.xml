@@ -239,4 +239,6 @@
     <string name="catalog_save_error">No se pudo guardar el contenido. Inténtalo de nuevo.</string>
     <string name="report_product_totals">Totales por producto</string>
     <string name="report_missing_quantities">Las posiciones antiguas sin cantidades de productos no se incluyen en los totales.</string>
+    <string name="composition_client">Contenido: %1$s</string>
+    <string name="composition_stats">Categorías: %1$d · Cantidad: %2$d</string>
 </resources>

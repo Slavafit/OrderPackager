@@ -193,7 +193,7 @@ fun OrderCompletionScreen(
                         enabled = !isFinishing && !state.isSaved
                     )
                 }
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         if (isFinishing) return@Button
                         if (state.batchNumber.isBlank()) {
@@ -328,12 +328,12 @@ fun OrderCompletionScreen(
                             DimField(stringResource(R.string.box_h), state.boxH, vm::setBoxH, Modifier.weight(1f))
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            OutlinedButton(onClick = { vm.applyDefault() }, Modifier.weight(1f)) {
+                            OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { vm.applyDefault() }, Modifier.weight(1f)) {
                                 Icon(Icons.Default.RestartAlt, null, Modifier.size(16.dp))
                                 Spacer(Modifier.width(4.dp))
                                 Text(stringResource(R.string.apply_default), fontSize = 13.sp)
                             }
-                            OutlinedButton(
+                            OutlinedButton(shape = MaterialTheme.shapes.medium,
                                 onClick = {
                                     vm.saveDefault()
                                     scope.launch {
@@ -428,7 +428,7 @@ fun OrderCompletionScreen(
             title = { Text(stringResource(R.string.delete_position_from_order_title)) },
             text  = { Text(stringResource(R.string.delete_position_from_order_body, pos.cyclicItemName)) },
             confirmButton = {
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         scope.launch {
                             vm.deletePosition(pos)
@@ -439,7 +439,7 @@ fun OrderCompletionScreen(
                 ) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { deleteTarget = null }) {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { deleteTarget = null }) {
                     Text(stringResource(R.string.cancel))
                 }
             }

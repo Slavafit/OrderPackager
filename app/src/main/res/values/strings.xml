@@ -239,4 +239,6 @@
     <string name="catalog_save_error">Не удалось сохранить состав. Повторите попытку.</string>
     <string name="report_product_totals">Итого по товарам</string>
     <string name="report_missing_quantities">У старых позиций нет количества товаров; они не включены в итог.</string>
+    <string name="composition_client">Состав: %1$s</string>
+    <string name="composition_stats">Категорий: %1$d · Количество: %2$d</string>
 </resources>

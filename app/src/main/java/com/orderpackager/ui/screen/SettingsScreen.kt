@@ -141,7 +141,7 @@ fun SettingsScreen(
                     })
                 )
                 Spacer(Modifier.height(8.dp))
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         focusManager.clearFocus()
                         saveScaleIp(context, scaleIp)
@@ -184,7 +184,7 @@ fun SettingsScreen(
                 )
                 Spacer(Modifier.height(8.dp))
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(
+                    Button(shape = MaterialTheme.shapes.medium,
                         onClick = {
                             focusManager.clearFocus()
                             PrintHelper.savePrinterIp(context, printerIp)
@@ -197,7 +197,7 @@ fun SettingsScreen(
                         Spacer(Modifier.width(6.dp))
                         Text(stringResource(R.string.save))
                     }
-                    OutlinedButton(
+                    OutlinedButton(shape = MaterialTheme.shapes.medium,
                         onClick = {
                             focusManager.clearFocus()
                             PrintHelper.savePrinterIp(context, printerIp)
@@ -254,7 +254,7 @@ fun SettingsScreen(
                     color = MaterialTheme.colorScheme.primary
                 )
                 Spacer(Modifier.height(12.dp))
-                OutlinedButton(onClick = onPrivacyPolicy, modifier = Modifier.fillMaxWidth()) {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = onPrivacyPolicy, modifier = Modifier.fillMaxWidth()) {
                     Icon(Icons.Default.PrivacyTip, null)
                     Spacer(Modifier.width(8.dp))
                     Text(stringResource(R.string.privacy_title))
