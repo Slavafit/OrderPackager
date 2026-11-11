@@ -363,6 +363,15 @@ fun OrderCompletionScreen(
                 )
             }
 
+            item {
+                Card(Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 8.dp)) {
+                    Column(Modifier.padding(16.dp)) {
+                        Text(stringResource(R.string.report_product_totals), fontWeight = FontWeight.Bold)
+                        Text(ShareHelper.buildProductTotals(context, state.positions))
+                    }
+                }
+            }
+
             // ─── Список позиций ───────────────────────────────────────────────
             if (state.positions.isEmpty()) {
                 item {

@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.orderpackager.data.catalog.Composition
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.orderpackager.R
 import com.orderpackager.repository.AppRepository
 import com.orderpackager.ui.viewmodel.WorkingViewModel
@@ -43,6 +45,18 @@ fun WorkingScreen(
     })
 
     val state by vm.state.collectAsStateWithLifecycle()
+    var showComposition by rememberSaveable { mutableStateOf(false) }
+    if (showComposition) {
+        CompositionScreen(
+            initial = state.composition,
+            onCancel = { showComposition = false },
+            onSave = { items ->
+                vm.saveComposition(items)
+                showComposition = false
+            }
+        )
+        return
+    }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var showFinishDialog by remember { mutableStateOf(false) }
@@ -178,37 +192,12 @@ fun WorkingScreen(
                 }
             }
 
-            // ─── Состав ───────────────────────────────────────────────────────
-            Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
-                Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text(
-                        stringResource(R.string.composition),
-                        style    = MaterialTheme.typography.labelLarge,
-                        color    = MaterialTheme.colorScheme.outline,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    Row(Modifier.fillMaxWidth()) {
-                        Column(Modifier.weight(1f)) {
-                            CompactCheck(stringResource(R.string.clothes),    state.hasClothes,     vm::setClothes)
-                            CompactCheck(stringResource(R.string.shoes),      state.hasShoes,       vm::setShoes)
-                            CompactCheck(stringResource(R.string.cosmetics),  state.hasCosmetics,   vm::setCosmetics)
-                        }
-                        Column(Modifier.weight(1f)) {
-                            CompactCheck(stringResource(R.string.accessories), state.hasAccessories, vm::setAccessories)
-                            CompactCheck(stringResource(R.string.bags), state.hasBags, vm::setBags)
-                            CompactCheck(stringResource(R.string.other),       state.hasOther,       vm::setOther)
-                        }
-                    }
-                    if (state.hasOther) {
-                        OutlinedTextField(
-                            value         = state.otherText,
-                            onValueChange = vm::setOtherText,
-                            modifier      = Modifier.fillMaxWidth().padding(top = 4.dp),
-                            placeholder   = { Text(stringResource(R.string.other_hint)) },
-                            singleLine    = true
-                        )
-                    }
-                }
+            Button(
+                onClick = { showComposition = true },
+                enabled = state.currentItem != null,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 64.dp)
+            ) {
+                Text(stringResource(R.string.composition_count, Composition.categoryCount(state.composition)))
             }
 
             // ─── Вес ──────────────────────────────────────────────────────────
@@ -422,16 +411,5 @@ fun WorkingScreen(
                 }
             }
         )
-    }
-}
-
-@Composable
-private fun CompactCheck(label: String, checked: Boolean, onChecked: (Boolean) -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier          = Modifier.padding(vertical = 2.dp)
-    ) {
-        Checkbox(checked = checked, onCheckedChange = onChecked, modifier = Modifier.size(36.dp))
-        Text(label, fontSize = 15.sp)
     }
 }

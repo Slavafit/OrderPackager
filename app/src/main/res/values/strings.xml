@@ -222,4 +222,21 @@
     <string name="privacy_changes_title">Изменения политики</string>
     <string name="privacy_changes_body">При изменении обработки данных политика будет обновлена, а новая дата вступления в силу будет указана в приложении и в онлайн-версии.</string>
     <string name="privacy_open_online">Открыть актуальную версию онлайн</string>
+
+    <string name="composition_count">Состав (%1$d категорий)</string>
+    <string name="catalog_back">Назад</string>
+    <string name="catalog_list">Список</string>
+    <string name="catalog_finish">Закончить</string>
+    <string name="catalog_quantity">Количество</string>
+    <string name="catalog_quantity_hint">От 0 до 99999. Ноль удаляет товар.</string>
+    <string name="catalog_add_another">Добавить ещё</string>
+    <string name="catalog_empty">Состав пока пуст</string>
+    <string name="catalog_edit">Изменить</string>
+    <string name="catalog_remove">Удалить</string>
+    <string name="catalog_discard">Выйти без сохранения изменений?</string>
+    <string name="catalog_leave">Выйти</string>
+    <string name="catalog_continue">Продолжить</string>
+    <string name="catalog_save_error">Не удалось сохранить состав. Повторите попытку.</string>
+    <string name="report_product_totals">Итого по товарам</string>
+    <string name="report_missing_quantities">У старых позиций нет количества товаров; они не включены в итог.</string>
 </resources>

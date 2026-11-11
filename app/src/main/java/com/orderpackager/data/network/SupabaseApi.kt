@@ -1,6 +1,8 @@
 package com.orderpackager.data.network
 
 import com.google.gson.annotations.SerializedName
+import com.orderpackager.data.catalog.Composition
+import com.orderpackager.data.catalog.CompositionItem
 import com.orderpackager.BuildConfig
 import com.orderpackager.data.db.entity.OrderPosition
 import com.orderpackager.data.db.entity.PackingOrder
@@ -21,7 +23,8 @@ data class CloudPosition(
     @SerializedName("has_bags") val hasBags: Boolean,
     @SerializedName("has_other") val hasOther: Boolean,
     @SerializedName("other_text") val otherText: String,
-    @SerializedName("weight_kg") val weightKg: Float
+    @SerializedName("weight_kg") val weightKg: Float,
+    val composition: List<CompositionItem>? = null
 ) {
     fun toEntity(orderId: Long) = OrderPosition(
         orderId = orderId,
@@ -34,6 +37,7 @@ data class CloudPosition(
         hasBags = hasBags,
         hasOther = hasOther,
         otherText = otherText,
+        compositionJson = Composition.encode(composition.orEmpty()),
         weightKg = weightKg
     )
 
@@ -48,6 +52,7 @@ data class CloudPosition(
             hasBags = position.hasBags,
             hasOther = position.hasOther,
             otherText = position.otherText,
+            composition = Composition.decode(position.compositionJson),
             weightKg = position.weightKg
         )
     }

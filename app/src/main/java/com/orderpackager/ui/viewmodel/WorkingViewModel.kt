@@ -1,5 +1,8 @@
 package com.orderpackager.ui.viewmodel
 
+import com.orderpackager.data.catalog.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.orderpackager.data.db.entity.CyclicItem
@@ -17,13 +20,7 @@ data class WorkingState(
     val orderId: Long = 0L,
     val cyclicItems: List<CyclicItem> = emptyList(),
     val currentIndex: Int = 0,
-    val hasClothes: Boolean = false,
-    val hasShoes: Boolean = false,
-    val hasCosmetics: Boolean = false,
-    val hasAccessories: Boolean = false,
-    val hasBags: Boolean = false,
-    val hasOther: Boolean = false,
-    val otherText: String = "",
+    val composition: List<CompositionItem> = emptyList(),
     val weightKg: Float? = null,
     val isLoadingWeight: Boolean = false,
     val weightError: String? = null,
@@ -34,7 +31,7 @@ data class WorkingState(
 ) {
     val currentItem: CyclicItem? get() = cyclicItems.getOrNull(currentIndex)
     val hasSelectedComposition: Boolean get() =
-        hasClothes || hasShoes || hasCosmetics || hasAccessories || hasBags || hasOther
+        composition.isNotEmpty()
     val isCurrentSaved: Boolean get() =
         currentItem != null && savedPositions.any { it.cyclicItemId == currentItem!!.id }
     val totalOrderWeight: Float get() = savedPositions.sumOf { it.weightKg.toDouble() }.toFloat()
@@ -144,13 +141,10 @@ class WorkingViewModel(
         val currentItem = s.currentItem ?: return
         val saved = s.savedPositions.firstOrNull { it.cyclicItemId == currentItem.id }
         _state.update { it.copy(
-            hasClothes     = saved?.hasClothes ?: false,
-            hasShoes       = saved?.hasShoes ?: false,
-            hasCosmetics   = saved?.hasCosmetics ?: false,
-            hasAccessories = saved?.hasAccessories ?: false,
-            hasBags         = saved?.hasBags ?: false,
-            hasOther       = saved?.hasOther ?: false,
-            otherText      = saved?.otherText ?: "",
+            composition = Composition.decode(
+                context.getSharedPreferences("composition_drafts", 0)
+                    .getString("$orderId:${currentItem.id}", saved?.compositionJson ?: "[]")
+            ),
             // Вес не сбрасываем если включён автоопрос
             weightKg       = if (s.autoWeight) s.weightKg
             else saved?.weightKg?.takeIf { w -> w > 0f },
@@ -160,13 +154,20 @@ class WorkingViewModel(
 
     // ─── Форма ────────────────────────────────────────────────────────────────
 
-    fun setClothes(v: Boolean)     = _state.update { it.copy(hasClothes = v) }
-    fun setShoes(v: Boolean)       = _state.update { it.copy(hasShoes = v) }
-    fun setCosmetics(v: Boolean)   = _state.update { it.copy(hasCosmetics = v) }
-    fun setAccessories(v: Boolean) = _state.update { it.copy(hasAccessories = v) }
-    fun setBags(v: Boolean)         = _state.update { it.copy(hasBags = v) }
-    fun setOther(v: Boolean)       = _state.update { it.copy(hasOther = v) }
-    fun setOtherText(v: String)    = _state.update { it.copy(otherText = v) }
+    // A composition is saved independently of weight/registration. Opening and
+    // cancelling the editor never mutates this durable draft.
+    suspend fun saveComposition(items: List<CompositionItem>) {
+        require(items.all { it.quantity in 1..Composition.MAX_QUANTITY })
+        val current = checkNotNull(_state.value.currentItem) { "Position is not loaded" }
+        val json = Composition.encode(items)
+        withContext(Dispatchers.IO) {
+            check(context.getSharedPreferences("composition_drafts", 0).edit()
+                .putString("$orderId:${current.id}", json).commit())
+        }
+        if (_state.value.currentItem?.id == current.id) {
+            _state.update { it.copy(composition = items) }
+        }
+    }
 
     // ─── Ручной запрос ────────────────────────────────────────────────────────
 
@@ -192,15 +193,11 @@ class WorkingViewModel(
             orderId        = orderId,
             cyclicItemId   = currentItem.id,
             cyclicItemName = currentItem.name,
-            hasClothes     = s.hasClothes,
-            hasShoes       = s.hasShoes,
-            hasCosmetics   = s.hasCosmetics,
-            hasAccessories = s.hasAccessories,
-            hasBags        = s.hasBags,
-            hasOther       = s.hasOther,
-            otherText      = s.otherText,
+            compositionJson = Composition.encode(s.composition),
             weightKg       = s.weightKg ?: 0f
         ))
+        context.getSharedPreferences("composition_drafts", 0).edit()
+            .remove("$orderId:${currentItem.id}").apply()
         repo.saveNextCyclicIndex(context, s.currentIndex, s.cyclicItems.size)
         return true
     }
@@ -215,16 +212,7 @@ class WorkingViewModel(
 
     fun clearSnackbar() = _state.update { it.copy(snackbarMessage = null) }
 
-    fun buildCompositionText(): String {
-        val s = _state.value
-        val parts = mutableListOf<String>()
-        if (s.hasClothes) parts += context.getString(R.string.content_clothes)
-        if (s.hasShoes) parts += context.getString(R.string.content_shoes)
-        if (s.hasCosmetics) parts += context.getString(R.string.content_cosmetics)
-        if (s.hasAccessories) parts += context.getString(R.string.content_accessories)
-        if (s.hasBags) parts += context.getString(R.string.content_bags)
-        if (s.hasOther && s.otherText.isNotBlank()) parts += context.getString(R.string.content_other_value, s.otherText)
-        else if (s.hasOther) parts += context.getString(R.string.content_other)
-        return parts.joinToString(", ")
-    }
+    fun buildCompositionText(): String = Composition.text(
+        _state.value.composition, context.resources.configuration.locales[0].language
+    )
 }

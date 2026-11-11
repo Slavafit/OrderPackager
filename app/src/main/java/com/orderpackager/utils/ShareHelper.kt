@@ -1,5 +1,7 @@
 package com.orderpackager.utils
 
+import com.orderpackager.data.catalog.CompositionReport
+import com.orderpackager.data.catalog.Composition
 import android.content.Context
 import android.content.Intent
 import com.orderpackager.data.db.entity.OrderPosition
@@ -26,11 +28,8 @@ object ShareHelper {
         sb.appendLine(context.getString(R.string.report_date, date))
         sb.appendLine("──────────────────")
 
-        positions.forEachIndexed { i, pos ->
-            sb.appendLine("${i + 1}. ${pos.cyclicItemName}")
-            sb.appendLine("   ${buildComposition(context, pos)}")
-            sb.appendLine("   ${context.getString(R.string.weight_kg, "%.2f".format(pos.weightKg))}")
-        }
+        sb.appendLine(context.getString(R.string.report_product_totals))
+        sb.appendLine(buildProductTotals(context, positions))
 
         sb.appendLine("─────────────────")
         sb.appendLine(context.getString(R.string.report_positions_total, positions.size))
@@ -44,6 +43,19 @@ object ShareHelper {
         return sb.toString().trimEnd()
     }
 
+    fun buildProductTotals(context: Context, positions: List<OrderPosition>): String {
+        val contents = positions.map { Composition.decode(it.compositionJson) }
+        val totals = CompositionReport.totals(contents)
+        return buildString {
+            if (totals.isNotEmpty()) append(CompositionReport.text(totals))
+            else append(context.getString(R.string.catalog_empty))
+            if (contents.any { it.isEmpty() }) {
+                append("\n")
+                append(context.getString(R.string.report_missing_quantities))
+            }
+        }
+    }
+
     fun share(context: Context, text: String) {
         val intent = Intent(Intent.ACTION_SEND).apply {
             type = "text/plain"
@@ -53,6 +65,8 @@ object ShareHelper {
     }
 
     fun buildComposition(context: Context, pos: OrderPosition): String {
+        val items = Composition.decode(pos.compositionJson)
+        if (items.isNotEmpty()) return Composition.text(items, context.resources.configuration.locales[0].language)
         val parts = mutableListOf<String>()
         if (pos.hasClothes) parts += context.getString(R.string.content_clothes)
         if (pos.hasShoes) parts += context.getString(R.string.content_shoes)

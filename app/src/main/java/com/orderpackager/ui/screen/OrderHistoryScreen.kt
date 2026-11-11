@@ -128,24 +128,13 @@ fun OrderHistoryScreen(
                             val sb = StringBuilder()
                             sb.appendLine(context.getString(R.string.daily_report_for, today))
                             sb.appendLine("═══════════════════")
-                            orders.forEach { order ->
-                                val pos = positionsCache[order.id] ?: vm.getPositions(order.id)
-                                val w   = pos.sumOf { it.weightKg.toDouble() }
-                                sb.appendLine(
-                                    context.getString(
-                                        R.string.daily_report_order_line,
-                                        order.clientLastName,
-                                        order.boxNumber.ifBlank { "—" },
-                                        order.batchNumber.ifBlank { "—" },
-                                        pos.size,
-                                        "%.2f".format(w)
-                                    )
-                                )
+                            val allPositions = orders.flatMap {
+                                positionsCache[it.id] ?: vm.getPositions(it.id)
                             }
+                            sb.appendLine(context.getString(R.string.report_product_totals))
+                            sb.appendLine(ShareHelper.buildProductTotals(context, allPositions))
                             sb.appendLine("═══════════════════")
-                            val grand = orders
-                                .flatMap { positionsCache[it.id] ?: vm.getPositions(it.id) }
-                                .sumOf { it.weightKg.toDouble() }
+                            val grand = allPositions.sumOf { it.weightKg.toDouble() }
                             sb.appendLine(context.getString(
                                 R.string.daily_report_total_line,
                                 orders.size,

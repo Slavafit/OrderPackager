@@ -222,4 +222,21 @@
     <string name="privacy_changes_title">Cambios de la política</string>
     <string name="privacy_changes_body">Si cambia el tratamiento de datos, se actualizará esta política y se mostrará una nueva fecha en la aplicación y versión en línea.</string>
     <string name="privacy_open_online">Abrir la política actual en línea</string>
+
+    <string name="composition_count">Contenido (%1$d categorías)</string>
+    <string name="catalog_back">Atrás</string>
+    <string name="catalog_list">Lista</string>
+    <string name="catalog_finish">Finalizar</string>
+    <string name="catalog_quantity">Cantidad</string>
+    <string name="catalog_quantity_hint">0–99999. Cero elimina el producto.</string>
+    <string name="catalog_add_another">Añadir otro</string>
+    <string name="catalog_empty">Aún no hay contenido</string>
+    <string name="catalog_edit">Editar</string>
+    <string name="catalog_remove">Eliminar</string>
+    <string name="catalog_discard">¿Descartar los cambios?</string>
+    <string name="catalog_leave">Salir</string>
+    <string name="catalog_continue">Continuar</string>
+    <string name="catalog_save_error">No se pudo guardar el contenido. Inténtalo de nuevo.</string>
+    <string name="report_product_totals">Totales por producto</string>
+    <string name="report_missing_quantities">Las posiciones antiguas sin cantidades de productos no se incluyen en los totales.</string>
 </resources>
