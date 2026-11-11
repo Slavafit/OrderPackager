@@ -241,4 +241,15 @@
     <string name="report_missing_quantities">У старых позиций нет количества товаров; они не включены в итог.</string>
     <string name="composition_client">Состав: %1$s</string>
     <string name="composition_stats">Категорий: %1$d · Количество: %2$d</string>
+    <string name="catalog_new_product">+ Новый товар</string>
+    <string name="catalog_product_name">Название товара</string>
+    <string name="catalog_report_name">Название для отчёта (на английском)</string>
+    <string name="catalog_product_unit">Единица измерения</string>
+    <string name="catalog_unit_pc">Штуки</string>
+    <string name="catalog_unit_pair">Пары</string>
+    <string name="catalog_unit_package">Упаковки</string>
+    <string name="catalog_unit_bottle">Бутылки</string>
+    <string name="catalog_create_product">Создать</string>
+    <string name="catalog_product_duplicate">Такой товар уже есть в этой категории.</string>
+    <string name="catalog_sync_hint">Товар сохранится на устройстве и отправится в облако при синхронизации.</string>
 </resources>

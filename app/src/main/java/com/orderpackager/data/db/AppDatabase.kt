@@ -1,5 +1,6 @@
 package com.orderpackager.data.db
 
+import com.orderpackager.data.catalog.*
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
@@ -10,11 +11,12 @@ import com.orderpackager.data.db.dao.*
 import com.orderpackager.data.db.entity.*
 
 @Database(
-    entities = [Client::class, CyclicItem::class, PackingOrder::class, OrderPosition::class],
-    version = 7,
+    entities = [Client::class, CyclicItem::class, PackingOrder::class, OrderPosition::class, CatalogCache::class, CustomProductRow::class],
+    version = 8,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
+    abstract fun catalogDao(): CatalogDao
     abstract fun clientDao(): ClientDao
     abstract fun cyclicItemDao(): CyclicItemDao
     abstract fun packingOrderDao(): PackingOrderDao
@@ -101,6 +103,13 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
 
+        private val MIGRATION_7_8 = object : Migration(7, 8) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("CREATE TABLE IF NOT EXISTS catalog_cache (id INTEGER NOT NULL, payload TEXT NOT NULL, PRIMARY KEY(id))")
+                db.execSQL("CREATE TABLE IF NOT EXISTS catalog_custom_products (ownerId TEXT NOT NULL, id TEXT NOT NULL, payload TEXT NOT NULL, pending INTEGER NOT NULL, PRIMARY KEY(ownerId, id))")
+            }
+        }
+
         fun getInstance(context: Context): AppDatabase =
             INSTANCE ?: synchronized(this) {
                 Room.databaseBuilder(
@@ -109,7 +118,7 @@ abstract class AppDatabase : RoomDatabase() {
                     "packager_db"
                 )
                 .addCallback(seedCallback)
-                .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7)
+                .addMigrations(MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5, MIGRATION_5_6, MIGRATION_6_7, MIGRATION_7_8)
                 .fallbackToDestructiveMigration()
                 .build().also { INSTANCE = it }
             }

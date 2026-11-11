@@ -30,8 +30,20 @@ fun CompositionScreen(
     onSave: suspend (List<CompositionItem>) -> Unit
 ) {
     val context = LocalContext.current
-    val language = LocalConfiguration.current.locales[0].language
-    val catalog = remember { ProductCatalog.load(context) }
+    val language = LocalConfiguration.current.locales[0].language.let {
+        if (it in listOf("ru", "en", "es")) it else "en"
+    }
+    val auth = remember { com.orderpackager.data.auth.SupabaseAuthManager.getInstance(context) }
+    val authState by auth.state.collectAsState()
+    val ownerId = remember(authState) { auth.currentUserId.orEmpty() }
+    val repository = remember { CatalogRepository.getInstance(context) }
+    val bundled = remember { ProductCatalog.load(context) }
+    val catalog by remember(ownerId) { repository.observe(ownerId) }.collectAsState(initial = bundled)
+    var showNewProduct by rememberSaveable { mutableStateOf(false) }
+    var createdProductJson by rememberSaveable { mutableStateOf<String?>(null) }
+    LaunchedEffect(ownerId) {
+        if (ownerId.isNotBlank()) com.orderpackager.data.sync.CloudSyncManager.getInstance(context).enqueue()
+    }
     var draftJson by rememberSaveable { mutableStateOf(Composition.encode(initial)) }
     val items = remember(draftJson) { Composition.decode(draftJson) }
     var categoryId by rememberSaveable { mutableStateOf<String?>(null) }
@@ -42,7 +54,12 @@ fun CompositionScreen(
     var saving by remember { mutableStateOf(false) }
     var saveError by remember { mutableStateOf(false) }
     val scope = rememberCoroutineScope()
+    val createdProduct = remember(createdProductJson) {
+        createdProductJson?.let { com.google.gson.Gson().fromJson(it, CatalogProduct::class.java) }
+    }
     val product = catalog.products.firstOrNull { it.id == productId }
+        ?: items.firstOrNull { it.product.id == productId }?.product
+        ?: createdProduct?.takeIf { it.id == productId }
     val number = quantity.toIntOrNull()?.takeIf { it in 0..Composition.MAX_QUANTITY }
 
     fun pendingItems(selectedQuantity: Int? = number): List<CompositionItem> {
@@ -163,7 +180,12 @@ fun CompositionScreen(
                     }
                 }
                 else -> {
-                    Text(catalog.categories.first { it.id == categoryId }.names.localized(language), style = MaterialTheme.typography.titleLarge)
+                    Text(catalog.categories.firstOrNull { it.id == categoryId }?.names?.localized(language).orEmpty(), style = MaterialTheme.typography.titleLarge)
+                    OutlinedButton(
+                        onClick = { showNewProduct = true },
+                        enabled = ownerId.isNotBlank() && catalog.categories.any { it.id == categoryId },
+                        modifier = Modifier.fillMaxWidth(), shape = MaterialTheme.shapes.medium
+                    ) { Text(stringResource(R.string.catalog_new_product)) }
                     catalog.products.filter { it.categoryId == categoryId }.sortedBy { it.sortOrder }.chunked(2).forEach { row ->
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                             row.forEach { entry ->
@@ -178,6 +200,19 @@ fun CompositionScreen(
             }
         }
     }
+    val selectedCategory = catalog.categories.firstOrNull { it.id == categoryId }
+    if (showNewProduct && selectedCategory != null) NewProductDialog(
+        category = selectedCategory,
+        language = language,
+        onDismiss = { showNewProduct = false },
+        onCreate = { entry ->
+            repository.add(ownerId, entry)
+            createdProductJson = com.google.gson.Gson().toJson(entry)
+            productId = entry.id
+            quantity = "1"
+            showNewProduct = false
+        }
+    )
     if (discardDialog) AlertDialog(
         onDismissRequest = { discardDialog = false },
         title = { Text(stringResource(R.string.catalog_discard)) },
