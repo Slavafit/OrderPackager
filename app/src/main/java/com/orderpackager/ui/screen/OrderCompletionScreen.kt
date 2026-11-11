@@ -328,7 +328,7 @@ fun OrderCompletionScreen(
                             DimField(stringResource(R.string.box_h), state.boxH, vm::setBoxH, Modifier.weight(1f))
                         }
                         Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                            OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { vm.applyDefault() }, Modifier.weight(1f)) {
+                            OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { vm.applyDefault() }, modifier = Modifier.weight(1f)) {
                                 Icon(Icons.Default.RestartAlt, null, Modifier.size(16.dp))
                                 Spacer(Modifier.width(4.dp))
                                 Text(stringResource(R.string.apply_default), fontSize = 13.sp)
