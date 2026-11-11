@@ -155,8 +155,8 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                         tint = MaterialTheme.colorScheme.outlineVariant)
                     Text(stringResource(R.string.cyclic_empty), color = MaterialTheme.colorScheme.outline)
                     Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                        Button(onClick = { showAddSheet = true }) { Text(stringResource(R.string.add)) }
-                        OutlinedButton(onClick = {
+                        Button(shape = MaterialTheme.shapes.medium, onClick = { showAddSheet = true }) { Text(stringResource(R.string.add)) }
+                        OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = {
                             importLauncher.launch(arrayOf(
                                 "text/csv", "text/plain",
                                 "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -223,7 +223,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                     modifier = Modifier.fillMaxWidth(),
                     singleLine = true
                 )
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         if (newName.isNotBlank()) {
                             scope.launch { vm.add(newName.trim()); showAddSheet = false }
@@ -244,13 +244,13 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
             title = { Text(stringResource(R.string.delete_position_title)) },
             text  = { Text(stringResource(R.string.delete_position_body, target.name)) },
             confirmButton = {
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = { scope.launch { vm.delete(target); deleteTarget = null } },
                     colors  = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
                 ) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { deleteTarget = null }) { Text(stringResource(R.string.cancel)) }
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { deleteTarget = null }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
@@ -263,7 +263,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
             title = { Text(stringResource(R.string.clear_list_title)) },
             text  = { Text(stringResource(R.string.clear_list_body, items.size)) },
             confirmButton = {
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         scope.launch {
                             vm.clearAll()
@@ -275,7 +275,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                 ) { Text(stringResource(R.string.clear)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showClearDialog = false }) { Text(stringResource(R.string.cancel)) }
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { showClearDialog = false }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
@@ -314,7 +314,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                 }
             },
             confirmButton = {
-                Button(onClick = {
+                Button(shape = MaterialTheme.shapes.medium, onClick = {
                     scope.launch {
                         vm.importAndReplace(names)
                         showImportPreview = false
@@ -324,7 +324,7 @@ fun EditCyclicListScreen(repo: AppRepository, onBack: () -> Unit) {
                 }) { Text(stringResource(R.string.import_load)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showImportPreview = false; pendingImport = null }) {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { showImportPreview = false; pendingImport = null }) {
                     Text(stringResource(R.string.cancel))
                 }
             }

@@ -20,6 +20,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.orderpackager.data.catalog.Composition
+import androidx.compose.runtime.saveable.rememberSaveable
 import com.orderpackager.R
 import com.orderpackager.repository.AppRepository
 import com.orderpackager.ui.viewmodel.WorkingViewModel
@@ -43,6 +45,19 @@ fun WorkingScreen(
     })
 
     val state by vm.state.collectAsStateWithLifecycle()
+    var showComposition by rememberSaveable { mutableStateOf(false) }
+    if (showComposition) {
+        CompositionScreen(
+            initial = state.composition,
+            clientName = state.currentItem?.name ?: clientName,
+            onCancel = { showComposition = false },
+            onSave = { items ->
+                vm.saveComposition(items)
+                showComposition = false
+            }
+        )
+        return
+    }
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     var showFinishDialog by remember { mutableStateOf(false) }
@@ -83,7 +98,7 @@ fun WorkingScreen(
                     }
                 },
                 actions = {
-                    TextButton(
+                    TextButton(shape = MaterialTheme.shapes.medium,
                         onClick = { showFinishDialog = true },
                         colors  = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.onPrimary
@@ -166,49 +181,24 @@ fun WorkingScreen(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                OutlinedButton(onClick = { vm.goPrev() }, modifier = Modifier.weight(1f)) {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { vm.goPrev() }, modifier = Modifier.weight(1f)) {
                     Icon(Icons.Default.ArrowBack, null, Modifier.size(18.dp))
                     Spacer(Modifier.width(4.dp))
                     Text(stringResource(R.string.prev))
                 }
-                OutlinedButton(onClick = { vm.goNext() }, modifier = Modifier.weight(1f)) {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { vm.goNext() }, modifier = Modifier.weight(1f)) {
                     Text(stringResource(R.string.next))
                     Spacer(Modifier.width(4.dp))
                     Icon(Icons.Default.ArrowForward, null, Modifier.size(18.dp))
                 }
             }
 
-            // ─── Состав ───────────────────────────────────────────────────────
-            Card(modifier = Modifier.fillMaxWidth(), elevation = CardDefaults.cardElevation(2.dp)) {
-                Column(Modifier.padding(horizontal = 16.dp, vertical = 8.dp)) {
-                    Text(
-                        stringResource(R.string.composition),
-                        style    = MaterialTheme.typography.labelLarge,
-                        color    = MaterialTheme.colorScheme.outline,
-                        modifier = Modifier.padding(bottom = 4.dp)
-                    )
-                    Row(Modifier.fillMaxWidth()) {
-                        Column(Modifier.weight(1f)) {
-                            CompactCheck(stringResource(R.string.clothes),    state.hasClothes,     vm::setClothes)
-                            CompactCheck(stringResource(R.string.shoes),      state.hasShoes,       vm::setShoes)
-                            CompactCheck(stringResource(R.string.cosmetics),  state.hasCosmetics,   vm::setCosmetics)
-                        }
-                        Column(Modifier.weight(1f)) {
-                            CompactCheck(stringResource(R.string.accessories), state.hasAccessories, vm::setAccessories)
-                            CompactCheck(stringResource(R.string.bags), state.hasBags, vm::setBags)
-                            CompactCheck(stringResource(R.string.other),       state.hasOther,       vm::setOther)
-                        }
-                    }
-                    if (state.hasOther) {
-                        OutlinedTextField(
-                            value         = state.otherText,
-                            onValueChange = vm::setOtherText,
-                            modifier      = Modifier.fillMaxWidth().padding(top = 4.dp),
-                            placeholder   = { Text(stringResource(R.string.other_hint)) },
-                            singleLine    = true
-                        )
-                    }
-                }
+            Button(shape = MaterialTheme.shapes.medium,
+                onClick = { showComposition = true },
+                enabled = state.currentItem != null,
+                modifier = Modifier.fillMaxWidth().heightIn(min = 64.dp)
+            ) {
+                Text(stringResource(R.string.composition_count, Composition.categoryCount(state.composition)))
             }
 
             // ─── Вес ──────────────────────────────────────────────────────────
@@ -298,7 +288,7 @@ fun WorkingScreen(
                     // Ручная кнопка — только когда авто выключен
                     if (!state.autoWeight) {
                         Spacer(Modifier.height(4.dp))
-                        Button(
+                        Button(shape = MaterialTheme.shapes.medium,
                             onClick  = { vm.fetchWeight() },
                             modifier = Modifier.fillMaxWidth(),
                             enabled  = !state.isLoadingWeight
@@ -327,7 +317,7 @@ fun WorkingScreen(
             }
 
             // ─── Кнопка Печать ────────────────────────────────────────────────
-            Button(
+            Button(shape = MaterialTheme.shapes.medium,
                 onClick = {
                     if (!state.hasSelectedComposition) {
                         scope.launch {
@@ -364,10 +354,8 @@ fun WorkingScreen(
                         color       = MaterialTheme.colorScheme.onPrimary,
                         strokeWidth = 2.dp
                     )
-                } else {
-                    Icon(Icons.Default.Print, null)
                 }
-                Spacer(Modifier.width(10.dp))
+                if (isPrinting) Spacer(Modifier.width(10.dp))
                 Text(
                     stringResource(if (isPrinting) R.string.printing else R.string.print_label),
                     fontSize = 18.sp
@@ -406,7 +394,7 @@ fun WorkingScreen(
                 }
             },
             confirmButton = {
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         if (isFinishRequested) return@Button
                         isFinishRequested = true
@@ -417,21 +405,10 @@ fun WorkingScreen(
                 ) { Text(stringResource(R.string.finish_order)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { showFinishDialog = false }) {
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { showFinishDialog = false }) {
                     Text(stringResource(R.string.cancel))
                 }
             }
         )
-    }
-}
-
-@Composable
-private fun CompactCheck(label: String, checked: Boolean, onChecked: (Boolean) -> Unit) {
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        modifier          = Modifier.padding(vertical = 2.dp)
-    ) {
-        Checkbox(checked = checked, onCheckedChange = onChecked, modifier = Modifier.size(36.dp))
-        Text(label, fontSize = 15.sp)
     }
 }

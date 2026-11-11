@@ -49,5 +49,6 @@ data class OrderPosition(
     val hasBags: Boolean = false,
     val hasOther: Boolean = false,
     val otherText: String = "",
+    @ColumnInfo(defaultValue = "'[]'") val compositionJson: String = "[]",
     val weightKg: Float = 0f
 )

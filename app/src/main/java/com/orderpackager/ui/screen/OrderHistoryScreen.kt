@@ -109,7 +109,7 @@ fun OrderHistoryScreen(
                 },
                 actions = {
                     // Переключатель Сегодня / Все
-                    TextButton(
+                    TextButton(shape = MaterialTheme.shapes.medium,
                         onClick = { vm.toggleShowAll() },
                         colors  = ButtonDefaults.textButtonColors(
                             contentColor = MaterialTheme.colorScheme.onPrimary
@@ -128,24 +128,13 @@ fun OrderHistoryScreen(
                             val sb = StringBuilder()
                             sb.appendLine(context.getString(R.string.daily_report_for, today))
                             sb.appendLine("═══════════════════")
-                            orders.forEach { order ->
-                                val pos = positionsCache[order.id] ?: vm.getPositions(order.id)
-                                val w   = pos.sumOf { it.weightKg.toDouble() }
-                                sb.appendLine(
-                                    context.getString(
-                                        R.string.daily_report_order_line,
-                                        order.clientLastName,
-                                        order.boxNumber.ifBlank { "—" },
-                                        order.batchNumber.ifBlank { "—" },
-                                        pos.size,
-                                        "%.2f".format(w)
-                                    )
-                                )
+                            val allPositions = orders.flatMap {
+                                positionsCache[it.id] ?: vm.getPositions(it.id)
                             }
+                            sb.appendLine(context.getString(R.string.report_product_totals))
+                            sb.appendLine(ShareHelper.buildProductTotals(context, allPositions))
                             sb.appendLine("═══════════════════")
-                            val grand = orders
-                                .flatMap { positionsCache[it.id] ?: vm.getPositions(it.id) }
-                                .sumOf { it.weightKg.toDouble() }
+                            val grand = allPositions.sumOf { it.weightKg.toDouble() }
                             sb.appendLine(context.getString(
                                 R.string.daily_report_total_line,
                                 orders.size,
@@ -405,13 +394,13 @@ fun OrderHistoryScreen(
             title = { Text(stringResource(R.string.delete_order_title)) },
             text  = { Text(stringResource(R.string.delete_order_body, target.clientLastName)) },
             confirmButton = {
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = { scope.launch { vm.deleteOrder(target); deleteTarget = null } },
                     colors  = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
                 ) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { deleteTarget = null }) { Text(stringResource(R.string.cancel)) }
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { deleteTarget = null }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
@@ -425,7 +414,7 @@ fun OrderHistoryScreen(
             title = { Text(stringResource(R.string.delete_position_title)) },
             text  = { Text(stringResource(R.string.delete_position_body, target.cyclicItemName)) },
             confirmButton = {
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         scope.launch {
                             vm.deletePosition(target)
@@ -437,7 +426,7 @@ fun OrderHistoryScreen(
                 ) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { deletePositionTarget = null }) { Text(stringResource(R.string.cancel)) }
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { deletePositionTarget = null }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }
@@ -505,7 +494,7 @@ fun OrderHistoryScreen(
                     )
                 }
 
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         scope.launch {
                             vm.updateOrder(order.copy(

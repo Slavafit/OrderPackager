@@ -132,7 +132,7 @@ fun EditClientsScreen(repo: AppRepository, onBack: () -> Unit) {
                     Spacer(Modifier.height(12.dp))
                     Text(stringResource(R.string.clients_empty), color = MaterialTheme.colorScheme.outline)
                     Spacer(Modifier.height(8.dp))
-                    Button(onClick = { showAddSheet = true }) { Text(stringResource(R.string.add_client)) }
+                    Button(shape = MaterialTheme.shapes.medium, onClick = { showAddSheet = true }) { Text(stringResource(R.string.add_client)) }
                 }
             }
         } else {
@@ -215,7 +215,7 @@ fun EditClientsScreen(repo: AppRepository, onBack: () -> Unit) {
                     modifier = Modifier.fillMaxWidth().focusRequester(fr),
                     singleLine = true
                 )
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         if (newName.isNotBlank()) {
                             scope.launch { vm.add(newName.trim()); showAddSheet = false }
@@ -236,13 +236,13 @@ fun EditClientsScreen(repo: AppRepository, onBack: () -> Unit) {
             title = { Text(stringResource(R.string.delete_client_title)) },
             text = { Text(stringResource(R.string.delete_client_body,target.lastName)) },
             confirmButton = {
-                Button(
+                Button(shape = MaterialTheme.shapes.medium,
                     onClick = { scope.launch { vm.delete(target); deleteTarget = null } },
                     colors = ButtonDefaults.buttonColors(MaterialTheme.colorScheme.error)
                 ) { Text(stringResource(R.string.delete)) }
             },
             dismissButton = {
-                OutlinedButton(onClick = { deleteTarget = null }) { Text(stringResource(R.string.cancel)) }
+                OutlinedButton(shape = MaterialTheme.shapes.medium, onClick = { deleteTarget = null }) { Text(stringResource(R.string.cancel)) }
             }
         )
     }

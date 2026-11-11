@@ -54,7 +54,7 @@ fun PrivacyPolicyScreen(onBack: () -> Unit) {
                 Text(stringResource(body), style = MaterialTheme.typography.bodyMedium)
             }
             if (BuildConfig.PRIVACY_POLICY_URL.isNotBlank()) {
-                OutlinedButton(
+                OutlinedButton(shape = MaterialTheme.shapes.medium,
                     onClick = {
                         context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(BuildConfig.PRIVACY_POLICY_URL)))
                     },
