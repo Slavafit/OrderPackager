@@ -1,6 +1,8 @@
 package com.orderpackager.data.network
 
 import com.google.gson.annotations.SerializedName
+import com.orderpackager.data.catalog.CloudCatalog
+import com.orderpackager.data.catalog.CatalogUpsertRequest
 import com.orderpackager.data.catalog.Composition
 import com.orderpackager.data.catalog.CompositionItem
 import com.orderpackager.BuildConfig
@@ -102,6 +104,12 @@ data class CloudCyclicItemsReplaceRequest(
 )
 
 interface SupabaseApi {
+    @POST("rest/v1/rpc/order_packer_catalog_pull")
+    suspend fun pullCatalog(@Body request: Map<String, String> = emptyMap()): Response<CloudCatalog>
+
+    @POST("rest/v1/rpc/order_packer_catalog_upsert")
+    suspend fun upsertCatalogProducts(@Body request: CatalogUpsertRequest): Response<Unit>
+
     @POST("rest/v1/rpc/order_packer_upsert")
     suspend fun upsert(@Body request: CloudUpsertRequest): Response<Unit>
 

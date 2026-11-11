@@ -241,4 +241,15 @@
     <string name="report_missing_quantities">Las posiciones antiguas sin cantidades de productos no se incluyen en los totales.</string>
     <string name="composition_client">Contenido: %1$s</string>
     <string name="composition_stats">Categorías: %1$d · Cantidad: %2$d</string>
+    <string name="catalog_new_product">+ Nuevo producto</string>
+    <string name="catalog_product_name">Nombre del producto</string>
+    <string name="catalog_report_name">Nombre para el informe (en inglés)</string>
+    <string name="catalog_product_unit">Unidad de medida</string>
+    <string name="catalog_unit_pc">Unidades</string>
+    <string name="catalog_unit_pair">Pares</string>
+    <string name="catalog_unit_package">Paquetes</string>
+    <string name="catalog_unit_bottle">Botellas</string>
+    <string name="catalog_create_product">Crear</string>
+    <string name="catalog_product_duplicate">Este producto ya existe en esta categoría.</string>
+    <string name="catalog_sync_hint">El producto se guarda en este dispositivo y se sube durante la sincronización.</string>
 </resources>

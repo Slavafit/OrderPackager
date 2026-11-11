@@ -19,6 +19,13 @@ class OrderPackagerApp : Application() {
         super.onCreate()
         AppRepository.getInstance(this)
         CloudSyncManager.getInstance(this).enqueue()
+        // Retry queued catalog additions (and existing sync) when connectivity returns.
+        getSystemService(android.net.ConnectivityManager::class.java)
+            .registerDefaultNetworkCallback(object : android.net.ConnectivityManager.NetworkCallback() {
+                override fun onAvailable(network: android.net.Network) {
+                    CloudSyncManager.getInstance(this@OrderPackagerApp).enqueue()
+                }
+            })
     }
 }
 

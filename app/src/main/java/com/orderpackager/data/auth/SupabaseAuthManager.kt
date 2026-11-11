@@ -28,7 +28,7 @@ sealed interface AuthState {
 
 data class PasswordLoginRequest(val email: String, val password: String)
 data class RefreshRequest(@SerializedName("refresh_token") val refreshToken: String)
-data class AuthUser(val email: String?)
+data class AuthUser(val email: String?, val id: String? = null)
 data class AuthSession(
     @SerializedName("access_token") val accessToken: String,
     @SerializedName("refresh_token") val refreshToken: String,
@@ -87,6 +87,17 @@ class SupabaseAuthManager private constructor(context: Context) {
         }
     }
 
+    val currentUserId: String? get() = prefs.getString("user_id", null)
+        ?: prefs.getString(KEY_ACCESS, null)?.let(::userIdFromAccessToken)
+
+    // Used only to associate a response with its local account. Supabase verifies
+    // the token server-side; this does not replace authentication.
+    fun userIdFromAccessToken(token: String): String? = runCatching {
+        val payload = token.split('.')[1]
+        val json = String(android.util.Base64.decode(payload, android.util.Base64.URL_SAFE), Charsets.UTF_8)
+        org.json.JSONObject(json).getString("sub").takeIf { it.isNotBlank() }
+    }.getOrNull()
+
     fun signOut() {
         prefs.edit().clear().apply()
         _state.value = AuthState.SignedOut
@@ -96,7 +107,9 @@ class SupabaseAuthManager private constructor(context: Context) {
         val token = prefs.getString(KEY_ACCESS, null) ?: return null
         val expiresAt = prefs.getLong(KEY_EXPIRES_AT, 0)
         if (System.currentTimeMillis() < expiresAt - 60_000) return token
-        return refreshSession()
+        return refreshSession() ?: if (prefs.getString(KEY_REFRESH, null) != null) {
+            throw java.io.IOException("Session refresh unavailable")
+        } else null
     }
 
     private fun restore() {
@@ -104,7 +117,10 @@ class SupabaseAuthManager private constructor(context: Context) {
             if (prefs.getString(KEY_REFRESH, null).isNullOrBlank()) {
                 _state.value = AuthState.SignedOut
             } else if (refreshSession() == null) {
-                _state.value = AuthState.SignedOut
+                // A temporary network failure must not remove access to local data.
+                _state.value = if (prefs.getString(KEY_REFRESH, null) != null && currentUserId != null) {
+                    AuthState.SignedIn(prefs.getString(KEY_EMAIL, null))
+                } else AuthState.SignedOut
             }
         }
     }
@@ -113,17 +129,21 @@ class SupabaseAuthManager private constructor(context: Context) {
         val refresh = prefs.getString(KEY_REFRESH, null) ?: return null
         val response = api.refresh(request = RefreshRequest(refresh))
         val session = response.body()
+        if (response.code() == 400 || response.code() == 401) {
+            prefs.edit().clear().apply()
+        }
         if (!response.isSuccessful || session == null) error("HTTP ${response.code()}")
         save(session)
         _state.value = AuthState.SignedIn(session.user?.email ?: prefs.getString(KEY_EMAIL, null))
         session.accessToken
-    }.getOrElse {
-        prefs.edit().clear().apply()
+    }.getOrElse { error ->
+        if (error is kotlinx.coroutines.CancellationException) throw error
         null
     }
 
     private fun save(session: AuthSession) {
         prefs.edit()
+            .putString("user_id", session.user?.id)
             .putString(KEY_ACCESS, session.accessToken)
             .putString(KEY_REFRESH, session.refreshToken)
             .putString(KEY_EMAIL, session.user?.email)

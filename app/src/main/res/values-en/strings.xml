@@ -242,4 +242,15 @@
     <string name="report_missing_quantities">Legacy positions without product quantities are excluded from these totals.</string>
     <string name="composition_client">Contents: %1$s</string>
     <string name="composition_stats">Categories: %1$d · Quantity: %2$d</string>
+    <string name="catalog_new_product">+ New product</string>
+    <string name="catalog_product_name">Product name</string>
+    <string name="catalog_report_name">Report name (English)</string>
+    <string name="catalog_product_unit">Unit</string>
+    <string name="catalog_unit_pc">Pieces</string>
+    <string name="catalog_unit_pair">Pairs</string>
+    <string name="catalog_unit_package">Packages</string>
+    <string name="catalog_unit_bottle">Bottles</string>
+    <string name="catalog_create_product">Create</string>
+    <string name="catalog_product_duplicate">This product already exists in this category.</string>
+    <string name="catalog_sync_hint">The product is saved on this device and uploaded during synchronization.</string>
 </resources>

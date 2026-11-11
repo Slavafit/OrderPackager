@@ -95,6 +95,7 @@ class CloudSyncManager private constructor(
         val accessToken = auth.getValidAccessToken() ?: run {
             throw AuthenticationRequiredException()
         }
+        val catalogOwner = auth.userIdFromAccessToken(accessToken)
         val api = SupabaseApiProvider.api(accessToken)
         restoreMissingOrders(api)
 
@@ -113,6 +114,9 @@ class CloudSyncManager private constructor(
         }
         synchronizeClientList(api)
         synchronizeCyclicList(api)
+        if (catalogOwner != null && auth.currentUserId == catalogOwner) {
+            com.orderpackager.data.catalog.CatalogRepository.getInstance(context).synchronize(api, catalogOwner)
+        }
         synced
     }
 
